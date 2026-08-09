@@ -2,51 +2,109 @@
 
 ## Purpose
 
-This document converts RT Study Lab project-history claims into facts traceable to production source and executable evidence. Source inspection, automated execution, clinical review, accessibility review, deployment verification, and manual mechanical/visual review are intentionally distinct evidence categories.
+This document converts RT Study Lab project-history claims into facts traceable to production source, executable evidence, and deployment evidence. Source inspection, automated execution, clinical review, accessibility review, deployment verification, and manual mechanical/visual review are intentionally distinct evidence categories.
 
 ## Canonical production source
 
 - Repository: `R3C4LL4L1F3/RT-study-lab`
 - Visibility: Private
 - Default branch: `main`
-- Baseline `main` ref: `a0495e9fa4e5437d8a027312b618b5c1c389ef94`
-- Baseline commit: `Redesign Shock visual teaching page`
+- Original source baseline ref: `a0495e9fa4e5437d8a027312b618b5c1c389ef94`
+- Original baseline commit: `Redesign Shock visual teaching page`
+- Current `main`: `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`
+- Current commit: `Run production validation on main pushes (#2)`
 - Source evidence state: **Verified against production repository**
 
-The live ChatGPT Sites deployment relationship is not yet fully verified. Source-controlled Sites/Vinext/Cloudflare configuration exists, but no durable record currently proves which GitHub commit produced the live site. Do not equate GitHub source state with live deployment state without deployment evidence.
+Do not equate GitHub source state with live ChatGPT Sites deployment state without Sites deployment/version evidence.
 
-## Issue #6 executable validation ref
+## Automated production validation
 
-Complete repository validation was implemented on a production review branch rather than directly on `main`:
+Issue #6 established the complete npm-based production validation path and merged it through production PR #1.
 
-- Branch: `validation/issue-6-test-baseline`
-- Production draft PR: `R3C4LL4L1F3/RT-study-lab#1`
-- Validated PR head: `96b5535f9228c7b01c709386e050ce53e68f14d4`
-- GitHub Actions run: `31309995943`
-- Job conclusion: **SUCCESS**
-- Node: `22.13.0`
-- Validation package manager: **npm**
+Canonical validation contract:
 
-Successful automated checks at that ref:
+- Node `22.13.0`
+- `npm ci`
+- `npm run lint`
+- `npm run build`
+- complete recursive `tests/**/*.test.mjs` discovery and execution
+- dedicated Ventilator historical-P1 regression
+- diagnostic report artifact upload
 
-- `npm ci` — PASS
-- `npm run lint` — PASS
-- `npm run build` — PASS
-- complete recursive 28-file `tests/**/*.test.mjs` inventory — PASS
-- dedicated `tests/ventilator-session352.test.mjs` historical-P1 regression — PASS
-- validation diagnostic artifact upload — PASS
+Issue #6 evidence:
 
-This is executable automated evidence for the draft PR ref. It is **not yet evidence that production `main` contains the new validation workflow**, because the PR is intentionally unmerged pending explicit maintainer authorization.
+- validated PR ref: `96b5535f9228c7b01c709386e050ce53e68f14d4`
+- successful pre-merge Actions run: `31309995943`
+- merged production ref: `fb9f23b7442d4dddeac0eab38ed01676aaf914e2`
+- successful exact-commit post-merge verification run: `31310610948`
 
-### Test-harness architecture established by Issue #6
+Issue #7 added automatic validation after pushes/merges to `main` through production PR #2.
 
-Several existing `.test.mjs` files import application `.ts` modules directly. At the declared minimum Node version, raw Node 22.13.0 test execution fails those imports with `ERR_UNKNOWN_FILE_EXTENSION`. The complete test runner therefore executes each test file sequentially with:
+Issue #7 evidence:
 
-`node --experimental-strip-types --test <file>`
+- validated PR ref: `586314ab8e252dba0a479c062a9ade9c96c5d1e6`
+- successful branch-push run: `31310866155`
+- successful pull-request run: `31310877109`
+- merged production ref: `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`
+- automatic `main` push run: `31311314980`
+- automatic `main` run result: **PASS** for install, lint, build, complete suite, dedicated Ventilator P1 regression, diagnostic artifact, and overall job
 
-This is validation-harness configuration only; it does not modify production application code.
+Several existing `.test.mjs` files import application `.ts` modules directly. The validation runner therefore invokes Node 22.13.0 with explicit `--experimental-strip-types`. Earlier `ERR_UNKNOWN_FILE_EXTENSION` runs were test-harness loader failures rather than application or clinical regressions.
 
-The runner recursively discovers every `*.test.mjs` file under `tests/`, so later conforming test files cannot silently fall outside the canonical command as they did under the previous fixed five-file script.
+## ChatGPT Sites source/deployment relationship — Issue #8
+
+### Production-source evidence
+
+Production contains `.openai/hosting.json`. This file links the local source project to a provisioned ChatGPT Sites project. The private Sites project identifier is intentionally not reproduced in this public project-control repository.
+
+Git history shows the hosting-linkage file has existed since the initial `Build RT Study Lab` commit.
+
+`build/sites-vite-plugin.ts` packages `.openai/hosting.json` into the build artifact under `dist/.openai/hosting.json` and also packages Drizzle migrations when present.
+
+`vite.config.ts` imports the hosting configuration and combines Vinext, the local Sites packaging plugin, and the Cloudflare Vite plugin.
+
+These facts prove a source-side Sites integration. They do **not** identify the currently deployed source revision.
+
+### Official platform evidence
+
+Current official ChatGPT Sites documentation establishes that:
+
+1. a Sites project links a local source project to hosting managed through Sites, with the linkage stored in `.openai/hosting.json`;
+2. Sites publishing has two distinct stages: **save a version** and **deploy a version**;
+3. for a local source project, ChatGPT associates the saved version with the Git commit used for the build;
+4. saved versions can be listed/inspected to identify previous deployment candidates;
+5. deploying publishes the selected saved version; changing GitHub source by itself is not proof of a deployment.
+
+### Canonical deployment-verification method
+
+To verify the live RT Study Lab deployment:
+
+1. open the RT Study Lab Site in ChatGPT Sites management;
+2. list/inspect saved versions;
+3. identify the version currently deployed;
+4. obtain the Git commit associated with that version;
+5. verify that commit exists in the private production GitHub history;
+6. compare the deployed commit with current production `main`;
+7. classify any difference before changing the live Site.
+
+Evidence states:
+
+- **Verified deployed ref** — Sites version metadata explicitly associates the active deployment with a Git commit present in GitHub.
+- **GitHub ahead of deployment** — current GitHub `main` contains commits newer than the deployed Sites version.
+- **Deployment ahead/diverged** — the deployed commit is not current GitHub `main` or is not reachable from expected GitHub history; investigate before modifying anything.
+- **Unknown** — Sites version metadata has not been retrieved.
+
+Current live deployment ref: **Unknown pending private Sites version inspection**.
+
+Do not redeploy simply to manufacture evidence. Do not expose the private Sites project identifier, internal Sites Git remote, private local filesystem paths, or private Site URL in public project-control records unnecessarily.
+
+### Future release rule
+
+Once Issue #8 establishes the active deployment ref, use this release sequence:
+
+**validated Git commit -> saved Sites version -> reviewed deployment candidate -> explicit deploy -> post-deploy version/ref verification**
+
+A successful GitHub CI run is a prerequisite for a reviewed production source revision, but it is not deployment evidence by itself.
 
 ## Repository architecture observed
 
@@ -67,13 +125,7 @@ The runner recursively discovers every `*.test.mjs` file under `tests/`, so late
 
 Production contains `package-lock.json`, `pnpm-lock.yaml`, and `pnpm-workspace.yaml`.
 
-Issue #6 established **npm as the canonical reproducible validation package manager** because:
-
-- repository scripts are npm-oriented;
-- the maintained npm lockfile includes later production dependencies such as chest-trauma 3D runtime packages;
-- the pnpm lockfile has not tracked those later dependency changes.
-
-The pnpm artifacts are intentionally retained. Their relationship to the ChatGPT Sites/Vinext environment has not been proven safe to remove or regenerate.
+Issue #6 established **npm as the canonical reproducible validation package manager** because the maintained npm lockfile tracks current production dependencies. The pnpm artifacts are intentionally retained until their Sites/Vinext role is proven safe to change.
 
 ## Module verification register
 
@@ -82,153 +134,71 @@ The pnpm artifacts are intentionally retained. Their relationship to the ChatGPT
 - Production path: `app/acls/ecg-lab/`
 - Route: `/acls/ecg-lab`
 - Implementation: **Verified against production repository — implemented**
-- Observed architecture:
-  - deterministic ECG engine with 500 Hz internal sampling;
-  - 19 source-defined rhythms;
-  - caliper/landmark snapping assistance;
-  - Learn, Practice and Exam logic;
-  - independent patient-state/clinical-scenario layer;
-  - pathway and treatment engines/training layers;
-  - arrest and post-arrest engines.
-- Current automated evidence: ECG/ACLS source-controlled test files were included in the Issue #6 complete suite and **passed at PR ref `96b5535...`**.
-- Clinical evidence: guideline/source metadata exists, including AHA pathway/treatment references, but passing software tests are not independent current clinical validation.
-- Accessibility evidence: keyboard/focus/announcement/semantic structures and accessibility-adjacent tests exist; no comprehensive current WCAG/manual assistive-technology artifact is established.
-
-Historical architecture claims about the separate ECG/patient-state/pathway/treatment layers are substantially confirmed by production source. Historical numeric test-count milestones remain history rather than current suite counts.
+- Observed architecture includes the 500 Hz ECG engine, source-defined rhythm library, caliper/landmark tooling, Learn/Practice/Exam workflows, patient-state/clinical-scenario layer, pathway/treatment engines, and arrest/post-arrest systems.
+- Current source-controlled ECG/ACLS tests pass within the canonical complete production validation suite.
+- Passing software tests are not independent current AHA clinical validation or comprehensive accessibility conformance.
 
 ### Ventilator Waveform Lab
 
 - Production paths: `app/visual-lab/VentilatorWaveformLab.tsx`, `app/visual-lab/ventilator/`
 - Implementation: **Verified against production repository — implemented**
-- Observed architecture includes deterministic waveform/breath logic, breath records, monitoring calculations, triggering/neural clock, patient profiles, scenario/configuration state, renderer, provenance helpers and bounded-history `LiveVentilatorSession`.
-- Tests: engine, Session 3, Session 3.5 and Session 3.5.2 source-controlled suites.
-- Current automated evidence: broader Ventilator tests and dedicated Session 3.5.2 P1 command **passed** at Issue #6 PR ref `96b5535...`.
-
-Historical concern dispositions:
-
-1. double-trigger / unintended triple stacking and associated minute-ventilation behavior — **resolved in current source with passing automated regression evidence**;
-2. dynamic compliance during patient effort/contamination — **resolved in current source with passing automated regression evidence**;
-3. historical VC/PC relabeling — **resolved in current source with passing automated regression evidence**;
-4. expiratory-hold scheduling/rescheduling — **resolved in current source with passing automated regression evidence**.
-
-Issue #3 remains open for browser verification of learner-facing history labels, hold controls, dynamic-compliance validity messaging and double-trigger presentation. Historical multidisciplinary scores remain historical manual evidence rather than current CI results.
+- Source contains deterministic waveform/breath logic, breath records, monitoring calculations, triggering/neural clock, patient profiles, scenario/configuration state, renderer, provenance helpers and bounded-history `LiveVentilatorSession`.
+- Tests include engine, Session 3, Session 3.5 and Session 3.5.2 suites.
+- Historical P1 concerns have passing automated regression evidence for double-trigger/minute-ventilation behavior, dynamic-compliance validity, immutable mode provenance, and expiratory-hold scheduling/rescheduling.
+- Issue #3 remains open for learner-facing browser verification.
 
 ### Shock / Oxygen Transport
 
 - Production path: `app/disease-processes/cardiovascular/shock/`
 - Route: `/disease-processes/cardiovascular/shock`
 - Status: **Shock learning page implemented; physiology simulation not implemented**
-- `ShockInteractiveLabSlot.tsx` explicitly states `Not implemented · integration boundary only` and states that no synthetic patient, pressure trace, cardiac-output model, treatment response or simulation runs on the page.
-- Current hemodynamics: qualitative/educational course trend data and comparison/quiz logic, not a coupled circulation engine.
-- Hb→CaO2→DO2→VO2→CvO2/SvO2→extraction→oxygen-debt simulation: **absent at this ref**.
-- Automated evidence: `tests/shock-page.test.mjs` **passed** within the Issue #6 full suite.
-- Historical reduced-circulation reconciliation concern: **Historical / superseded at this production ref**.
-
-A future Shock/Oxygen Transport simulation is planned work and should begin from an explicit clinical/educational model contract rather than a repair assumption.
+- The current page explicitly contains an integration boundary rather than a coupled circulation engine.
+- Hb->CaO2->DO2->VO2->CvO2/SvO2->extraction->oxygen-debt simulation is absent at the verified source ref.
+- Automated Shock page tests pass.
 
 ### Equipment catalog
 
 - Production paths: `app/equipment-lab/`, `public/equipment/`
 - Status: **implemented as image/HTML-overlay interactive lessons**
-- Behavior includes zoom/pan/fullscreen, keyboard controls, hotspots, flow diagrams, setup comparison, simplified assembly ordering, troubleshooting and scenario questions.
-- `equipment-data.ts` stores device teaching content plus creator/source/license/accessed/alteration metadata.
-- Tracheostomy lesson: static cuffed-tracheostomy photograph + HTML hotspots.
-- Shiley-specific 3D runtime/snap-lock animation: **not identified in production source**.
-- Dedicated equipment-catalog automated suite: not identified.
-
-Historical Blender/Shiley work is therefore **Confirmed from project history but not production-integrated**.
+- Historical Shiley Blender/snap-lock 3D work is not production-integrated.
+- Dedicated equipment-catalog automated coverage has not been established.
 
 ### Chest-trauma 3D
 
 - Production paths: `app/disease-processes/trauma/chest-trauma-3d/`, `public/visual-labs/chest-trauma/`
 - Status: **integrated production 3D module**
-- Architecture: React Three Fiber/Drei/Three.js; desktop/mobile respiratory and thorax GLBs; canonical node/morph lookup; geometry-derived runtime bounds/landmarks; camera controls; 2D-default lazy/opt-in 3D boundary; visibility/reduced-motion/runtime safeguards.
-- Provenance: source-controlled HuBMAP HRA CC BY 4.0 attribution/derivative documentation and related asset manifests/license records.
-- Automated evidence: `tests/chest-trauma-3d.test.mjs` and `tests/chest-trauma-visual.test.mjs` **passed** within the Issue #6 complete suite.
-- Remaining verification: browser clipping/intersections, morph visual quality, controls, responsive behavior, performance, reduced-motion behavior and manual anatomical/educational visual fidelity.
+- Automated source/model/visual contracts pass.
+- Manual browser clipping/intersection, morph visual quality, responsive behavior, performance, reduced-motion, and anatomical/educational visual review remain under Issue #5.
 
 ### PFT
 
 - Production paths: `app/pft-reports/`, `public/pft-images/`
 - Status: **implemented**
-- Current behavior: reconstructed educational reports, hidden diagnosis/reveal, metric inspection, keyboard-accessible view controls, stepwise interpretation, report-specific loop exploration, local review status and knowledge checks.
-- Source-controlled data/test contract: 12 reports and 12 report-specific loop datasets with internal arithmetic/interpretive safeguards.
-- Automated evidence: PFT loop-data tests **passed** in the Issue #6 complete suite.
-- Clinical boundary: author-created educational reconstructions/no patient data; source references exist, but independent current human clinical validation remains separate.
+- Source-controlled PFT loop/report contract tests pass.
+- Independent clinical review remains separate.
 
 ### ABG / Hemodynamics
 
-- Production paths: `app/abg-lab/`; qualitative Shock hemodynamics under the Shock module.
+- Production path: `app/abg-lab/`
 - Status: **25-case ABG learning lab implemented; no general hemodynamic calculation engine identified**.
-- ABG interface: fixed authored case values, filtering, multiple choice, interpretation/compensation/oxygenation/cause/action feedback.
-- Dedicated ABG automated file: not identified.
-- No general user-entered hemodynamic/circulation calculation engine was established in this baseline.
+- No dedicated ABG automated file was identified during baseline mapping.
 
 ### Disease-process modules
 
-Generic dynamic disease records include:
+Generic disease records include ARDS, COPD exacerbation, status asthmaticus, pneumonia, acute pulmonary edema, pulmonary embolism, pulmonary fibrosis, cystic fibrosis, neuromuscular respiratory failure and bronchiectasis. Specialized modules include Shock, Stroke, Burns, Chest Trauma, traumatic brain injury and trauma content.
 
-- ARDS
-- COPD exacerbation
-- status asthmaticus
-- pneumonia
-- acute pulmonary edema
-- pulmonary embolism
-- pulmonary fibrosis
-- cystic fibrosis
-- neuromuscular respiratory failure
-- bronchiectasis
-
-Specialized source modules include Shock, Stroke, Burns, Chest Trauma, traumatic brain injury and trauma landing/general content.
-
-Selected specialized tests including Shock, Stroke and trauma/chest-trauma were included in the complete Issue #6 suite and passed. Comprehensive automated coverage of every generic disease record is not established.
+Selected specialized tests pass within the canonical complete suite; comprehensive automated coverage of every disease record is not established.
 
 ### Respiratory pharmacology
 
 - Production path: `app/medications/`
 - Status: **implemented**
-- Structured monographs include mechanisms, indications, response, administration/device considerations, ventilator aerosol considerations, adverse effects, precautions/interactions, monitoring, failure cues, education, cases, traps, source IDs and review fields.
-- Shared source registry includes AARC, ATS/ERS, GOLD, GINA, DailyMed, CFF, SCCM, AHA, CDC and other references.
-- Dedicated medication automated suite: not identified.
-- Reference presence is not independent clinical validation.
-
-### Oxygen-delivery / equipment content
-
-Source-verified device lessons cover oxygen, aerosol, airway and ventilation/emergency equipment using static/openly licensed imagery, diagrams, flow/setup teaching, troubleshooting and scenarios. Manufacturer-specific mechanical simulation is not implied.
-
-### Other/future interactive systems
-
-Current source contains several different interactive categories:
-
-1. engine-backed physiologic/clinical systems — ECG/ACLS and Ventilator;
-2. reconstructed-data/case teaching — PFT, ABG and equipment lessons;
-3. 3D anatomy/pathology visualization — chest-trauma 3D.
-
-The planned Shock/Oxygen Transport simulation remains an explicit integration boundary only. No separate general-purpose future simulation framework should be treated as production-ready.
-
-## Automated validation inventory
-
-### Baseline `main`
-
-At `a0495e9...`, the canonical `npm test` script names only five selected test files and there is no source-controlled GitHub Actions workflow.
-
-### Validated Issue #6 draft PR
-
-At `96b5535...`, the proposed canonical path:
-
-- uses npm + maintained `package-lock.json`;
-- builds before testing;
-- recursively discovers the complete source-controlled `tests/**/*.test.mjs` set;
-- executes test files sequentially with Node 22.13 explicit type stripping;
-- runs the Ventilator historical-P1 regression explicitly;
-- uploads a durable per-file diagnostic report;
-- contains no deployment credentials and does not deploy.
-
-GitHub Actions run `31309995943` completed successfully.
+- Structured monographs and shared source registry are present.
+- Dedicated medication automated coverage has not been identified; reference presence is not independent clinical validation.
 
 ## Clinical validation inventory
 
-Production source contains substantial guideline/source evidence and educational boundaries. No current independent end-to-end clinical validation artifact tied to either baseline `main` or the Issue #6 PR ref has been established.
+Production source contains substantial guideline/source evidence and educational boundaries. No current independent end-to-end clinical validation artifact tied to current production `main` has been established.
 
 Automated pass results must not be called clinical validation.
 
@@ -240,41 +210,42 @@ No comprehensive current WCAG conformance report or documented manual assistive-
 
 ## Mechanical / 3D validation inventory
 
-Chest-trauma automated model/source contracts now have passing executable evidence on the Issue #6 PR ref. Manual browser/mechanical/visual validation remains open under Issue #5.
+Chest-trauma automated model/source contracts have passing executable evidence. Manual browser/mechanical/visual validation remains open under Issue #5.
 
-External Blender equipment-model review remains project-history evidence unless the relevant assets/runtime are version-controlled in production.
+External Blender equipment-model work remains project-history evidence unless deliberately version-controlled and integrated.
 
 ## Security and repository hygiene
 
-Positive source controls include:
+Positive controls include:
 
 - `.env*`, `node_modules`, runtime/build state and PEM files ignored;
-- no tracked environment file identified in the current production tree;
-- `.openai/hosting.json` contains project/deployment metadata but no credential was observed during baseline inspection;
+- no tracked environment file identified in the production tree;
+- `.openai/hosting.json` contains project linkage metadata but no credential was observed during source inspection;
 - dependency/build output such as `node_modules` is not source-controlled;
 - third-party chest-trauma asset attribution is source-controlled;
-- Issue #6 GitHub Actions uses `contents: read` and no deployment credentials.
+- production validation workflow uses `contents: read`, no deployment credentials, and performs no deployment.
 
 Current hygiene items:
 
 - pnpm artifacts remain pending deployment-aware disposition;
-- production README remains largely starter-oriented;
-- live-source deployment mapping remains undocumented.
+- production README remains starter-oriented;
+- deployment release records should be added after Issue #8 establishes the saved-version/Git-commit correspondence.
 
 ## Current unresolved verification questions
 
-1. Which GitHub ref corresponds to the current live ChatGPT Sites deployment?
-2. After production PR #1 is merged, does the new validation workflow also pass from `main`?
-3. Do Ventilator learner-facing browser behaviors agree with the now-passing automated P1 regressions?
-4. Does chest-trauma 3D pass current manual browser/mechanical/visual review across supported devices?
-5. What independent clinical-review cadence/evidence should govern safety-sensitive modules?
-6. What comprehensive accessibility-validation workflow should be adopted?
-7. Are the retained pnpm files required by the Sites/Vinext development/deployment environment?
+1. Which Git commit is associated with the currently deployed RT Study Lab Sites version? — **Issue #8**
+2. Do Ventilator learner-facing browser behaviors agree with the passing automated P1 regressions? — **Issue #3**
+3. Does chest-trauma 3D pass current manual browser/mechanical/visual review across supported devices? — **Issue #5**
+4. What independent clinical-review cadence/evidence should govern safety-sensitive modules?
+5. What comprehensive accessibility-validation workflow should be adopted?
+6. Are the retained pnpm files required by the Sites/Vinext development/deployment environment?
 
 ## Baseline completion status
 
-The **production source baseline is complete** and Issue #2 is closed.
+The **production source baseline is complete**.
 
-The **automated validation baseline is successfully implemented and executed on draft production PR #1**. It is not yet landed on `main`; Issue #6 therefore remains open pending explicit merge authorization and post-merge verification.
+The **automated validation baseline is complete, merged, and automatically re-runs after production `main` updates**.
 
-Runtime/browser, clinical, accessibility, live-deployment and manual 3D validation remain separate follow-on evidence categories.
+The **live deployment baseline remains incomplete** until Issue #8 retrieves the active Sites version's associated Git commit.
+
+Runtime/browser, clinical, accessibility and manual 3D validation remain separate follow-on evidence categories.
