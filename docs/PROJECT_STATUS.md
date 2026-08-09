@@ -2,146 +2,135 @@
 
 ## Purpose
 
-This document separates project-control facts, production-source facts, executable validation evidence, deployment evidence, and historical claims. Use the evidence/lifecycle vocabulary defined in the repository `README.md`.
+This document records current RT Study Lab project state while keeping project-control facts, production-source facts, executable validation evidence, deployment evidence, and historical claims distinct.
 
-## Project-control verified status
+## Overall state
 
-- This repository is the RT Study Lab project-control/documentation repository.
-- `main` is the default branch.
-- `setup/project-control-foundation` is the active project-control branch.
-- Project-control PR #1 remains open, draft, and unmerged.
-- The production repository is `R3C4LL4L1F3/RT-study-lab` and remains private.
-- Production PR #1 was merged as part of Issue #6 completion.
-- Production PR #2 was merged as part of Issue #7 completion.
-- Issue #8 now tracks source-to-live ChatGPT Sites deployment correspondence.
+**Stable, but not yet release-mature.**
 
-## Production source baseline
+No current **P0** work item is established by MASTER PROJECT CONTROL.
 
-The original source-backed application baseline was:
+Current project emphasis is:
+
+1. make the project-control baseline durable;
+2. close existing Tier 3 validation;
+3. establish independent clinical-validation capability;
+4. strengthen production/release governance;
+5. specify the Interactive Models & Simulation Lab architecture/model contract before any reusable physiology implementation;
+6. defer broad Tier 3 expansion until the reusable framework proves stable.
+
+## Current repository state
+
+### Project-control repository
+
+- Repository: `R3C4LL4L1F3/RT-study-lab-project`
+- Default branch: `main`
+- Foundation branch: `setup/project-control-foundation`
+- PR #1: open review vehicle for the durable foundation; merge requires explicit maintainer authorization
+- Current project-control issues in active/future queue include #3, #5, #8, #9, #10, #11 and #12
+
+### Production repository
 
 - Repository: `R3C4LL4L1F3/RT-study-lab`
-- Branch: `main`
-- Ref: `a0495e9fa4e5437d8a027312b618b5c1c389ef94`
-- Commit: `Redesign Shock visual teaching page`
-
-After Issue #6, production `main` advanced to:
-
-- Ref: `fb9f23b7442d4dddeac0eab38ed01676aaf914e2`
-- Commit: `Establish complete production validation baseline (#1)`
-
-After Issue #7, current production `main` is:
-
-- Ref: `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`
+- Visibility: Private
+- Default branch: `main`
+- Current ref: `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`
 - Commit: `Run production validation on main pushes (#2)`
-- Merge method: squash
+- Automatic `Production Validation` on current `main`: **PASS** — Actions run `31311314980`
+- Open production PRs: none at synchronization inspection
+- Open production issues: none at synchronization inspection
+- `main` branch protection: **not enabled**
+- Git tags: none
+- GitHub Releases: none
 
-## Automated validation baseline
+Green production CI does not establish clinical validation, comprehensive accessibility validation, manual 3D/browser validation, or live deployment equivalence.
 
-Issue #6 established and merged the complete repository validation path using:
+## Deployment correspondence
 
-- Node `22.13.0`
-- npm + maintained `package-lock.json`
-- `npm ci`
-- `npm run lint`
-- `npm run build`
-- recursive 28-file source-controlled test discovery
-- dedicated Ventilator historical-P1 regression
-- diagnostic artifact upload
+Issue #8 tracks the unresolved source-to-live ChatGPT Sites correspondence.
 
-Issue #6 pre-merge run `31309995943` passed at PR ref `96b5535f9228c7b01c709386e050ce53e68f14d4`.
+Source-side linkage is verified, but the Git commit associated with the active Sites deployment remains **unknown pending authoritative private Sites saved/deployed-version metadata**.
 
-Issue #6 exact-commit post-merge verification run `31310610948` passed at production ref `fb9f23b7442d4dddeac0eab38ed01676aaf914e2`.
+Current status: **BLOCKED**.
 
-Issue #7 added automatic `push: main` validation through production PR #2. The merge to `main` automatically started Actions run `31311314980` on exact commit `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`. That run passed:
-
-- locked dependency installation — **PASS**
-- lint — **PASS**
-- build — **PASS**
-- complete source-controlled test suite — **PASS**
-- dedicated Ventilator historical-P1 regression — **PASS**
-- diagnostic artifact upload — **PASS**
-- overall job — **PASS**
-
-The runner uses Node 22.13.0 with explicit `--experimental-strip-types` because several existing `.test.mjs` files import application `.ts` modules directly. Earlier CI failures caused by `ERR_UNKNOWN_FILE_EXTENSION` were test-harness loader failures, not application or clinical regressions.
-
-## Sites deployment correspondence — Issue #8
-
-The live ChatGPT Sites deployment still has **not** been tied to an exact GitHub ref. GitHub source state and live deployment state therefore remain separate evidence categories.
-
-Source-side evidence now establishes:
-
-- production contains `.openai/hosting.json`, which links the local source project to a provisioned Sites project;
-- the Sites project linkage file has existed since the initial `Build RT Study Lab` commit;
-- `build/sites-vite-plugin.ts` packages the Sites hosting metadata into the build artifact;
-- the private Sites project identifier is not reproduced in this public project-control repository.
-
-Current official ChatGPT Sites documentation establishes the canonical verification mechanism:
-
-1. Sites publishing has a **save version** stage and a separate **deploy version** stage;
-2. for a local source project, a saved Sites version is associated with the Git commit used for the build;
-3. saved versions can be listed/inspected to identify deployment candidates;
-4. deploying publishes a selected saved version and does not occur merely because GitHub source changes.
-
-Therefore the current live ref must be obtained from the RT Study Lab Site's saved/deployed-version record. Do not infer it from GitHub `main`, the Sites project ID, or commit dates.
-
-Current deployment evidence state: **Unknown pending Sites version inspection**.
+Do not infer the live ref from GitHub `main`, commit dates, or the existence of `.openai/hosting.json`. Do not redeploy merely to manufacture correlation evidence.
 
 ## Major workstream status
 
-| Workstream | Production-source status | Current executable / verification state |
+| Workstream | Current production / record state | Queue state |
 |---|---|---|
-| ECG Rhythm / ACLS Lab | Implemented under `app/acls/ecg-lab/` | Current source-controlled ECG/ACLS suites pass within the complete production validation suite; current clinical/accessibility review remains separate |
-| Ventilator Waveform Lab | Implemented under `app/visual-lab/` | Full Ventilator suite and dedicated Session 3.5.2 P1 regression pass; browser verification remains under #3 |
-| Shock / Oxygen Transport | Shock learning page implemented; simulation explicitly not implemented | `shock-page.test.mjs` passes; planned physiology engine remains future work, not a current defect |
-| Equipment catalog | Image/HTML interactive lessons implemented | No dedicated equipment-catalog suite identified; historical Shiley 3D remains non-integrated |
-| Chest-trauma 3D | Integrated R3F/Three.js module | 3D/model and visual source-controlled test files pass; manual browser/mechanical/visual review remains under #5 |
-| PFT | Interactive reconstructed report/loop system implemented | PFT loop-data test passes in full suite |
-| Disease-process modules | Generic disease library plus specialized Shock/Stroke/Burns/Chest Trauma/TBI/trauma modules present | Selected specialized module tests pass; comprehensive generic disease coverage not established |
-| ABG / Hemodynamics | 25-case ABG lab; qualitative Shock hemodynamics | No dedicated ABG test file/general hemodynamic engine identified |
-| Respiratory Pharmacology | Structured medication monographs/source registry implemented | Dedicated medication tests not identified; reference presence is not clinical validation |
-| Oxygen/equipment content | Device lessons and licensed/static assets implemented | No manufacturer-specific mechanical simulation implied |
+| ECG / ACLS Lab | Implemented; substantial source-controlled tests pass | **P1 APPROVED** for independent contemporary clinical validation; no fix branch unless validation finds a discrepancy |
+| Ventilator Waveform Lab | Implemented; historical-P1 automated regression evidence passes | **P1 IN VALIDATION** under #3 for browser/manual closure; independent clinical validation is also P1 approved |
+| Interactive Models & Simulation Lab — Shock / Circulation / O₂ | Shock learning page exists; no numerical physiology framework/simulation is implemented | **P1 APPROVED FOR SPECIFICATION** under #9; implementation not approved |
+| 3D Equipment Lab — chest-trauma 3D | Integrated; automated model/source contracts pass | **P2 IN VALIDATION** under #5 for runtime/manual QA |
+| Clinical-validation framework | No repeatable independent project-wide baseline completed | **P2 APPROVED** under #10 |
+| Accessibility-validation framework | Accessibility-adjacent implementation/tests exist; no comprehensive current baseline | **P2 APPROVED** under #11 |
+| Production branch/release controls | CI green; `main` unprotected; no tags/releases | **P2 APPROVED / EXECUTION DEFERRED** under #12 |
+| Deployment-to-Git correspondence | Source-side mechanism known; deployed SHA unknown | **P2 High BLOCKED** under #8 |
+| PFT | Implemented; loop-data test passes | No current defect record; independent clinical review remains separate |
+| ABG | 25-case learning lab implemented | Missing dedicated automated coverage remains P2 queue candidate |
+| Respiratory pharmacology | Structured monographs/source registry implemented | Dedicated automated coverage and independent clinical review remain incomplete |
+| Equipment catalog | Image/HTML interactive lessons implemented | Dedicated catalog automated coverage not established; historical Shiley 3D is not production-integrated |
 
-## Ventilator historical P1 disposition
+## Interactive Models ownership change
 
-Automated regression evidence now repeatedly passes for:
+Active project routing now uses:
 
-1. double-trigger/triple-stacking prevention and minute-ventilation behavior;
-2. dynamic-compliance validity during effort/contamination;
-3. immutable VC/PC historical breath provenance;
-4. expiratory-hold scheduling/rescheduling behavior.
+**Interactive Models & Simulation Lab — Shock / Circulation**
 
-These items are **resolved in current source with passing automated regression evidence**. Issue #3 remains open for learner-facing browser verification of history labels, hold controls, and dynamic-compliance validity messaging.
+for Shock-related forward planning/specification.
 
-## Current repository/project risks
+The prior standalone Shock circulation-simulator chat terminology may remain in historical chronology where needed. Ventilator Waveform Lab, ECG & ACLS Lab, and 3D Equipment Lab remain separate subsystem owners.
 
-1. **Live deployment ref remains unknown.** Issue #8 has established how to prove it, but the private Sites version record still needs inspection.
-2. **pnpm artifacts remain unresolved for deployment hygiene.** npm is canonical for validation; pnpm files are intentionally retained until Sites/Vinext requirements are understood.
-3. **Clinical validation remains distinct.** Passing tests do not establish independent current clinical review.
-4. **Accessibility validation remains incomplete.** Accessibility-oriented code/tests exist, but comprehensive current WCAG/manual assistive-technology evidence is absent.
-5. **Manual 3D/browser validation remains incomplete.** Chest-trauma automated source/model contracts pass, but visual/mechanical/runtime review remains.
-6. **Production README remains starter-oriented.** Validation/testing documentation has been improved, but a broader project-specific README rewrite remains optional future cleanup.
+## Canonical priority state
 
-## Issue tracking
+### P0
 
-- #2 — Production-repository source baseline: **Closed / completed**.
-- #3 — Ventilator P1 verification: automated regression complete; **browser verification remains open**.
-- #4 — Shock/Oxygen Transport reconciliation: **Closed / completed**; no current physiology simulation exists.
-- #5 — Interactive Equipment / 3D verification: automated chest-trauma contracts executed; **manual/browser/mechanical work remains open**.
-- #6 — Complete production test baseline and CI: **Closed / completed**.
-- #7 — Automatic validation after merges to `main`: **Closed / completed**; automatic `main` run `31311314980` passed on `d64bde34...`.
-- #8 — ChatGPT Sites deployment-to-Git correspondence: **Open / in progress**; source-side linkage mechanism established, deployed commit pending private Sites version inspection.
+None currently established.
 
-## Next status transition
+### P1
 
-Repository validation infrastructure is established and automatic on both PRs targeting `main` and pushes/merges to `main`.
+- ECG/ACLS independent clinical validation — **APPROVED**
+- Ventilator browser/manual historical-P1 closure — **IN VALIDATION**, Issue #3
+- Ventilator independent clinical validation — **APPROVED**
+- Interactive Models architecture/model contract — **APPROVED FOR SPECIFICATION**, Issue #9; implementation not approved
 
-The immediate next priority is Issue #8:
+### P2
 
-1. inspect the RT Study Lab saved/deployed versions in ChatGPT Sites management;
-2. obtain the Git commit associated with the active deployment;
-3. verify that ref in the private production GitHub history;
-4. compare it with current GitHub `main`;
-5. if different, classify the divergence before any deployment action;
-6. establish the future release sequence: **validated Git commit -> saved Sites version -> reviewed candidate -> explicit deployment -> post-deploy verification**.
+- project-control foundation — **ACTIVE** through PR #1
+- production branch-control policy — **APPROVED / DEFERRED EXECUTION**, Issue #12
+- deployment correspondence — **BLOCKED**, Issue #8
+- release/tag convention — **APPROVED / BLOCKED BY #8**, Issue #12
+- chest-trauma 3D manual QA — **IN VALIDATION**, Issue #5
+- clinical-validation framework — **APPROVED**, Issue #10
+- accessibility-validation framework — **APPROVED**, Issue #11
+- missing module test coverage — **DEFERRED**
+- pnpm artifact investigation — **DEFERRED**
+- design-system durable record — **DEFERRED**
+- production README modernization — **DEFERRED**
+- validation-branch lifecycle cleanup — **DEFERRED / cleanup candidates only**
 
-After deployment correspondence is established, continue with learner-facing Ventilator browser verification under #3 and chest-trauma/equipment manual browser/mechanical verification under #5.
+### P3
+
+Framework-dependent content/model expansion. No broad Interactive Models production expansion is authorized before the approved clinical/model and architecture gates are satisfied.
+
+## Existing issue disposition
+
+- #3 — Ventilator historical-P1 browser/manual closure: **open / IN VALIDATION**
+- #5 — chest-trauma 3D runtime/manual verification: **open / IN VALIDATION**
+- #8 — deployment-to-Git correspondence: **open / BLOCKED**
+- #9 — Interactive Models architecture/model contract: **open / APPROVED FOR SPECIFICATION**
+- #10 — independent clinical-validation framework: **open / APPROVED**
+- #11 — accessibility-validation baseline: **open / APPROVED**
+- #12 — production branch/release control policy: **open / APPROVED, execution deferred**
+
+Closed Issue #4 remains the historical Shock reconciliation record and should not be reopened merely to represent future Interactive Models architecture work.
+
+## Immediate next operational task
+
+Once the project-control foundation is approved for merge and made durable on project-control `main`, the next operational owner is normally:
+
+**QA — Regression & Release**
+→ complete Ventilator browser/manual historical-P1 verification under Issue #3.
+
+If new repository evidence materially changes the state before that handoff, return to MASTER PROJECT CONTROL rather than silently reprioritizing.
