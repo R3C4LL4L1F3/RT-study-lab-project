@@ -1,44 +1,50 @@
 # Development History
 
-This history preserves the **reported sequence** of major RT Study Lab work from prior project records alongside project-control milestones that are directly observable in this repository.
-
-Unless a row explicitly says otherwise, application-development entries are **Confirmed from project history** and **Need verification against production repository**. Their order is retained from project records; precise dates are not assigned retrospectively without source evidence.
+This history preserves major RT Study Lab project records and distinguishes historical claims from milestones now verified against production source.
 
 ## Development sequence
 
-| Area | Milestone / historical record | Evidence basis |
+| Area | Milestone / record | Evidence basis |
 |---|---|---|
-| Ventilator Waveform Lab | Continuous A/C VC and PC waveform lab with historical breath navigation, playback/window controls, annotations, and selected-breath details | Confirmed from project history; needs production verification |
-| Ventilator Waveform Lab | Session 3.5 audit identified four P1 concerns affecting double triggering, dynamic compliance during effort, historical mode labeling, and expiratory-hold scheduling | Confirmed from project history; historical / possibly superseded until production verification |
-| ECG Rhythm Lab | Initial rhythm-learning engine with Learn Mode, ECG measurement controls, calibration, and a core rhythm library | Confirmed from project history; needs production verification |
-| ECG Rhythm Lab | Rhythm library expanded with ectopy, SVT, polymorphic VT, torsades, and additional practice behavior | Confirmed from project history; needs production verification |
-| ECG Rhythm Lab | Final Phase 1 audit refined measurement references, calipers, long-window behavior, rhythm-specific controls, and accessibility/performance behavior | Confirmed from project history; needs production verification |
-| ECG Rhythm Lab | Optional ECG landmark snapping added for measurement workflows | Confirmed from project history; needs production verification |
-| ECG / ACLS | Independent patient-state engine reported for pulse, perfusion, breathing, mental status, shock, heart failure, arrest, and pathway state | Confirmed from project history; needs production verification |
-| ECG / ACLS | Clinical Practice and Examination modes reported with seeded cases, scoring, timing, review, and local history | Confirmed from project history; needs production verification |
-| ECG / ACLS | Guideline/pathway engine reported separately from waveform and patient-state engines | Confirmed from project history; needs production verification |
-| ECG / ACLS | Treatment engine reported with medication/electrical actions, reassessment, deterministic state transitions, timeline replay, and sequence-aware scoring | Confirmed from project history; needs production verification |
-| Shock / Oxygen Transport | Project history identifies a need to reconcile a reduced circulation implementation with a broader intended oxygen-transport/physiology model | Confirmed from project history; needs production verification |
-| Interactive Equipment | Macintosh laryngoscope modeling/refinement workflow established | Confirmed from project history; needs production verification |
-| Interactive Equipment | Shiley-style cuffed tracheostomy tube model developed with modular outer cannula, removable inner cannula, obturator, cuff/pilot-line, and iterative animation/model revisions | Confirmed from project history; needs production verification |
+| Ventilator Waveform Lab | Continuous A/C VC and PC waveform lab with historical navigation/playback/window/annotation work | Confirmed from project history; current implementation now source-verified |
+| Ventilator Waveform Lab | Historical audit reported P1 concerns involving double triggering/minute ventilation, dynamic compliance during effort, historical mode labeling, and expiratory-hold scheduling | Confirmed from project history |
+| Ventilator Waveform Lab | Current source contains dedicated Session 3.5.2 regression coverage and implementation paths addressing the historical P1 concerns | Verified against production repository at `a0495e9...`; runtime re-execution required |
+| ECG Rhythm Lab | Initial rhythm engine, Learn/Practice behavior, measurement controls and expanding rhythm library | Confirmed from project history; current architecture now source-verified |
+| ECG Rhythm Lab | Optional landmark snapping and guided measurement workflow | Confirmed from project history; current source verifies caliper-snapping implementation |
+| ECG / ACLS | Patient-state, Clinical Practice/Exam, pathway, treatment, arrest and post-arrest learning architecture | Confirmed from project history; current source verifies the distinct engine/module architecture |
+| ECG / ACLS | Current source verifies 500 Hz internal ECG generation and 19 rhythm definitions | Verified against production repository at `a0495e9...` |
+| ECG / ACLS | Current pathway/treatment source carries AHA 2025 guideline metadata and educational/non-endorsement boundaries | Verified against production repository at `a0495e9...` |
+| Shock | Course-aligned Shock disease module and later visual-teaching redesign | Verified from production commit history and source |
+| Shock / Oxygen Transport | Current production source explicitly leaves the oxygen-transport simulation as a future integration boundary; no simulation runs on the page | Verified against production repository at `a0495e9...` |
+| Interactive Equipment | Macintosh laryngoscope and Shiley-style cuffed tracheostomy Blender/model refinement work | Confirmed from project history; not identified as production-integrated at the baseline ref |
+| Equipment catalog | Interactive image/HTML equipment lessons with device content, safety scenarios and source/license metadata | Verified against production repository at `a0495e9...` |
+| Chest Trauma 3D | HRA respiratory and BodyParts3D thorax assets integrated into a React Three Fiber/Three.js visual lab with desktop/mobile variants | Verified against production repository and commit history |
+| PFT | Reconstructed PFT report/loop learning system with 12 report-specific datasets and source-controlled validation contracts | Verified against production repository at `a0495e9...` |
+| ABG | 25-case ABG interpretation lab | Verified against production repository at `a0495e9...` |
+| Disease content | Generic disease library plus specialized Shock, Stroke, Burns, Chest Trauma, TBI/trauma modules | Verified against production repository at `a0495e9...` |
+| Pharmacology | Structured respiratory medication monographs linked to shared source registry | Verified against production repository at `a0495e9...` |
 | Project control | Dedicated GitHub project-control repository initialized | Project-control verified |
-| Project control | `setup/project-control-foundation` branch created for first-pass documentation | Project-control verified |
-| Project control | Draft PR #1 opened to establish the documentation foundation | Project-control verified |
-| Project control | PR #1 audited; evidence/lifecycle vocabulary clarified and major workstream verification coverage expanded | Project-control verified |
-| Project control | `PRODUCTION_REPOSITORY_VERIFICATION.md` added as the framework for the next control phase | Project-control verified |
-| Project control | Issues #2–#5 created as a deliberately small verification backlog for production baseline, Ventilator, Shock/Oxygen Transport, and Interactive Equipment | Project-control verified |
+| Project control | `setup/project-control-foundation` branch created and Draft PR #1 opened | Project-control verified |
+| Project control | Evidence/lifecycle vocabulary, roadmap, known-issue, validation and production-verification framework established | Project-control verified |
+| Project control | Issues #2–#5 created as a small verification backlog | Project-control verified |
+| Source control | Canonical private GitHub production repository established as `R3C4LL4L1F3/RT-study-lab` while preserving the pre-existing Sites source history | Verified against production repository/project workflow |
+| Production baseline | Source ref `a0495e9fa4e5437d8a027312b618b5c1c389ef94` audited and mapped into project-control records | Project-control verified + Verified against production repository |
+| Production baseline | Canonical `npm test` found to execute only a subset of the source-controlled test inventory; no GitHub Actions workflow identified | Verified against production repository |
+
+## Historical test/validation policy
+
+Historical numeric test counts and multidisciplinary review scores remain preserved in `VALIDATION_REGISTER.md`. Current source correspondence may confirm that engines/tests exist, but historical pass counts do not become current pass results until a current suite is executed with durable evidence.
 
 ## History policy
 
 Future entries should include, when available:
 
-- date or release identifier established by evidence
+- date/release identifier established by evidence
 - feature/change summary
-- production repository path and commit or pull request
-- deployment reference
+- production repository path and exact commit/PR
+- deployment reference where established
 - validation/test reference
-- known regressions introduced or resolved
-- evidence basis
-- lifecycle/disposition where relevant
+- known regressions introduced/resolved
+- evidence basis and lifecycle/disposition
 
-Do not assign precise dates, versions, implementation states, resolution states, or architecture details retrospectively unless a source establishes them.
+Do not assign precise dates, deployment states, pass results, clinical validation, accessibility conformance, or defect-resolution status retrospectively without evidence.
