@@ -2,10 +2,12 @@
 
 This file is the lightweight decision register for RT Study Lab project-control decisions. It is not a substitute for detailed ADRs when a decision has significant technical consequences.
 
+Decision **status** and evidence **basis** are separate concepts. Use the vocabulary defined in the repository `README.md`.
+
 ## DEC-001 — Keep project control separate from production application source
 
 - Status: Accepted
-- Evidence state: Repository-verified
+- Evidence basis: Project-control verified
 
 ### Decision
 
@@ -19,31 +21,48 @@ The project needs a stable control plane that survives individual chats, experim
 
 - Production implementation claims require links or evidence from the actual source/deployment environment.
 - Documentation changes can proceed independently of production code.
-- This repository must clearly distinguish evidence states.
+- This repository must clearly distinguish project-control evidence from production verification.
 
-## DEC-002 — Use evidence states for implementation and validation claims
+## DEC-002 — Separate evidence basis from lifecycle/disposition
 
 - Status: Accepted
-- Evidence state: Repository-verified
+- Evidence basis: Project-control verified
 
 ### Decision
 
-Classify material project claims as **Repository-verified**, **Reported**, **Proposed**, or **Unknown**.
+Material project records should distinguish evidence basis from lifecycle/disposition.
+
+Evidence basis includes:
+
+- **Project-control verified**
+- **Confirmed from project history**
+- **Verified against production repository**
+- **Needs verification against production repository**
+- **Unknown**
+
+Lifecycle/disposition includes, where relevant:
+
+- **Current known issue**
+- **Planned work**
+- **Historical / possibly superseded**
+
+Historical tables may retain **Reported** as shorthand for project-history information, but Reported does not establish current production behavior.
 
 ### Rationale
 
-RT Study Lab includes clinical education, simulation behavior, automated tests, and AI-assisted development. Treating historical conversation output as equivalent to reproducible validation would create false confidence.
+A fact can be well supported as project history while still being unverified in current production. Likewise, a historical defect report should not automatically become a Current known issue.
 
 ### Consequences
 
 - Historical feature/test records can be preserved without being overstated.
-- Validation records require traceable evidence before promotion to repository-verified status.
+- Production status requires direct production-source or durable production evidence.
 - Unknown information is recorded as unknown rather than inferred.
+- Defect lifecycle is separated from the evidence source used to describe it.
 
 ## DEC-003 — Use branch-and-draft-PR review for project-control changes
 
 - Status: Accepted
-- Evidence state: Repository-verified
+- Evidence basis: Project-control verified
 
 ### Decision
 
@@ -53,30 +72,31 @@ Do not make project-control changes directly to `main`. Use a purpose-specific b
 
 This provides a reviewable change history and reduces accidental corruption of the project-control record.
 
-## DEC-004 — Preserve clinical, engineering, and educational validation as distinct concerns
+## DEC-004 — Preserve validation dimensions as distinct concerns
 
 - Status: Accepted
-- Evidence state: Proposed control standard based on project needs
+- Evidence basis: Project-control verified control standard
 
 ### Decision
 
-Future validation records should separate:
+Future validation records should separate, as applicable:
 
 - clinical plausibility/correctness
 - engineering/software correctness
 - mechanics/simulation behavior
 - measurement correctness
 - educational clarity/effectiveness
-- visual/interaction realism where relevant
+- accessibility
+- visual/interaction realism
 
 ### Rationale
 
 A passing software test does not establish clinical correctness, and a clinically plausible visualization does not establish software robustness.
 
-## DEC-005 — Keep major learning engines independently reviewable
+## DEC-005 — Keep major learning engines independently reviewable where source supports it
 
 - Status: Proposed
-- Evidence state: Reported architecture pattern, pending source verification
+- Evidence basis: Confirmed from project history; needs verification against production repository
 
 ### Decision
 
@@ -88,7 +108,22 @@ Independent engines are easier to test, audit, and clinically review than tightl
 
 ### Verification needed
 
-Inspect the production source and convert this entry to Accepted/Repository-verified only if the current architecture supports the reported pattern.
+Inspect the production source and convert this entry to Accepted only if the current architecture supports the reported pattern and the decision remains appropriate.
+
+## DEC-006 — Require production evidence before current-defect or resolved status
+
+- Status: Accepted
+- Evidence basis: Project-control verified control standard
+
+### Decision
+
+A historical application defect report must not be labeled **Current known issue** or **Resolved** solely from chat history, prior summaries, or this project-control repository. Current production evidence is required for either status.
+
+GitHub issues may track verification tasks before production access exists, but issue creation alone does not confirm the defect.
+
+### Rationale
+
+This prevents stale historical findings from being mistaken for current behavior and prevents unsupported claims that a safety- or correctness-relevant problem has been fixed.
 
 ## Future ADR threshold
 
