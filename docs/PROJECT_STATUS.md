@@ -37,6 +37,17 @@ These are **Project-control verified** statements only. They do not establish cu
 
 Detailed verification fields and questions are maintained in `PRODUCTION_REPOSITORY_VERIFICATION.md`.
 
+## Current verification tracking
+
+A deliberately small issue set tracks the next high-value verification work:
+
+- #2 — Establish production-repository verification baseline
+- #3 — Verify Ventilator Waveform Lab historical P1 correctness concerns
+- #4 — Reconcile Shock / Oxygen Transport implementation with intended physiology model
+- #5 — Verify Interactive Equipment Lab fidelity and browser readiness
+
+Issues #3–#5 are verification tasks. Their existence does not prove that a historical application defect is currently present.
+
 ## Confirmed from project history
 
 The following sections summarize retained history. They are **not** production-verified.
