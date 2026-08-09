@@ -1,106 +1,87 @@
 # Project Status
 
-## Purpose of this status record
+## Purpose
 
-This document separates project-control facts from historical implementation claims and from facts that have actually been verified against the production source.
-
-Use the evidence/lifecycle vocabulary defined in the repository `README.md`.
+This document separates project-control facts, production-source facts, runtime/validation evidence, and historical project claims. Use the evidence/lifecycle vocabulary defined in the repository `README.md`.
 
 ## Project-control verified status
 
 - This repository is the RT Study Lab project-control/documentation repository.
 - `main` is the default branch.
-- `setup/project-control-foundation` is the current documentation foundation branch.
-- Before this foundation work, the repository contained only a short `README.md`.
-- No GitHub issues were present when the current PR audit began.
-- PR #1 exists as an open draft from `setup/project-control-foundation` into `main`.
-- No CI configuration or validation artifacts have been identified in this project-control repository.
-- The production application source repository is not identified in this repository.
-- Relevant searches through the current GitHub connection identified this project-control repository but did not identify a separate production RT Study Lab repository.
+- `setup/project-control-foundation` is the active documentation foundation branch.
+- PR #1 remains an open draft into `main`; it has not been merged.
+- Issues #2–#5 were created as the initial verification backlog.
+- The production repository is now identified as `R3C4LL4L1F3/RT-study-lab`.
 
-These are **Project-control verified** statements only. They do not establish current production application behavior.
+## Production baseline
+
+The current source-backed baseline uses:
+
+- Repository: `R3C4LL4L1F3/RT-study-lab`
+- Visibility: Private
+- Branch: `main`
+- Source ref: `a0495e9fa4e5437d8a027312b618b5c1c389ef94`
+- Commit: `Redesign Shock visual teaching page`
+
+See `PRODUCTION_REPOSITORY_VERIFICATION.md` for the module-by-module evidence record.
+
+GitHub source is now directly inspectable, but the live ChatGPT Sites deployment has **not** been proven to be synchronized to this GitHub ref. Source state and deployment state must remain separate.
 
 ## Major workstream verification overview
 
-| Workstream | Project-history state | Production verification | Current issue state |
-|---|---|---|---|
-| ECG Rhythm / ACLS Lab | Historical implementation and test milestones are recorded | Needs verification against production repository | No current production defect status established here |
-| Ventilator Waveform Lab | Historical implementation plus four P1 defect reports are recorded | Needs verification against production repository | Historical / possibly superseded until reproduced |
-| Shock / Oxygen Transport Lab | Project history identifies an implementation/physiology reconciliation need | Needs verification against production repository | Verification concern; not yet a Current known issue |
-| Interactive Respiratory Equipment Lab | Historical 3D/modeling work is recorded | Needs verification against production repository | Verification concerns; not yet Current known issues |
-| PFT Lab | Workstream identified | Needs verification against production repository | Unknown |
-| Disease-Process Modules | Workstream identified | Needs verification against production repository | Unknown |
-| ABG / Hemodynamics | Workstream identified | Needs verification against production repository | Unknown |
-| Respiratory Pharmacology | Workstream identified | Needs verification against production repository | Unknown |
-| Oxygen-Delivery / Equipment Content | Workstream identified | Needs verification against production repository | Unknown |
-| Future Interactive Clinical Simulations | Planned work unless current source proves an existing implementation | Needs verification before any implementation claim | Planned work |
+| Workstream | Production-source status | Validation / current issue state |
+|---|---|---|
+| ECG Rhythm / ACLS Lab | **Verified against production repository — implemented** under `app/acls/ecg-lab/` | Extensive source-controlled tests and guideline metadata exist; current tests were not executed in this audit and ECG tests are outside canonical `npm test` |
+| Ventilator Waveform Lab | **Verified against production repository — implemented** under `app/visual-lab/` | Historical P1 concerns appear resolved in current source with dedicated regression coverage; runtime re-execution still required |
+| Shock / Oxygen Transport | Shock learning page implemented; **oxygen-transport simulation not implemented** | Current source explicitly defines an integration boundary only; prior reduced-model reconciliation concern is superseded at this ref |
+| Interactive Equipment | Equipment catalog implemented as image/HTML interactive lessons | Historical Blender/Shiley 3D work is not production-integrated at this ref |
+| Chest-trauma 3D | **Verified against production repository — integrated** | R3F/Three.js GLB runtime, model-contract tests, and source-controlled attribution exist; current browser/mechanical test execution still required |
+| PFT | **Verified against production repository — implemented** | 12 reconstructed report/loop datasets have source-controlled tests; current execution not performed |
+| Disease-process modules | Generic disease library plus specialized Shock, Stroke, Burns, Chest Trauma, TBI and trauma modules are present | Test/clinical-review coverage is uneven by module |
+| ABG / Hemodynamics | 25-case ABG learning lab present; qualitative Shock hemodynamics present | No general hemodynamic calculation engine or dedicated ABG test file identified |
+| Respiratory Pharmacology | Structured medication monographs and shared source registry present | Dedicated medication tests not identified; reference presence is not clinical validation |
+| Oxygen-delivery / equipment content | Device lessons and licensed/static assets present | No manufacturer-specific mechanical simulation implied |
+| Future interactive clinical simulations | ECG/Ventilator/chest-trauma are already distinct interactive systems; Shock simulation remains planned | No separate general-purpose future simulation framework identified |
 
-Detailed verification fields and questions are maintained in `PRODUCTION_REPOSITORY_VERIFICATION.md`.
+## Production architecture summary
+
+Current source is a Next.js/React/TypeScript application built through Vinext/Vite with Cloudflare/ChatGPT Sites integration. Three.js/React Three Fiber is actively used by chest-trauma 3D. Drizzle tooling exists but the production schema is intentionally empty and D1/R2 bindings are null at the baseline ref.
+
+The current `npm test` command performs a build and runs only five selected test files, although the repository contains a much broader test inventory. No `.github/workflows` CI configuration was identified.
+
+## Historical Ventilator P1 disposition
+
+Production source now contains dedicated `tests/ventilator-session352.test.mjs` regressions and corresponding session/provenance/hold implementation for the historical concerns:
+
+1. double-trigger unintended triple stacking — **Resolved in current source; runtime re-execution required**
+2. minute-ventilation defect during double triggering — **Resolved in current source; runtime re-execution required**
+3. dynamic compliance during effort/contamination — **Resolved in current source; runtime re-execution required**
+4. VC/PC historical breath relabeling — **Resolved in current source; runtime re-execution required**
+5. expiratory-hold rescheduling — **Resolved in current source; runtime re-execution required**
+
+Because those regression tests are not currently part of canonical `npm test` and were not executed in this GitHub-only audit, these are source-level dispositions rather than fresh pass results.
+
+## Current known project-control / repository risks
+
+1. **Incomplete canonical test command:** the default test script excludes substantial current suites, including ECG/ACLS, Shock, chest-trauma 3D, and the dedicated Ventilator P1 regression file.
+2. **No GitHub CI baseline:** no source-controlled GitHub Actions workflow was identified.
+3. **No current full-suite/build/lint artifact:** source inspection established test presence, not passing execution.
+4. **Deployment synchronization unknown:** GitHub source-to-live-Sites correspondence is not currently evidenced.
+5. **Package-manager ambiguity:** npm and pnpm lock/workspace files coexist.
+6. **Production README is stale/generic:** it does not describe RT Study Lab architecture or verification workflow.
+7. **Clinical/accessibility validation incomplete:** source references, ARIA/keyboard structures, and tests exist, but comprehensive current review evidence is not established.
 
 ## Current verification tracking
 
-A deliberately small issue set tracks the next high-value verification work:
+- #2 — Production-repository verification baseline: source dependency is resolved; issue can be completed when this baseline record and issue reconciliation are finalized.
+- #3 — Ventilator P1 verification: current source indicates resolution; keep open until regression tests are actually executed at the baseline/ref or later verified ref.
+- #4 — Shock/Oxygen Transport reconciliation: current source establishes that no simulation exists at this ref; the intended physiology engine remains planned.
+- #5 — Interactive Equipment verification: production catalog/chest-trauma integration is now mapped; Shiley model remains non-integrated and current mechanical/browser validation remains outstanding.
 
-- #2 — Establish production-repository verification baseline
-- #3 — Verify Ventilator Waveform Lab historical P1 correctness concerns
-- #4 — Reconcile Shock / Oxygen Transport implementation with intended physiology model
-- #5 — Verify Interactive Equipment Lab fidelity and browser readiness
+## Historical evidence retained
 
-Issues #3–#5 are verification tasks. Their existence does not prove that a historical application defect is currently present.
-
-## Confirmed from project history
-
-The following sections summarize retained history. They are **not** production-verified.
-
-### Ventilator Waveform Lab
-
-Project history records an A/C volume-control and pressure-control waveform lab with continuous waveform history, breath navigation, selected-breath detail, playback/window/history controls, annotations, and responsive learning controls.
-
-A historical validation summary recorded:
-
-- Clinical: 82/100
-- Engineering: 76/100
-- Educational: 79/100
-- Mechanics: 88/100
-- Realism: 84/100
-- Measurement: 78/100
-
-The historical browser/clinical audit recorded **PARTIAL PASS** and four P1 concerns. Those concerns are preserved in `KNOWN_ISSUES.md` but are not labeled **Current known issue** until reproduced against production source/current behavior.
-
-### ECG Rhythm / ACLS Lab
-
-Project history records a staged ECG/ACLS learning system including:
-
-- ECG waveform generation and measurement tools
-- Learn Mode and Practice Mode
-- expanded rhythm library
-- digital calipers and optional landmark snapping
-- patient-state modeling
-- Clinical Practice and Examination modes
-- guideline/pathway logic
-- treatment sequencing, reassessment, and timeline replay
-
-Historical test milestones are preserved in `VALIDATION_REGISTER.md`. They need production-source and durable test-evidence reconciliation before being treated as current results.
-
-### Shock / Oxygen Transport Lab
-
-Project history identifies a need to reconcile the implemented circulation/transport model with the intended broader physiology architecture. Specific verification targets include transport-chain coupling, conservation/numerical stability, and missing or disconnected subsystems. No production implementation details are asserted here.
-
-### Interactive Respiratory Equipment Lab
-
-Project history records interactive 3D respiratory-equipment work including Macintosh laryngoscope and Shiley-style cuffed tracheostomy tube modeling, Blender/Python refinement, and device animation work.
-
-Current production integration, geometry fidelity, mechanical realism, animation correctness, clipping/intersection status, Shiley snap-lock behavior, browser optimization, source location, and deployment state all need verification against production source/assets.
-
-## Current project-control gaps
-
-1. Canonical production application repository/location is not linked or otherwise identified through the current connection.
-2. No build, test, or deployment evidence has been imported or linked here.
-3. Historical validation claims are not yet backed by reproducible production-linked evidence.
-4. Historical application concerns have not yet been reconciled into current defect status.
-5. Architecture from production source has not yet been inventoried.
-6. Several major workstreams have little or no durable implementation-status history in this repository.
+Historical multidisciplinary Ventilator scores and historical ECG test-count milestones remain preserved in `VALIDATION_REGISTER.md`. They are not converted into current pass results merely because related source/tests now exist.
 
 ## Next status transition
 
-The highest-value next phase is **Production Repository Verification**. Once the canonical production source becomes accessible, use `PRODUCTION_REPOSITORY_VERIFICATION.md` to establish module paths, source files, observed architecture, tests, current defects, historical claim disposition, clinical/accessibility evidence, and unresolved verification questions.
+The source-discovery baseline is established. The highest-value next validation phase is to create and execute a **complete canonical production test baseline** that includes the full source-controlled suite and durable CI evidence, then use those results to close or reopen source-level dispositions with executable proof.
