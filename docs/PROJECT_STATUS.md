@@ -10,7 +10,7 @@ This document separates project-control facts, production-source facts, runtime/
 - `main` is the default branch.
 - `setup/project-control-foundation` is the active documentation foundation branch.
 - PR #1 remains an open draft into `main`; it has not been merged.
-- Issues #2–#5 were created as the initial verification backlog.
+- The initial verification backlog was issues #2–#5; issue #6 was added after the production baseline exposed a current validation-path gap.
 - The production repository is now identified as `R3C4LL4L1F3/RT-study-lab`.
 
 ## Production baseline
@@ -73,10 +73,11 @@ Because those regression tests are not currently part of canonical `npm test` an
 
 ## Current verification tracking
 
-- #2 — Production-repository verification baseline: source dependency is resolved; issue can be completed when this baseline record and issue reconciliation are finalized.
-- #3 — Ventilator P1 verification: current source indicates resolution; keep open until regression tests are actually executed at the baseline/ref or later verified ref.
-- #4 — Shock/Oxygen Transport reconciliation: current source establishes that no simulation exists at this ref; the intended physiology engine remains planned.
-- #5 — Interactive Equipment verification: production catalog/chest-trauma integration is now mapped; Shiley model remains non-integrated and current mechanical/browser validation remains outstanding.
+- #2 — **Closed / completed:** production-repository source baseline established.
+- #3 — **Open:** Ventilator P1 implementation/regression source indicates resolution; executable regression/browser evidence still required.
+- #4 — **Closed / completed:** Shock reconciliation established that no oxygen-transport simulation exists at the baseline ref; future physiology engine is planned work.
+- #5 — **Open:** equipment/chest-trauma source integration mapped; Shiley model is not production-integrated and current 3D browser/mechanical validation remains outstanding.
+- #6 — **Open / P0:** establish a complete production test baseline and GitHub CI after package-manager/test-command semantics are resolved.
 
 ## Historical evidence retained
 
@@ -84,4 +85,4 @@ Historical multidisciplinary Ventilator scores and historical ECG test-count mil
 
 ## Next status transition
 
-The source-discovery baseline is established. The highest-value next validation phase is to create and execute a **complete canonical production test baseline** that includes the full source-controlled suite and durable CI evidence, then use those results to close or reopen source-level dispositions with executable proof.
+The source-discovery baseline is established. The highest-value next validation phase is issue #6: create and execute a **complete canonical production test baseline** that includes the intended full source-controlled suite and durable CI evidence, then use those results to finalize source-level defect dispositions and protect future development.
