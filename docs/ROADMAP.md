@@ -1,157 +1,129 @@
 # Roadmap
 
-This roadmap now starts from a source-backed production baseline rather than an unknown production repository.
+This roadmap distinguishes verified project-control work, production-source work, validation work, and future product development.
 
-## P0 — Establish reproducible production validation
+## P0 — Land the validated production verification path
 
-The canonical production repository is `R3C4LL4L1F3/RT-study-lab`; the source baseline is recorded at `a0495e9fa4e5437d8a027312b618b5c1c389ef94` in `PRODUCTION_REPOSITORY_VERIFICATION.md`.
+Issue #6 has established and successfully executed a complete production validation path on a draft production PR.
 
-### 1. Make the canonical test command complete
+### Current validated state
 
-Current evidence shows that `npm test` runs only five selected test files even though the production repository contains a broader ECG/ACLS, Ventilator, Shock, Stroke, trauma/chest-trauma 3D, and UX/clinical test inventory.
+- Production repository: `R3C4LL4L1F3/RT-study-lab`
+- Baseline `main`: `a0495e9fa4e5437d8a027312b618b5c1c389ef94`
+- Validation branch: `validation/issue-6-test-baseline`
+- Production draft PR: #1 — `Establish complete production validation baseline`
+- Validated PR ref: `96b5535f9228c7b01c709386e050ce53e68f14d4`
+- Successful Actions run: `31309995943`
+- Canonical validation package manager: **npm**
+- Locked install, lint, build, complete 28-file suite, dedicated Ventilator P1 regression and diagnostic artifact upload: **PASS**
 
-Priority actions:
+### Remaining P0 action
 
-- decide and document the canonical package manager
-- create a deliberate full-suite test command
-- include `tests/ventilator-session352.test.mjs` so the historical P1 regressions are part of the normal baseline
-- include the current ECG/ACLS, Shock and chest-trauma 3D suites unless an evidence-backed reason requires a separate command
-- run build, lint and full tests at a recorded source ref
-- retain results without treating software tests as clinical validation
+- Review production PR #1.
+- Merge it only after explicit maintainer authorization.
+- After merge, confirm the workflow executes successfully from production `main`.
 
-**Exit criterion:** a maintainer can run one documented baseline workflow and know which current source-controlled tests were executed.
+**Exit criterion:** the validated complete-suite command and GitHub CI are present on production `main` with a successful post-merge run.
 
-### 2. Add durable GitHub CI after local semantics are proven
+## P0 — Establish source-to-live deployment correspondence
 
-No `.github/workflows` CI configuration is present at the baseline ref.
+GitHub now provides a durable production-source repository, but the live ChatGPT Sites deployment has not been tied to an exact GitHub commit through durable evidence.
 
-After the canonical install/test commands are verified:
+Required work:
 
-- add a conservative GitHub Actions workflow through a production-repository branch/PR
-- run install/build/lint/full tests
-- avoid adding secrets unless a workflow actually requires them
-- keep deployment credentials and ChatGPT Sites internals out of the repository
+- determine the safe/official relationship between the GitHub source copy and the ChatGPT Sites source/deployment path;
+- establish how a reviewed GitHub change becomes a live Sites change;
+- record the deployed source ref when that can be established without exposing internal credentials/tokens;
+- keep source verification and live deployment verification separate until then.
 
-**Exit criterion:** pull requests have durable automated evidence tied to commit SHAs.
+**Exit criterion:** a maintainer can identify which source ref produced the live site and how reviewed changes move between GitHub and the deployment environment.
 
-### 3. Finalize Ventilator historical P1 dispositions with execution evidence
+## P1 — Complete targeted runtime/browser verification
 
-Current source and dedicated regression tests indicate that the historical issues are addressed:
+### Ventilator Waveform Lab — Issue #3
 
-1. double-trigger unintended triple stacking
-2. minute-ventilation interval defect
-3. dynamic compliance during effort/contamination
-4. historical VC/PC breath relabeling
-5. expiratory-hold rescheduling
+Automated source-level and regression verification is now established on the Issue #6 PR ref. Remaining browser checks:
 
-Execute the relevant tests and browser behavior at a recorded ref before promoting the records from **Resolved in current source; runtime re-execution required** to **Verified resolved**.
+- historical VC/PC breath labels after mode transitions;
+- expiratory-hold controls across later breaths;
+- dynamic-compliance contaminated/invalid messaging;
+- double-trigger visual behavior and learner-facing minute-ventilation display.
 
-### 4. Verify deployment synchronization
+If the browser checks agree with the passing regressions, Issue #3 can be closed with evidence. If they disagree, create a narrowly scoped current defect.
 
-The GitHub repository is now the durable production-source repository, but current correspondence between GitHub `main` and the live ChatGPT Sites deployment is not yet evidenced.
+### Interactive Equipment / chest-trauma 3D — Issue #5
 
-Record a non-secret method to establish:
+Automated chest-trauma 3D/model/visual source tests passed in the Issue #6 complete suite. Remaining manual/browser checks:
 
-- source ref used for a deployment
-- whether Sites remains an independent Git remote/deployment origin
-- how future GitHub-reviewed changes reach the live site
-- rollback expectations
+- clipping and intersections;
+- morph/progression visual fidelity;
+- camera controls and labels;
+- mobile/responsive behavior;
+- reduced motion;
+- performance/runtime stability;
+- educational/anatomical visual review.
 
-**Exit criterion:** source state and deployed state can be distinguished without relying on chat history.
+Historical Shiley Blender work remains outside production. If integration is pursued, first version-control the actual model/source assets, provenance/license, snap-lock acceptance criteria, and browser implementation plan.
 
-## P1 — Production documentation and repository hygiene
+## P1 — Clinical and accessibility evidence program
 
-### Production README
+Automated software validation is now reproducible; this makes the remaining non-software evidence gaps clearer.
 
-Replace the generic Vinext starter README through a focused production-repository documentation PR. It should document:
+Prioritize:
 
-- RT Study Lab purpose
-- module map
-- install/build/test/lint commands
-- package-manager convention
-- source vs deployment relationship
-- contribution/branch/PR expectations
-- clinical/educational validation boundaries
+- clinically meaningful calculations and safety-sensitive pathway/treatment assumptions;
+- ECG/ACLS guideline-source reconciliation and clinical review;
+- Ventilator mechanics/measurement teaching assumptions;
+- PFT interpretation boundaries;
+- disease/pharmacology high-risk statements;
+- accessibility review of major interactive labs using keyboard and assistive-technology workflows.
 
-### Package-manager cleanup
+Do not treat passing CI as clinical or accessibility validation.
 
-Reconcile `package-lock.json`, `pnpm-lock.yaml`, and `pnpm-workspace.yaml` only after confirming which toolchain the Sites/local environment requires. Do not delete lockfiles speculatively.
+## P1 — Shock / Oxygen Transport future simulation
 
-### Validation records
+Current production evidence establishes that the planned Shock/Oxygen Transport simulation is **not implemented**. The historical reduced-model reconciliation concern is superseded.
 
-Add durable validation artifacts or links for:
+Before implementation:
 
-- full automated test baseline
-- clinical review
-- accessibility review
-- chest-trauma 3D visual/mechanical review
+1. define the educational and clinical model contract;
+2. distinguish calculated, derived, approximated and illustrative variables;
+3. define Hb/CaO2/DO2/VO2/CvO2-SvO2/extraction/oxygen-debt relationships from verified sources;
+4. define numerical/conservation acceptance criteria;
+5. write an architecture decision before adding the simulation engine.
 
-## P1 — Module stabilization priorities
+This is planned feature work, not repair of an existing production engine.
 
-### ECG Rhythm / ACLS
+## P2 — Production repository documentation and hygiene
 
-Current production source confirms a substantial engine-backed system: 500 Hz ECG generation, 19 rhythms, Learn/Practice/Exam/Clinical modes, patient state, pathways, treatment, arrest and post-arrest engines.
+After the validation PR and deployment contract are settled:
 
-Next stabilization work should be driven by full-suite execution and current clinical/accessibility review rather than historical test counts.
+- replace the starter-oriented production README with an RT Study Lab architecture/contributor overview;
+- decide whether retained pnpm artifacts are required by Sites/Vinext before deleting or regenerating them;
+- add issue/PR templates when repeated use justifies them;
+- add release/deployment records once deployment versioning is established;
+- add durable clinical/accessibility/manual-validation templates.
 
-### Ventilator Waveform Lab
+## P2 — Product stabilization and expansion
 
-Do not reopen historical P1s merely because they existed historically. Current source addresses them. Use execution evidence to verify, then focus future work on any failures or browser/clinical-review findings actually observed.
+Use production evidence to prioritize future work rather than historical assumptions. Candidate workstreams include:
 
-### Shock / Oxygen Transport
+- ECG/ACLS refinement after current clinical/browser review;
+- Ventilator feature refinement after Issue #3 closure;
+- chest-trauma 3D refinement after Issue #5 closure;
+- PFT/ABG improvements based on current source/test gaps;
+- disease-process content improvements;
+- respiratory pharmacology validation/expansion;
+- equipment/oxygen-device interactive development;
+- deliberate integration of external 3D equipment models where educational value justifies it.
 
-Current Shock page is a production learning module; the planned oxygen-transport simulation does not exist at the baseline ref.
+## Deferred / evidence-sensitive claims
 
-Treat the future lab as a feature/architecture project, not a bug fix. Before implementation, establish an explicit educational/physiology contract for the intended model, equations, simplifications, validation method, and numerical invariants.
+Do not claim completion without corresponding evidence for:
 
-### Interactive Equipment and chest-trauma 3D
-
-Keep these scopes distinct:
-
-- equipment catalog: image/HTML-overlay device lessons
-- chest-trauma: integrated R3F/Three.js 3D anatomy/pathology module
-- historical Shiley/laryngoscope Blender work: not production-integrated at this ref
-
-Prioritize executable model tests and browser visual/mechanical review before further chest-trauma visual expansion. If Shiley integration is pursued, first version-control the actual source asset, provenance and mechanical acceptance criteria.
-
-### PFT
-
-Current source verifies 12 reconstructed report/loop datasets and test contracts. Next work should follow current test execution plus targeted clinical review of interpretation boundaries and reference assumptions.
-
-### ABG / hemodynamics
-
-ABG is currently a 25-case learning interface, not a general calculation engine. Add tests before substantial case/calculation expansion. Treat any future hemodynamic calculator or Shock physiology engine as a distinct architecture decision.
-
-### Disease processes
-
-Specialized Shock, Stroke, Burns, Chest Trauma, TBI and generic disease pages exist. Prioritize clinical-content review and test coverage based on educational risk rather than uniformly expanding every disease page.
-
-### Respiratory pharmacology and equipment content
-
-Structured source-backed content exists, but dedicated tests were not identified. Future work should emphasize source freshness, content validation, and regression coverage before adding broad new inventories.
-
-## P2 — Documentation durability
-
-- lightweight ADR format for substantive architecture decisions
-- defect/clinical-review/feature issue templates once repetition justifies them
-- validation-report templates
-- deployment/release record after source-to-Sites workflow is established
-- project terminology/evidence glossary if README vocabulary becomes insufficient
-
-## Deferred / evidence required
-
-Do not assert the following without new evidence:
-
-- that current GitHub `main` is the exact live Sites deployment
-- that the full current test suite passes
-- that historical multidisciplinary validation scores remain current
-- that source references equal clinical validation
-- that accessibility-oriented markup/tests establish WCAG conformance
-- that the historical Shiley Blender model is deployed
-- that a Shock oxygen-transport engine exists
-
-## Current highest-value next task
-
-**Establish and execute the complete canonical automated test baseline, then add CI around the proven command.**
-
-This has the highest leverage because every future code change depends on knowing whether ECG/ACLS, Ventilator P1 regressions, Shock, PFT and 3D contracts are actually protected by the normal verification path.
+- live-site deployment synchronization;
+- independent current clinical validation;
+- comprehensive accessibility conformance;
+- manual mechanical/visual 3D validation;
+- production integration of the Shiley model;
+- post-merge CI on production `main` before the production PR is actually merged.
