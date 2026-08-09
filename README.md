@@ -2,7 +2,7 @@
 
 This repository is the durable project-control and documentation home for **RT Study Lab**.
 
-It is intentionally separate from any production application source repository unless that source is explicitly linked here later. Its purpose is to preserve development history, current status, roadmap, known issues, architecture decisions, validation records, and the AI-assisted development workflow.
+The production application source is maintained separately in the private repository `R3C4LL4L1F3/RT-study-lab`. This project-control repository preserves development history, current status, roadmap, known issues, architecture decisions, validation records, and the AI-assisted development workflow without duplicating the application source.
 
 ## Repository boundary
 
@@ -10,12 +10,22 @@ This repository should answer:
 
 - What is RT Study Lab trying to accomplish?
 - What is confirmed from project history?
-- What has been verified against the current production source?
-- What remains unresolved or needs production verification?
+- What has been verified against current production source?
+- What remains unresolved or requires runtime/clinical/accessibility/deployment verification?
 - What architectural or workflow decisions have been made?
 - What should be worked on next?
 
-It should **not** silently become a substitute for the production application repository.
+It should not become a substitute for the production application repository.
+
+## Production source baseline
+
+- Production repository: `R3C4LL4L1F3/RT-study-lab`
+- Visibility: Private
+- Default branch: `main`
+- Baseline verification ref: `a0495e9fa4e5437d8a027312b618b5c1c389ef94`
+- Baseline commit message: `Redesign Shock visual teaching page`
+
+The GitHub production source is now directly inspectable. Current synchronization between that GitHub ref and the live ChatGPT Sites deployment is **not yet verified** and must be tracked separately.
 
 ## Evidence and work-state vocabulary
 
@@ -23,55 +33,60 @@ Material claims should separate **where the evidence comes from** from **what th
 
 ### Evidence basis
 
-- **Project-control verified** — directly observable in this repository, such as branches, pull requests, issues, documentation, or artifacts stored here. This does **not** imply that production application behavior has been verified.
-- **Confirmed from project history** — preserved from prior RT Study Lab development records or maintainer-provided history, but not yet reconciled against the current production repository.
-- **Verified against production repository** — confirmed by inspecting the identified production source at a recorded ref/commit and, where relevant, associated tests or durable validation evidence.
-- **Needs verification against production repository** — the claim, defect, architecture statement, or implementation status cannot yet be confirmed from current production source.
+- **Project-control verified** — directly observable in this repository, such as branches, pull requests, issues, documentation, or artifacts stored here. This does not imply application behavior was verified.
+- **Confirmed from project history** — preserved from prior RT Study Lab development records or maintainer-provided history, but not necessarily reconciled against current production source.
+- **Verified against production repository** — confirmed by inspecting `R3C4LL4L1F3/RT-study-lab` at a recorded ref/commit and, where relevant, associated source-controlled tests/assets/configuration.
+- **Needs verification against production repository** — a claim cannot yet be established from current source.
 - **Unknown** — information has not been established.
 
-Historical tables may still use **Reported** as shorthand for project-history information. A Reported item must not be treated as current production fact unless it is separately marked **Verified against production repository**.
+Historical tables may still use **Reported** as shorthand for project-history information. A Reported item is not automatically a current production fact.
 
 ### Lifecycle / disposition
 
-- **Current known issue** — reproduced or otherwise confirmed against the current production implementation, with current evidence.
+- **Current known issue** — reproduced or otherwise confirmed with current evidence.
+- **Resolved in current source; runtime re-execution required** — current implementation and regression source address a historical defect, but the relevant current test/runtime evidence has not yet been executed/retained.
 - **Planned work** — intended future work; not an implementation claim.
 - **Historical / possibly superseded** — retained because it matters to project history or verification, but it may no longer describe the current product.
 
-Clinical validation, implementation status, test results, deployment status, defect resolution, version numbers, and dates must not be promoted to production-verified status without supporting evidence.
+Clinical validation, test pass state, deployment state, accessibility conformance, defect resolution, version numbers, and dates must not be promoted beyond their evidence.
 
 ## Current repository state
 
-As of the project-control foundation audit:
-
 - Default branch: `main`
-- Working branch for this foundation: `setup/project-control-foundation`
-- Production application source repository: **Needs verification against production repository / not identified through the current GitHub connection**
-- CI configuration in this project-control repository: **None identified**
-- Issue history before project-control setup: **None identified**
-- Pull-request history before project-control setup: **None identified**
+- Working branch for the project-control foundation/baseline: `setup/project-control-foundation`
+- Draft PR: #1 into `main`; do not merge until reviewed
+- Production application source: **identified and source-baselined**
+- Production GitHub CI: no `.github/workflows` workflow identified at the baseline ref
+- Project-control CI: none identified
+- Current highest-priority repository risk: canonical `npm test` executes only a subset of the source-controlled test inventory
 
 ## Documentation index
 
-- [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) — current project-control and module status
-- [`docs/DEVELOPMENT_HISTORY.md`](docs/DEVELOPMENT_HISTORY.md) — sequence-oriented historical development record
+- [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) — current project/module status
+- [`docs/DEVELOPMENT_HISTORY.md`](docs/DEVELOPMENT_HISTORY.md) — sequence-oriented development record
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — priorities, dependencies, and next work
-- [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md) — current control gaps, historical defect reports, and verification concerns
-- [`docs/VALIDATION_REGISTER.md`](docs/VALIDATION_REGISTER.md) — validation and test claims with evidence state
+- [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md) — confirmed risks, historical defect dispositions, and verification concerns
+- [`docs/VALIDATION_REGISTER.md`](docs/VALIDATION_REGISTER.md) — current/historical validation and test evidence
 - [`docs/ARCHITECTURE_DECISIONS.md`](docs/ARCHITECTURE_DECISIONS.md) — project and architecture decision log
 - [`docs/AI_DEVELOPMENT_WORKFLOW.md`](docs/AI_DEVELOPMENT_WORKFLOW.md) — guardrails for AI-assisted development
-- [`docs/PRODUCTION_REPOSITORY_VERIFICATION.md`](docs/PRODUCTION_REPOSITORY_VERIFICATION.md) — framework for converting project-history claims into production-verified records
+- [`docs/PRODUCTION_REPOSITORY_VERIFICATION.md`](docs/PRODUCTION_REPOSITORY_VERIFICATION.md) — source-backed production baseline and remaining verification work
 
 ## Change workflow
 
-1. Inspect the repository and relevant project records before editing.
-2. Work on a purpose-specific branch; do not make project-control changes directly on `main`.
-3. Preserve existing content unless a deliberate revision is documented.
-4. Separate project-history evidence from production-repository verification.
-5. Do not call a historical defect a **Current known issue** until current production evidence supports that status.
-6. Update affected project-control documents in the same change set.
-7. Open a **draft pull request** into `main` for review.
-8. Do not merge until the documentation accurately reflects available evidence.
+1. Inspect production source and relevant project records before editing.
+2. Do not make meaningful application changes directly on production `main`; use focused branches and PRs.
+3. Do not make project-control changes directly on this repository's `main`.
+4. Preserve evidence state: source inspection is not equivalent to runtime execution or clinical validation.
+5. Update affected project-control records when production evidence changes project status.
+6. Keep secrets, credentials, PHI, private filesystem paths, and private personal data out of repositories.
+7. Use draft PRs for meaningful changes and review diffs before merge.
 
 ## Immediate control objective
 
-The next control phase is **Production Repository Verification**. The goal is to identify the canonical production repository and systematically reconcile each major RT Study Lab workstream against current source, tests, validation evidence, accessibility evidence, and unresolved defects. The verification framework is prepared in `docs/PRODUCTION_REPOSITORY_VERIFICATION.md`; it is intentionally not marked complete while production source remains inaccessible or unidentified.
+The source-discovery baseline is established. The next highest-value phase is **Reproducible Production Validation**:
+
+1. decide/document the canonical package manager;
+2. make the canonical test command cover the intended current suite, including high-risk regression tests;
+3. execute build/lint/full tests at a recorded source ref;
+4. add durable GitHub CI around the proven commands;
+5. then continue clinical, accessibility, deployment, and 3D mechanical/visual verification as separate evidence tracks.
