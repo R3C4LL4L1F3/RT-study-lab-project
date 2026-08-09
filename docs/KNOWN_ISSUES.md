@@ -1,113 +1,127 @@
 # Known Issues and Verification Concerns
 
-This register separates current project-control gaps from historical application defect reports and verification concerns that have **not** yet been confirmed against the current production implementation.
+This register distinguishes confirmed current repository/control risks from historical application defects and unresolved validation work.
 
-Use the evidence/lifecycle vocabulary defined in the repository `README.md`.
+## Current known issues / risks
 
-## Current project-control issues
-
-### PC-001 — Production source repository is not linked or identified
+### PC-001 — Canonical production test command does not cover the full current test inventory
 
 - Severity: High
-- Evidence basis: Project-control verified
-- Lifecycle: Current known issue (project control)
-- Impact: Implementation, test, CI, deployment, architecture, and defect-resolution claims cannot be independently reconciled from this repository.
-- Resolution target: Record the canonical production source repository and deployment relationship without adding credentials or sensitive data.
+- Evidence basis: **Verified against production repository**
+- Lifecycle: **Current known issue**
+- Source ref: `a0495e9fa4e5437d8a027312b618b5c1c389ef94`
+- Evidence: `package.json` runs only five selected test files after build, while the production tree contains many additional ECG/ACLS, Ventilator, Shock, Stroke, trauma/chest-trauma 3D, and UX/clinical test files.
+- Important example: `tests/ventilator-session352.test.mjs`, which contains regressions for the historical Ventilator P1 concerns, is not included in `npm test`.
+- Impact: a successful default test command would not establish that the full current source-controlled regression suite passed.
+- Resolution target: define a canonical full-suite command, make exclusions deliberate/explicit, execute it at a recorded source ref, and retain durable results.
 
-### PC-002 — No reproducible production-linked validation evidence is stored or linked
-
-- Severity: High
-- Evidence basis: Project-control verified
-- Lifecycle: Current known issue (project control)
-- Impact: Historical test counts and validation summaries remain project-history claims rather than current verified results.
-- Resolution target: Link or archive current automated-test results, validation reports, source refs, and environment information once the production repository is identified.
-
-### PC-003 — Current application defect status has not been reconciled
+### PC-002 — No source-controlled GitHub CI baseline
 
 - Severity: High
-- Evidence basis: Project-control verified
-- Lifecycle: Current known issue (project control)
-- Impact: Historical defect reports cannot yet be classified as still present, resolved, regressed, or superseded.
-- Resolution target: Perform Production Repository Verification and reproduce high-risk historical concerns against current source/build behavior.
+- Evidence basis: **Verified against production repository**
+- Lifecycle: **Current known issue**
+- Evidence: no `.github/workflows` configuration was identified in the production baseline tree.
+- Impact: future source changes lack an automatic GitHub build/lint/full-test gate and durable per-commit result trail.
+- Resolution target: add a conservative CI workflow only after the canonical install/package-manager and full-test command are resolved.
 
-## Ventilator Waveform Lab — historical defect reports
+### PC-003 — Live deployment synchronization is not verified
 
-The four records below are **Confirmed from project history** and **Need verification against production repository**. They are deliberately **not** labeled Current known issues until current evidence confirms them.
+- Severity: Medium
+- Evidence basis: Project-control verified + production-source verified boundary
+- Lifecycle: **Current known issue (project control)**
+- Evidence: the GitHub source repository is now identified, and Sites/Vinext hosting configuration exists, but this audit did not prove that the live ChatGPT Sites deployment is built from GitHub `main` at the recorded ref.
+- Impact: GitHub source state must not automatically be called live deployment state.
+- Resolution target: record a non-secret deployment verification procedure/ref and source-to-deployment relationship.
 
-### VENT-P1-001 — Double-trigger preset can produce triple stacking / incorrect minute ventilation
+### PC-004 — Package-manager state is ambiguous
+
+- Severity: Medium
+- Evidence basis: **Verified against production repository**
+- Lifecycle: **Current known issue (repository hygiene)**
+- Evidence: `package-lock.json`, `pnpm-lock.yaml`, and `pnpm-workspace.yaml` coexist; README/scripts are npm-oriented.
+- Impact: fresh-environment reproducibility and CI setup can diverge if tools resolve different lockfiles.
+- Resolution target: select/document the canonical package manager and remove only demonstrably stale lock/workspace files through a reviewed application-repository PR.
+
+### PC-005 — Production README is stale/generic
+
+- Severity: Low
+- Evidence basis: **Verified against production repository**
+- Lifecycle: **Current known issue (repository documentation)**
+- Evidence: the production README still describes the generic Vinext starter rather than RT Study Lab modules, architecture, verification commands, and GitHub/Sites relationship.
+- Resolution target: revise through a focused production-repository documentation PR after test/package-manager conventions are decided.
+
+## Ventilator Waveform Lab — historical P1 reports
+
+These defects are **Confirmed from project history**, and current production source contains explicit implementation/regression evidence that addresses them. Because the current suites were not executed in this audit, the disposition is **Resolved in current source; runtime re-execution required**, not a fresh passing validation result.
+
+### VENT-P1-001 — Double-trigger triple stacking / minute ventilation
 
 - Historical priority: P1
-- Evidence basis: Confirmed from project history
-- Lifecycle: Historical / possibly superseded
-- Reported behavior: The double-trigger preset can produce triple-stacked breaths and/or minute-ventilation behavior inconsistent with the intended scenario.
-- Required verification: Reproduce against the current production build/source and inspect event scheduling, breath generation, and minute-ventilation calculation behavior.
+- Current source disposition: **Resolved in current source; runtime re-execution required**
+- Evidence: `tests/ventilator-session352.test.mjs` requires exactly two-breath stacked clusters, rejects three-breath clusters, and verifies minute ventilation over the declared completed-breath interval.
+- Remaining action: execute the regression at a recorded source ref. Also add this file to the canonical test baseline.
 
 ### VENT-P1-002 — Dynamic compliance during patient effort
 
 - Historical priority: P1
-- Evidence basis: Confirmed from project history
-- Lifecycle: Historical / possibly superseded
-- Reported behavior: Dynamic-compliance output during patient effort may be physiologically or mechanically misleading.
-- Required verification: Confirm calculation and display semantics against the current waveform engine and intended teaching model; do not assume a formula that has not been observed in source.
+- Current source disposition: **Resolved in current source; runtime re-execution required**
+- Evidence: dedicated regression requires passive dynamic-compliance estimation and contaminated/null output with explanatory reason for effort/leak-related scenarios.
+- Remaining action: execute the regression and confirm the UI communicates validity status as intended in a browser review.
 
-### VENT-P1-003 — Mode change relabels historical VC data as PC
+### VENT-P1-003 — Historical VC data relabeled as PC after mode change
 
 - Historical priority: P1
-- Evidence basis: Confirmed from project history
-- Lifecycle: Historical / possibly superseded
-- Reported behavior: Historical volume-control waveform/breath data can be relabeled as pressure-control after a mode change.
-- Required verification: Confirm that each historical breath retains the mode identity active when that breath was generated.
+- Current source disposition: **Resolved in current source; runtime re-execution required**
+- Evidence: `LiveVentilatorSession` stores per-breath configuration provenance; regression coverage exercises VC→PC→VC transitions and retained provenance.
+- Remaining action: execute regression and visually inspect historical-breath labeling in the production UI.
 
 ### VENT-P1-004 — Expiratory hold not reschedulable after breath 3
 
 - Historical priority: P1
-- Evidence basis: Confirmed from project history
-- Lifecycle: Historical / possibly superseded
-- Reported behavior: An expiratory-hold action may not schedule correctly after the third breath.
-- Required verification: Reproduce against the current hold scheduler/state machine and document actual supported scheduling behavior.
+- Current source disposition: **Resolved in current source; runtime re-execution required**
+- Evidence: hold state dynamically targets the next breath and supports arm/repeat/cancel/invalid states; regression coverage repeats holds after arbitrary breath numbers.
+- Remaining action: execute regression and browser-check control behavior.
 
-## Shock / Oxygen Transport Lab — verification concerns
+## Shock / Oxygen Transport — reconciled state
 
-These are verification requirements, not confirmed production defects.
+### SHOCK-VERIFY-001 — Prior reduced-circulation-model reconciliation claim
 
-### SHOCK-VERIFY-001 — Reconcile implemented transport model with intended broader physiology model
+- Evidence basis: **Verified against production repository**
+- Lifecycle: **Historical / superseded at baseline ref**
+- Current source: `ShockInteractiveLabSlot.tsx` explicitly states that the interactive Shock/Oxygen Transport lab is not implemented and is an integration boundary only.
+- Disposition: there is no current reduced circulation engine to compare with the intended broader model at `a0495e9...`.
 
-- Evidence basis: Confirmed from project history
-- Lifecycle: Needs verification against production repository
-- Verification scope:
-  - identify the circulation/transport model actually implemented
-  - compare the current reduced circulation implementation with the intended broader physiology architecture
-  - identify missing, simplified, or disconnected subsystems
+### SHOCK-PLAN-001 — Intended oxygen-transport simulation remains unimplemented
 
-### SHOCK-VERIFY-002 — Validate oxygen-transport coupling and numerical behavior
+- Evidence basis: **Verified against production repository**
+- Lifecycle: **Planned work**, not a defect
+- Current source boundary: future concepts name circulating blood, cardiac output, oxygen delivery/extraction, SvO2/DO2/VO2, tissue reserve, and oxygen debt, while explicitly stating that no synthetic patient, pressure trace, cardiac-output model, treatment response, or simulation runs.
+- Guardrail: do not claim Hb→CaO2→DO2→VO2→CvO2/SvO2 coupling, conservation, or numerical stability until an actual engine is implemented and reviewed.
 
-- Evidence basis: Confirmed from project history
-- Lifecycle: Needs verification against production repository
-- Verification scope:
-  - inspect whether Hb → CaO2 → DO2 → VO2 → CvO2/SvO2 → extraction → oxygen-debt relationships are actually coupled in source
-  - determine which values are calculated, derived, approximated, or illustrative
-  - test conservation behavior and numerical stability across supported scenarios
-  - do not document equations or clinical rules that are not verified from source/reference evidence
+## Interactive Equipment / 3D — verification concerns
 
-## Interactive Respiratory Equipment Lab — verification concerns
+### EQUIP-VERIFY-001 — External Shiley-style 3D work is not production-integrated
 
-These are verification requirements, not confirmed production defects.
+- Evidence basis: **Verified against production repository** plus Confirmed from project history
+- Lifecycle: **Planned/integration work; mechanical verification still outstanding**
+- Current production state: the tracheostomy equipment lesson uses a static equipment photograph with HTML hotspots. No Shiley-specific GLB/runtime/snap-lock implementation was identified in the production tree.
+- Historical Blender/model work must not be described as deployed until deliberately integrated or separately version-controlled.
 
-### EQUIP-VERIFY-001 — Verify geometry, mechanics, animation, and browser readiness
+### 3D-VERIFY-001 — Chest-trauma 3D source contracts exist but current browser/mechanical validation is not executed
 
-- Evidence basis: Confirmed from project history
-- Lifecycle: Needs verification against production repository
-- Verification scope:
-  - geometry fidelity and proportions for the stated educational purpose
-  - mechanical realism of moving/locking components
-  - animation paths and device-part alignment
-  - clipping, self-intersection, and part-to-part intersections
-  - Shiley-style snap-lock inner-cannula behavior without invented twist-lock motion
-  - asset provenance/license records for sourced assets
-  - browser optimization for models, textures, animations, and interaction runtime
+- Evidence basis: **Verified against production repository**
+- Lifecycle: **Needs runtime/mechanical verification**
+- Current production state: integrated Three.js/R3F chest-trauma module with desktop/mobile GLBs, morph targets, anatomical registration, source-controlled model-contract tests, and license/attribution records.
+- Remaining action: execute model tests and perform browser visual/mechanical review for clipping, progression, controls, responsive behavior, reduced motion, and performance.
 
-## Current production defect status
+## Clinical and accessibility validation gaps
 
-No application item in this file is currently labeled **Current known issue** based on production-source evidence because the canonical production repository has not yet been identified through the current GitHub connection.
+These are not automatically software defects.
 
-GitHub issues may be created to track **verification work** before production access is available. The existence of a tracking issue must not be interpreted as proof that a historical defect still exists.
+- Source references and educational boundaries exist across major clinical modules, but no current end-to-end independent clinical-validation artifact was established for the baseline ref.
+- ECG/ACLS, PFT, Shock and 3D code contain accessibility-oriented semantics/keyboard/reduced-motion behaviors and related tests, but no comprehensive current WCAG/manual assistive-technology report was identified.
+- ABG, medication and equipment content have no dedicated test files identified in the current test inventory.
+
+## Defect-state rule
+
+A source-level fix plus a regression-test file is strong evidence of a resolved implementation path, but it is not equivalent to a freshly executed passing result. Historical defects above should only become **Verified resolved** after the relevant tests/runtime behavior are executed against a recorded production ref.
