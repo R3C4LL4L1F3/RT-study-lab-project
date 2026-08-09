@@ -26,10 +26,14 @@ This history preserves major RT Study Lab project records and distinguishes hist
 | Project control | Dedicated GitHub project-control repository initialized | Project-control verified |
 | Project control | `setup/project-control-foundation` branch created and Draft PR #1 opened | Project-control verified |
 | Project control | Evidence/lifecycle vocabulary, roadmap, known-issue, validation and production-verification framework established | Project-control verified |
-| Project control | Issues #2–#5 created as a small verification backlog | Project-control verified |
+| Project control | Issues #2–#5 created as a deliberately small initial verification backlog | Project-control verified |
 | Source control | Canonical private GitHub production repository established as `R3C4LL4L1F3/RT-study-lab` while preserving the pre-existing Sites source history | Verified against production repository/project workflow |
 | Production baseline | Source ref `a0495e9fa4e5437d8a027312b618b5c1c389ef94` audited and mapped into project-control records | Project-control verified + Verified against production repository |
 | Production baseline | Canonical `npm test` found to execute only a subset of the source-controlled test inventory; no GitHub Actions workflow identified | Verified against production repository |
+| Project control | Issue #2 closed after the production source baseline acceptance criteria were satisfied | Project-control verified |
+| Project control | Issue #4 closed after source reconciliation established that the Shock/Oxygen Transport simulation is not implemented at the baseline ref | Project-control verified + Verified against production repository |
+| Project control | Issue #3 retained open for executable Ventilator regression/browser verification; issue #5 retained open for current 3D mechanical/browser validation and non-integrated Shiley scope | Project-control verified |
+| Project control | Issue #6 created for the confirmed incomplete canonical test path and missing GitHub CI baseline | Project-control verified + Verified against production repository |
 
 ## Historical test/validation policy
 
