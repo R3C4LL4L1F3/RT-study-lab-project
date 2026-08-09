@@ -1,22 +1,34 @@
 # Validation Register
 
-This register preserves historical validation claims while recording current executable evidence separately. **Tests present**, **tests executed**, **clinical validation**, **accessibility validation**, and **manual visual/mechanical review** are distinct evidence states.
+This register preserves historical validation claims while recording current executable evidence separately. **Tests present**, **tests executed**, **clinical validation**, **accessibility validation**, **deployment correspondence**, and **manual visual/mechanical/browser review** are distinct evidence states.
+
+## Authoritative current validation summary
+
+| Area | Current evidence state | Disposition |
+|---|---|---|
+| Production CI | Automatic `main` validation on `d64bde34...` passed install, lint, build, complete source-controlled suite, Ventilator P1 regression and artifact upload | **GREEN** |
+| Ventilator historical P1 software regression | Dedicated and full-suite automated evidence passes | **Automated evidence complete** |
+| Ventilator browser/manual P1 closure | Learner-facing behavior under Issue #3 not yet manually closed | **INCOMPLETE / IN VALIDATION** |
+| Ventilator independent clinical validation | No current independent contemporary module sign-off established | **INCOMPLETE** |
+| Chest-trauma 3D automated contracts | Source/model/visual contract tests pass | **Automated evidence complete** |
+| Chest-trauma 3D runtime/manual QA | Browser/mechanical/visual/performance review under Issue #5 remains open | **INCOMPLETE / IN VALIDATION** |
+| ECG / ACLS software validation | Substantial source-controlled engine/workflow tests pass in canonical suite | **Substantial automated evidence** |
+| ECG / ACLS independent contemporary clinical validation | No current independent end-to-end clinical sign-off tied to current production `main` | **INCOMPLETE** |
+| Accessibility | Accessibility-oriented code/tests exist; no comprehensive manual/WCAG/AT baseline | **INCOMPLETE** |
+| Deployment correspondence | Source-side Sites linkage known; active deployed Git SHA requires authoritative Sites metadata under Issue #8 | **INCOMPLETE / BLOCKED** |
+| Interactive Models & Simulation Lab | No reusable numerical physiology framework or Shock/O₂ simulation currently implemented | **Architecture/model contract pending under Issue #9** |
+
+Validation gaps above are **not automatically confirmed defects**.
 
 ## Production source baseline
 
 - Production repository: `R3C4LL4L1F3/RT-study-lab`
-- Original production baseline ref: `a0495e9fa4e5437d8a027312b618b5c1c389ef94`
-- Original baseline commit: `Redesign Shock visual teaching page`
-- Initial audit type: GitHub source inspection
+- Original production baseline: `a0495e9fa4e5437d8a027312b618b5c1c389ef94` — `Redesign Shock visual teaching page`
+- Current production `main`: `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6` — `Run production validation on main pushes (#2)`
 
-The original source-baseline audit did not execute tests, build, or lint. Issues #6 and #7 subsequently established executable CI evidence and automatic post-merge validation.
+The original source-baseline audit did not itself execute tests/build/lint. Issues #6 and #7 subsequently established executable validation and automatic post-merge `main` validation.
 
 ## Current production validation infrastructure
-
-Current production `main` ref:
-
-- `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`
-- `Run production validation on main pushes (#2)`
 
 Canonical repository validation uses:
 
@@ -27,17 +39,17 @@ Canonical repository validation uses:
 - `npm run build`
 - recursive `tests/**/*.test.mjs` discovery
 - sequential isolated Node test processes
-- explicit `--experimental-strip-types` for existing tests that directly import `.ts` source
+- explicit `--experimental-strip-types` for existing tests that import `.ts` source directly
 - dedicated `npm run test:p1:ventilator`
 - retained diagnostic report artifact
 
-The full runner discovers **28 source-controlled `*.test.mjs` files** under `tests/`.
+The full runner currently discovers **28 source-controlled `*.test.mjs` files**.
 
 ### Issue #6 baseline evidence
 
 Pre-merge production PR #1 validation:
 
-- ref: `96b5535f9228c7b01c709386e050ce53e68f14d4`
+- validated ref: `96b5535f9228c7b01c709386e050ce53e68f14d4`
 - Actions run: `31309995943`
 - install — **PASS**
 - lint — **PASS**
@@ -47,72 +59,52 @@ Pre-merge production PR #1 validation:
 - diagnostic artifact — **PASS**
 - overall job — **PASS**
 
-Post-merge exact-commit verification for production PR #1:
+Post-merge exact-commit verification:
 
-- production ref: `fb9f23b7442d4dddeac0eab38ed01676aaf914e2`
+- merged production ref: `fb9f23b7442d4dddeac0eab38ed01676aaf914e2`
 - Actions run: `31310610948`
-- all validation steps — **PASS**
+- validation path — **PASS**
 
-### Issue #7 automatic-main validation evidence
+### Issue #7 automatic-main evidence
 
-Production PR #2 changed only `.github/workflows/production-validation.yml` to add `main` to the existing `push` branch filter.
+Production PR #2 added automatic validation on pushes/merges to `main`.
 
-PR/branch validation at ref `586314ab8e252dba0a479c062a9ade9c96c5d1e6`:
-
-- branch-push Actions run `31310866155` — **PASS**
-- pull-request Actions run `31310877109` — **PASS**
-
-After authorized squash merge, production `main` advanced to:
+Current production `main`:
 
 - `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`
 
-The merge itself automatically started `Production Validation` as Actions run `31311314980` with event `push` and branch `main`.
+Automatic `main` run:
 
-Post-merge automatic-main result:
+- Actions run `31311314980`
+- event: `push`
+- branch: `main`
+- overall result: **PASS**
 
 | Check | Result |
 |---|---|
 | Locked dependency installation (`npm ci`) | **PASS** |
-| Repository lint (`npm run lint`) | **PASS** |
-| Vinext production build (`npm run build`) | **PASS** |
-| Complete source-controlled test inventory (`npm run test:all`) | **PASS** |
-| Dedicated Ventilator historical-P1 regression (`npm run test:p1:ventilator`) | **PASS** |
-| Full-suite diagnostic report artifact upload | **PASS** |
-| Overall GitHub Actions job | **PASS** |
-
-**Current disposition:** automatic repository validation is now established for pull requests targeting `main` and pushes/merges to `main`.
+| Repository lint | **PASS** |
+| Vinext production build | **PASS** |
+| Complete source-controlled test inventory | **PASS** |
+| Dedicated Ventilator historical-P1 regression | **PASS** |
+| Diagnostic report artifact upload | **PASS** |
+| Overall job | **PASS** |
 
 ## Node/TypeScript test-harness finding
 
-Several existing `.test.mjs` files import application `.ts` modules directly. At the repository's declared minimum Node version, raw Node 22.13.0 rejects those imports with `ERR_UNKNOWN_FILE_EXTENSION`.
+Several existing `.test.mjs` files import application `.ts` modules directly. Raw Node 22.13.0 rejects those imports without the configured support.
 
-The validation harness therefore invokes each test file with:
+The validation harness therefore invokes test files with:
 
 `node --experimental-strip-types --test <test-file>`
 
-This is a test-runner configuration requirement; it does not modify production application source. Earlier Issue #6 red runs caused by this loader behavior are **not application or clinical regressions**.
-
-## Complete current automated-test inventory
-
-The complete runner includes source-controlled tests covering:
-
-- chest-trauma 3D model/runtime contracts
-- chest-trauma visual contracts
-- ECG engine, calipers, practice, exam, patient-state, clinical reasoning/UX, pathways, treatment, arrest and post-arrest logic
-- PFT report/loop-data contracts
-- rendered HTML
-- Shock page/content boundaries
-- Stroke page and visual interactions
-- trauma page
-- Ventilator engine and Sessions 3, 3.5 and 3.5.2
-
-New files following `tests/**/*.test.mjs` enter the canonical validation path automatically.
+Earlier Issue #6 red runs caused by `ERR_UNKNOWN_FILE_EXTENSION` are **test-harness loader failures**, not application or clinical regressions.
 
 ## Ventilator Waveform Lab
 
-### Historical multidisciplinary validation summary
+### Historical multidisciplinary record
 
-These remain **Confirmed from project history** and are not replaced by automated CI:
+These scores remain **Confirmed from project history** and are not replaced by CI:
 
 | Dimension | Historical score | Evidence basis |
 |---|---:|---|
@@ -123,95 +115,137 @@ These remain **Confirmed from project history** and are not replaced by automate
 | Realism | 84/100 | Confirmed from project history |
 | Measurement | 78/100 | Confirmed from project history |
 
-Historical browser/clinical result: **PARTIAL PASS**.
+Historical browser/clinical disposition: **PARTIAL PASS**.
 
-### Current executable regression evidence
+### Current automated evidence
 
 `tests/ventilator-session352.test.mjs` directly covers the historical high-risk concerns:
 
-- double-trigger clusters must contain exactly two breaths; unintended triple stacking is rejected;
-- minute ventilation is derived from completed delivered volumes over the declared interval;
-- dynamic compliance is validity-aware and contaminated in effort/leak-related scenarios;
-- historical breaths retain immutable VC/PC provenance across mode transitions;
-- diagnostic holds can arm after arbitrary breath numbers, repeat, complete, cancel, and invalidate under incompatible conditions.
+- exactly two-breath double-trigger clusters / rejection of unintended triple stacking;
+- minute ventilation derived from completed delivered volumes over the declared interval;
+- dynamic-compliance validity/contamination behavior;
+- immutable VC/PC breath provenance across mode transitions;
+- diagnostic hold arm/repeat/complete/cancel/invalid-state behavior after arbitrary breath numbers.
 
-The dedicated P1 regression has passed repeatedly, including the automatic production-`main` run `31311314980` at `d64bde34...`.
+The dedicated P1 regression also passed on current production `main` in Actions run `31311314980`.
 
-**Current disposition:** automated regression verification is complete. Browser presentation/control verification remains required before Issue #3 is fully complete. Automated pass status is not independent clinical validation.
+**Automated historical-P1 regression evidence: complete.**
 
-## ECG Rhythm / ACLS Lab
+**Browser/manual closure: incomplete under Issue #3.**
 
-### Historical automated-test milestones
+**Independent contemporary Ventilator clinical validation: incomplete.**
 
-These counts remain historical records and are not converted into current suite counts:
+Do not create a production fix branch unless manual validation reproduces a current defect. Automated pass status is not clinical validation.
 
-| Milestone | Historical result | Evidence basis |
-|---|---|---|
-| Phase 1A | ECG tests 12/12; site tests 97/97 | Confirmed from project history |
-| Final Phase 1 audit | ECG tests 33/33; site tests 118/118 | Confirmed from project history |
-| Version 27 landmark snapping | ECG tests 40/40; site tests 125/125 | Confirmed from project history |
-| Phase 2A-1 patient-state engine | Patient-state tests 8/8 | Confirmed from project history |
-| Phase 2A-2 clinical practice/exam | Patient-state tests 19/19; ECG tests 59/59; complete suite 144 | Confirmed from project history |
-| Phase 2B-2 treatment engine | Treatment tests 18/18; complete suite 175/175 | Confirmed from project history |
+## ECG / ACLS Lab
 
-### Current executable evidence
+Historical automated milestones remain historical records and are not converted into current test totals.
 
-Current source-controlled ECG/ACLS tests covering engine, calipers, practice/exam, clinical reasoning/UX, pathways, treatment, arrest and post-arrest behavior are included in the complete production validation suite and passed in automatic `main` run `31311314980`.
+Current source-controlled ECG/ACLS tests covering waveform engine, calipers, practice/exam, clinical reasoning/UX, patient-state, pathways, treatment, arrest and post-arrest behavior are included in the complete production suite and passed in current automatic production validation.
 
-This does not independently establish current AHA clinical validation or comprehensive accessibility conformance.
+**Current software-test evidence: substantial.**
 
-## Shock / Oxygen Transport
+**Independent contemporary clinical validation: incomplete.**
 
-The current Shock page is a learning module with qualitative hemodynamic teaching and an explicit future-lab boundary. The oxygen-transport simulation is not implemented.
+Initial P1 independent clinical-validation work is approved to begin through the Clinical Validation & Sources workflow after the approved project sequence reaches that stage. Do not create a production fix branch unless that validation establishes an implementation discrepancy.
 
-`tests/shock-page.test.mjs` is included in the complete suite and passed in automatic `main` run `31311314980`. No circulation-engine numerical/conservation validation is applicable because that simulation engine is absent.
+## Interactive Models & Simulation Lab — Shock / Circulation / Oxygen Transport
 
-## PFT
+Current production Shock content is a learning module with qualitative hemodynamic teaching and an explicit future-lab boundary.
 
-`tests/pft-loop-data.test.mjs` defines source-controlled contracts for 12 reconstructed reports/loop datasets, internal arithmetic consistency, ratio/TLC safeguards, bronchodilator-response math, distinct physiologic trace sets, and accessibility descriptions/boundaries.
+- No synthetic circulation state engine is implemented.
+- No numerical Hb→CaO₂→DO₂→VO₂→CvO₂/SvO₂→extraction→oxygen-debt engine is implemented.
+- No reusable physiology model clock/state/invariant framework is implemented.
+- No long-run numerical/conservation validation is applicable to a nonexistent engine.
 
-The PFT test passed in automatic `main` run `31311314980`.
+`tests/shock-page.test.mjs` passes in the current canonical production suite, but that test validates page/content/boundary contracts rather than a numerical physiology simulation.
+
+Current forward state:
+
+- Issue #9 — **P1, Tier 3, APPROVED FOR SPECIFICATION; implementation not approved**.
+- Required gate: approved clinical/model contract + approved reusable architecture/model contract before production implementation.
+- Required future architecture validation includes independent review, deterministic cases, invariants, boundary behavior, long-run expectations, reset/replay, seed behavior and serialization expectations.
+
+Future V/Q, gas-exchange, pulmonary-circulation, PE, ARDS-physiology, heart-failure-physiology and related models remain framework-dependent/deferred.
 
 ## Chest-trauma 3D
 
-`tests/chest-trauma-3d.test.mjs` and `tests/chest-trauma-visual.test.mjs` cover source/model contracts including canonical nodes/morphs, desktop/mobile assets, geometry budgets, coordinate registration, geometry-derived landmarks/camera fitting, lazy/opt-in boundaries, interaction safeguards, and provenance expectations.
+`tests/chest-trauma-3d.test.mjs` and `tests/chest-trauma-visual.test.mjs` cover source/model contracts including canonical nodes/morphs, desktop/mobile assets, geometry budgets, coordinate registration, geometry-derived landmarks/camera fitting, lazy/opt-in boundaries, interaction safeguards and provenance expectations.
 
-Both passed in automatic `main` run `31311314980`.
+Both pass in canonical production validation.
 
-This establishes automated source/model-contract evidence only. Browser rendering, clipping/intersection review, morph visual quality, performance, reduced-motion behavior in real browsers, and mechanical/visual fidelity still require manual/runtime review under Issue #5.
+**Automated source/model/visual contract evidence: complete.**
 
-## ABG, medications, equipment catalog, and broader disease content
+**Manual runtime/browser/mechanical/visual validation: incomplete under Issue #5.**
 
-- ABG: 25 authored cases are present; no dedicated ABG automated test file was identified.
-- Medications: structured monographs and source IDs are present; no dedicated medication automated test file was identified.
-- Equipment catalog: structured lessons, safety content and source/license metadata are present; no dedicated equipment-lab automated test file was identified.
-- Disease content: dedicated tests exist for selected specialized modules such as Shock, Stroke and trauma/chest-trauma, but comprehensive generic disease-record coverage is not established.
+Remaining evidence includes clipping/intersection review, morph visual fidelity, responsive behavior, camera/control behavior, reduced-motion behavior, performance/runtime stability and educational/anatomical fidelity.
 
-## Clinical-validation inventory
+Historical external Shiley Blender work remains outside production integration unless deliberately version-controlled and integrated.
 
-Production source contains substantial reference evidence, including the shared source registry and module-specific guideline/source metadata.
+## PFT
 
-**No current independent end-to-end clinical validation artifact tied to current production `main` was established.** Automated CI must not be substituted for clinician review, guideline reconciliation, or clinical plausibility/correctness review.
+`tests/pft-loop-data.test.mjs` defines source-controlled contracts for reconstructed reports/loop datasets, arithmetic consistency, ratio/TLC safeguards, bronchodilator-response math, distinct physiologic trace sets and accessibility descriptions/boundaries.
 
-## Accessibility-validation inventory
+Current production validation passes this test. Independent clinical review remains separate.
 
-Source evidence includes ARIA labels/live regions, focus handling, keyboard interaction, responsive styles, reduced-motion handling, and accessibility-adjacent tests in several major modules.
+## ABG, medications, equipment catalog and broader disease content
 
-**No comprehensive current WCAG conformance artifact or documented manual assistive-technology review was established.**
+- ABG: 25 authored cases present; no dedicated ABG automated test file identified.
+- Medications: structured monographs/source IDs present; no dedicated medication automated test file identified.
+- Equipment catalog: structured lessons, safety content and source/license metadata present; no dedicated equipment-catalog automated test file identified.
+- Disease content: selected specialized tests exist, but comprehensive generic disease-record coverage is not established.
 
-## Mechanical / 3D validation inventory
+These are **coverage/validation gaps**, not confirmed defects.
 
-Automated chest-trauma 3D source/model tests have passing executable evidence on current production `main`. Manual visual/mechanical browser validation remains separate and incomplete.
+## Independent clinical-validation framework — Issue #10
 
-Historical external equipment-model work, including Shiley Blender assets, remains outside the production integration baseline unless deliberately version-controlled and integrated.
+- Priority: P2
+- Risk: Tier 3
+- Owner: Clinical Validation & Sources
+- Support: QA — Regression & Release
+- Status: **APPROVED — not yet completed**
+
+The framework must preserve source/version traceability, production-ref traceability, explicit clinical assumptions/simplifications, independent disposition, uncertainty/conflict handling and re-review triggers.
+
+Initial P1 module validation begins with ECG/ACLS and Ventilator. Neither module is clinically validated merely because the framework record exists.
+
+## Accessibility-validation baseline — Issue #11
+
+- Priority: P2
+- Risk: Tier 1
+- Owner: Design System & UI/UX
+- Support: QA — Regression & Release
+- Status: **APPROVED — baseline incomplete**
+
+Required project-level evidence includes, as applicable:
+
+- keyboard operation;
+- focus behavior;
+- semantic structure/control naming;
+- status/error/feedback announcements;
+- responsive behavior;
+- reduced motion;
+- manual accessibility review;
+- assistive-technology review where practical;
+- production-ref traceability.
+
+Existing ARIA/live regions, focus handling, responsive CSS and accessibility-adjacent tests do not by themselves establish comprehensive conformance.
+
+## Deployment correspondence — Issue #8
+
+Source-side Sites integration is verified. The active deployed Git ref remains **unknown** until authoritative private Sites saved/deployed-version metadata is inspected.
+
+Current disposition: **INCOMPLETE / BLOCKED**.
+
+Do not infer live deployment equivalence from GitHub `main` or green CI. Do not redeploy simply to generate evidence.
 
 ## Validation policy going forward
 
-For future production changes:
-
-1. use npm and the maintained `package-lock.json` for repository validation unless a documented architecture decision changes that convention;
-2. require the canonical validation path on review refs and preserve automatic validation after merges to `main`;
-3. retain CI/run evidence with the PR or project-control record when it is material to a verification decision;
-4. keep complete recursive test discovery rather than returning to a manually curated subset;
-5. keep automated results separate from clinical, accessibility, deployment, and visual/mechanical evidence;
-6. do not delete or regenerate the retained pnpm files until their ChatGPT Sites/Vinext role is verified.
+1. Use npm + maintained `package-lock.json` for canonical production-repository validation unless a documented decision changes that convention.
+2. Preserve automatic validation on review refs and production `main`.
+3. Retain exact run/ref evidence for material validation decisions.
+4. Keep complete recursive test discovery rather than returning to a fixed subset.
+5. Keep automated, clinical, accessibility, deployment and manual visual/mechanical evidence distinct.
+6. Do not promote a validation gap to a current defect without supporting evidence.
+7. Do not delete/regenerate pnpm artifacts until their Sites/Vinext role is verified.
+8. For Interactive Models, do not begin production implementation until the clinical/model contract and reusable architecture decision are approved.
