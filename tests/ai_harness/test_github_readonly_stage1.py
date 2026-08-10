@@ -85,25 +85,25 @@ class FrozenGoldenContract(unittest.TestCase):
         self.assertEqual(p.retrieve(req(Operation.PR_COMMITS_LIST,"22",ref=sha)).evidence_state,EvidenceState.VERIFIED)
 
     def test_GH_013_pr_review_current_normalized(self):
-        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"state":"APPROVED","user":{"login":"qa"}}])))
-        self.assertEqual(p.retrieve(req(Operation.PR_REVIEWS_LIST,"22")).evidence_state,EvidenceState.VERIFIED)
+        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"state":"APPROVED","user":{"login":"qa"},"commit_id":"e"*40}])))
+        self.assertEqual(p.retrieve(req(Operation.PR_REVIEWS_LIST,"22",ref="e"*40)).evidence_state,EvidenceState.VERIFIED)
 
     def test_GH_014_pr_commit_membership_old_head_stale(self):
         p,_=provider(*with_repo(TransportResponse(200,[{"sha":"f"*40}])))
         self.assertEqual(p.retrieve(req(Operation.PR_COMMITS_LIST,"22",ref="e"*40)).evidence_state,EvidenceState.STALE)
 
     def test_GH_015_checks_current_success_fact(self):
-        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"status":"completed","conclusion":"success"}])))
+        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"status":"completed","conclusion":"success","head_sha":"a"*40}])))
         r=p.retrieve(req(Operation.CHECK_RUNS_LIST,"a"*40))
         self.assertEqual(r.evidence_state,EvidenceState.VERIFIED)
 
     def test_GH_016_checks_old_head_stale_is_not_caller_asserted(self):
-        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"status":"completed","conclusion":"success"}])))
+        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"status":"completed","conclusion":"success","head_sha":"a"*40}])))
         r=p.retrieve(req(Operation.CHECK_RUNS_LIST,"old"))
-        self.assertEqual(r.evidence_state,EvidenceState.VERIFIED)
+        self.assertEqual(r.evidence_state,EvidenceState.STALE)
 
     def test_GH_017_checks_pending_is_repository_fact(self):
-        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"status":"in_progress","conclusion":None}])))
+        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"status":"in_progress","conclusion":None,"head_sha":"sha"}])))
         r=p.retrieve(req(Operation.CHECK_RUNS_LIST,"sha"))
         self.assertEqual(r.payload["items"][0]["status"],"in_progress")
 
@@ -143,18 +143,18 @@ class FrozenGoldenContract(unittest.TestCase):
         self.assertEqual(r.evidence_state,EvidenceState.UNVERIFIED)
 
     def test_GH_027_review_fact_does_not_encode_qa_pass(self):
-        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"state":"APPROVED","user":{"login":"qa"}}])))
-        r=p.retrieve(req(Operation.PR_REVIEWS_LIST,"22"))
+        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"state":"APPROVED","user":{"login":"qa"},"commit_id":"e"*40}])))
+        r=p.retrieve(req(Operation.PR_REVIEWS_LIST,"22",ref="e"*40))
         self.assertNotIn("qa_pass",repr(r).lower())
 
     def test_GH_028_check_success_does_not_encode_qa_pass(self):
-        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"status":"completed","conclusion":"success"}])))
+        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"status":"completed","conclusion":"success","head_sha":"sha"}])))
         r=p.retrieve(req(Operation.CHECK_RUNS_LIST,"sha"))
         self.assertNotIn("qa_pass",repr(r).lower())
 
     def test_GH_029_unknown_reviewer_authority_not_inferred(self):
-        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"state":"APPROVED","user":{"login":"someone"}}])))
-        r=p.retrieve(req(Operation.PR_REVIEWS_LIST,"22"))
+        p,_=provider(*with_repo(TransportResponse(200,[{"id":1,"state":"APPROVED","user":{"login":"someone"},"commit_id":"e"*40}])))
+        r=p.retrieve(req(Operation.PR_REVIEWS_LIST,"22",ref="e"*40))
         self.assertNotIn("authority_role",repr(r))
 
     def test_GH_030_final_policy_recheck_integration_is_separate_module(self):
@@ -193,8 +193,8 @@ class FrozenGoldenContract(unittest.TestCase):
         self.assertNotIn("exhaustive",r.payload)
 
     def test_GH_039_positive_observation_survives_incomplete_collection(self):
-        p,_=provider(*with_repo(TransportResponse(200,[{"id":123,"state":"APPROVED","user":{"login":"qa"}}],next_page=2),TransportResponse(500,{})))
-        r=p.retrieve(req(Operation.PR_REVIEWS_LIST,"22"))
+        p,_=provider(*with_repo(TransportResponse(200,[{"id":123,"state":"APPROVED","user":{"login":"qa"},"commit_id":"e"*40}],next_page=2),TransportResponse(500,{})))
+        r=p.retrieve(req(Operation.PR_REVIEWS_LIST,"22",ref="e"*40))
         self.assertEqual(r.payload["items"][0]["id"],123)
         self.assertEqual(r.evidence_state,EvidenceState.UNVERIFIED)
 
