@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 import hashlib
 import json
@@ -61,14 +61,12 @@ class Operation(str, Enum):
 
 
 ALLOWED_OPERATIONS = frozenset(Operation)
-COLLECTION_OPERATIONS = frozenset(
-    {
-        Operation.PR_COMMITS_LIST,
-        Operation.PR_FILES_LIST,
-        Operation.PR_REVIEWS_LIST,
-        Operation.CHECK_RUNS_LIST,
-    }
-)
+COLLECTION_OPERATIONS = frozenset({
+    Operation.PR_COMMITS_LIST,
+    Operation.PR_FILES_LIST,
+    Operation.PR_REVIEWS_LIST,
+    Operation.CHECK_RUNS_LIST,
+})
 CONTENT_PREFIXES = (
     "ai-harness/RTSL-AIH-001/",
     "ai-harness/RTSL-AIH-002/",
@@ -86,13 +84,11 @@ SECRET_HEADER_NAMES = frozenset({"authorization", "proxy-authorization", "x-gith
 
 class EvidenceProvider(Protocol):
     enabled: bool
-
     def retrieve(self, request: "EvidenceRequest") -> "EvidenceRecord": ...
 
 
 class CredentialSource(Protocol):
-    def capability(self, repository_alias: str) -> CredentialCapability: ...
-
+    def permission_manifest(self, repository_alias: str) -> Mapping[str, str] | None: ...
     def request_headers(self, repository_alias: str) -> Mapping[str, str]: ...
 
 
@@ -115,8 +111,6 @@ class EvidenceRequest:
     subject: str
     ref: str | None = None
     path: str | None = None
-    observed_states: tuple[EvidenceState, ...] = ()
-    absence_eligible: bool = False
 
 
 @dataclass(frozen=True)
@@ -125,7 +119,6 @@ class TransportResponse:
     payload: Any = None
     next_page: int | None = None
     endpoint_supports_absence: bool = False
-    request_headers: Mapping[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -147,18 +140,14 @@ class EvidenceRecord:
 
 
 class StaticCredentialSource:
-    """Fixture-backed capability source. It never creates or refreshes live credentials."""
+    """Fixture-backed manifest/header source. It never creates or refreshes credentials."""
 
-    def __init__(
-        self,
-        capability: CredentialCapability = CredentialCapability.NOT_CONFIGURED,
-        headers: Mapping[str, str] | None = None,
-    ) -> None:
-        self._capability = capability
+    def __init__(self, manifest: Mapping[str, str] | None = None, headers: Mapping[str, str] | None = None) -> None:
+        self._manifest = None if manifest is None else dict(manifest)
         self._headers = dict(headers or {})
 
-    def capability(self, repository_alias: str) -> CredentialCapability:
-        return self._capability
+    def permission_manifest(self, repository_alias: str) -> Mapping[str, str] | None:
+        return None if self._manifest is None else dict(self._manifest)
 
     def request_headers(self, repository_alias: str) -> Mapping[str, str]:
         return dict(self._headers)
@@ -171,25 +160,15 @@ class FixtureTransport:
         self._responses = list(responses)
         self.calls: list[dict[str, Any]] = []
 
-    def get(
-        self,
-        *,
-        operation: Operation,
-        repository: str,
-        subject: str,
-        headers: Mapping[str, str],
-        page: int | None = None,
-    ) -> TransportResponse:
-        self.calls.append(
-            {
-                "method": "GET",
-                "operation": operation.value,
-                "repository": repository,
-                "subject": subject,
-                "page": page,
-                "header_names": sorted(headers),
-            }
-        )
+    def get(self, *, operation: Operation, repository: str, subject: str, headers: Mapping[str, str], page: int | None = None) -> TransportResponse:
+        self.calls.append({
+            "method": "GET",
+            "operation": operation.value,
+            "repository": repository,
+            "subject": subject,
+            "page": page,
+            "header_names": sorted(headers),
+        })
         if not self._responses:
             raise RuntimeError("fixture transport has no remaining response")
         return self._responses.pop(0)
@@ -202,13 +181,13 @@ class DisabledEvidenceProvider:
     enabled = False
 
     def retrieve(self, request: EvidenceRequest) -> EvidenceRecord:
-        capability = CredentialCapability.NOT_CONFIGURED
         return _record(
             request=request,
             state=EvidenceState.UNVERIFIED,
-            capability=capability,
+            capability=CredentialCapability.NOT_CONFIGURED,
             completeness=(CollectionCompleteness.UNVERIFIED if request.operation in COLLECTION_OPERATIONS else None),
             payload={"reason": "provider-disabled"},
+            repository_identity=None,
         )
 
 
@@ -221,48 +200,93 @@ class GitHubReadOnlyEvidenceProvider:
 
     def retrieve(self, request: EvidenceRequest) -> EvidenceRecord:
         _validate_request(request)
-        capability = self._credentials.capability(request.repository_alias)
+        manifest = self._credentials.permission_manifest(request.repository_alias)
+        capability = validate_permission_manifest(manifest)
         if capability is not CredentialCapability.VERIFIED_READ_ONLY:
             return _record(
                 request=request,
-                state=resolve_evidence_state((*request.observed_states, EvidenceState.UNVERIFIED)),
+                state=EvidenceState.UNVERIFIED,
                 capability=capability,
                 completeness=(CollectionCompleteness.UNVERIFIED if request.operation in COLLECTION_OPERATIONS else None),
                 payload={"reason": "credential-preflight-failed"},
+                repository_identity=None,
             )
 
-        headers = _safe_request_headers(self._credentials.request_headers(request.repository_alias))
-        headers = {**headers, "X-GitHub-Api-Version": GITHUB_API_VERSION}
-        if request.operation in COLLECTION_OPERATIONS:
-            return self._retrieve_collection(request, capability, headers)
-        return self._retrieve_scalar(request, capability, headers)
+        headers = {**self._credentials.request_headers(request.repository_alias), "X-GitHub-Api-Version": GITHUB_API_VERSION}
 
-    def _retrieve_scalar(
-        self,
-        request: EvidenceRequest,
-        capability: CredentialCapability,
-        headers: Mapping[str, str],
-    ) -> EvidenceRecord:
-        response = self._transport.get(
-            operation=request.operation,
+        repo_response = self._transport.get(
+            operation=Operation.REPO_GET,
             repository=EXPECTED_REPOSITORY,
-            subject=request.subject,
+            subject=EXPECTED_REPOSITORY,
             headers=headers,
         )
-        state, payload = _scalar_state(request, response)
-        state = resolve_evidence_state((*request.observed_states, state))
-        return _record(request=request, state=state, capability=capability, completeness=None, payload=payload)
+        repo_state, repo_identity, repo_payload = _normalize_repository(repo_response)
+        if repo_state is not EvidenceState.VERIFIED:
+            return _record(
+                request=request,
+                state=repo_state,
+                capability=capability,
+                completeness=(CollectionCompleteness.UNVERIFIED if request.operation in COLLECTION_OPERATIONS else None),
+                payload={"repository": repo_payload, "reason": "repository-identity-preflight-failed"},
+                repository_identity=repo_identity,
+            )
 
-    def _retrieve_collection(
-        self,
-        request: EvidenceRequest,
-        capability: CredentialCapability,
-        headers: Mapping[str, str],
-    ) -> EvidenceRecord:
+        if request.operation is Operation.REPO_GET:
+            return _record(
+                request=request,
+                state=EvidenceState.VERIFIED,
+                capability=capability,
+                completeness=None,
+                payload=repo_payload,
+                repository_identity=repo_identity,
+            )
+
+        if request.operation in COLLECTION_OPERATIONS:
+            return self._retrieve_collection(request, capability, headers, repo_identity)
+        return self._retrieve_scalar(request, capability, headers, repo_identity)
+
+    def _retrieve_scalar(self, request: EvidenceRequest, capability: CredentialCapability, headers: Mapping[str, str], repository_identity: Mapping[str, Any]) -> EvidenceRecord:
+        try:
+            response = self._transport.get(
+                operation=request.operation,
+                repository=EXPECTED_REPOSITORY,
+                subject=request.subject,
+                headers=headers,
+            )
+        except Exception:
+            return _record(
+                request=request,
+                state=EvidenceState.UNVERIFIED,
+                capability=capability,
+                completeness=None,
+                payload={"reason": "operation-retrieval-failed"},
+                repository_identity=repository_identity,
+            )
+        state, payload = _normalize_scalar(request, response, repository_identity)
+        return _record(
+            request=request,
+            state=state,
+            capability=capability,
+            completeness=None,
+            payload=payload,
+            repository_identity=repository_identity,
+        )
+
+    def _retrieve_collection(self, request: EvidenceRequest, capability: CredentialCapability, headers: Mapping[str, str], repository_identity: Mapping[str, Any]) -> EvidenceRecord:
         items: list[Any] = []
         page: int | None = 1
-        completeness = CollectionCompleteness.COMPLETE
+        seen_pages: set[int] = set()
         while page is not None:
+            if page in seen_pages:
+                return _record(
+                    request=request,
+                    state=EvidenceState.UNVERIFIED,
+                    capability=capability,
+                    completeness=CollectionCompleteness.INCOMPLETE if items else CollectionCompleteness.UNVERIFIED,
+                    payload={"items": items, "reason": "pagination-cycle"},
+                    repository_identity=repository_identity,
+                )
+            seen_pages.add(page)
             try:
                 response = self._transport.get(
                     operation=request.operation,
@@ -272,44 +296,44 @@ class GitHubReadOnlyEvidenceProvider:
                     page=page,
                 )
             except Exception:
-                completeness = CollectionCompleteness.INCOMPLETE if items else CollectionCompleteness.UNVERIFIED
-                state = resolve_evidence_state((*request.observed_states, EvidenceState.UNVERIFIED))
-                return _record(
-                    request=request,
-                    state=state,
-                    capability=capability,
-                    completeness=completeness,
-                    payload={"items": items, "reason": "collection-retrieval-failed"},
-                )
-            if response.status_code != 200:
-                completeness = CollectionCompleteness.INCOMPLETE if items else CollectionCompleteness.UNVERIFIED
-                state = resolve_evidence_state((*request.observed_states, EvidenceState.UNVERIFIED))
-                return _record(
-                    request=request,
-                    state=state,
-                    capability=capability,
-                    completeness=completeness,
-                    payload={"items": items, "status_code": response.status_code},
-                )
-            if not isinstance(response.payload, list):
-                completeness = CollectionCompleteness.UNVERIFIED
                 return _record(
                     request=request,
                     state=EvidenceState.UNVERIFIED,
                     capability=capability,
-                    completeness=completeness,
-                    payload={"items": items, "reason": "non-list collection payload"},
+                    completeness=CollectionCompleteness.INCOMPLETE if items else CollectionCompleteness.UNVERIFIED,
+                    payload={"items": items, "reason": "collection-retrieval-failed"},
+                    repository_identity=repository_identity,
                 )
-            items.extend(response.payload)
+            if response.status_code != 200:
+                return _record(
+                    request=request,
+                    state=EvidenceState.UNVERIFIED,
+                    capability=capability,
+                    completeness=CollectionCompleteness.INCOMPLETE if items else CollectionCompleteness.UNVERIFIED,
+                    payload={"items": items, "status_code": response.status_code},
+                    repository_identity=repository_identity,
+                )
+            page_state, normalized_items = _normalize_collection_page(request.operation, response.payload)
+            if page_state is not EvidenceState.VERIFIED:
+                return _record(
+                    request=request,
+                    state=page_state,
+                    capability=capability,
+                    completeness=CollectionCompleteness.INCOMPLETE if items else CollectionCompleteness.UNVERIFIED,
+                    payload={"items": items, "reason": "invalid-collection-page"},
+                    repository_identity=repository_identity,
+                )
+            items.extend(normalized_items)
             page = response.next_page
 
-        state = resolve_evidence_state((*request.observed_states, EvidenceState.VERIFIED))
+        derived_state = _derive_collection_fact_state(request, items)
         return _record(
             request=request,
-            state=state,
+            state=derived_state,
             capability=capability,
-            completeness=completeness,
+            completeness=CollectionCompleteness.COMPLETE,
             payload={"items": items, "exhaustive": True},
+            repository_identity=repository_identity,
         )
 
 
@@ -323,20 +347,19 @@ def resolve_evidence_state(states: Sequence[EvidenceState]) -> EvidenceState:
     return EvidenceState.UNVERIFIED
 
 
-def validate_permission_manifest(permissions: Mapping[str, str]) -> CredentialCapability:
+def validate_permission_manifest(permissions: Mapping[str, str] | None) -> CredentialCapability:
+    if permissions is None:
+        return CredentialCapability.NOT_CONFIGURED
     normalized = {str(k).lower(): str(v).lower() for k, v in permissions.items()}
     if not normalized:
         return CredentialCapability.UNVERIFIED
-    for required in READ_ONLY_PERMISSION_CEILING:
-        if required not in normalized:
+    for required, required_value in READ_ONLY_PERMISSION_CEILING.items():
+        if normalized.get(required) != required_value:
             return CredentialCapability.UNVERIFIED
     for name, value in normalized.items():
         if value not in {"read", "none"}:
             return CredentialCapability.OVERPRIVILEGED
         if name not in READ_ONLY_PERMISSION_CEILING and value != "none":
-            return CredentialCapability.OVERPRIVILEGED
-    for required, ceiling in READ_ONLY_PERMISSION_CEILING.items():
-        if normalized.get(required) not in {ceiling, "none", None}:
             return CredentialCapability.OVERPRIVILEGED
     return CredentialCapability.VERIFIED_READ_ONLY
 
@@ -346,10 +369,10 @@ def validate_content_path(path: str) -> str:
         raise ValueError("content path is required")
     decoded = path
     for _ in range(3):
-        new = unquote(decoded)
-        if new == decoded:
+        newer = unquote(decoded)
+        if newer == decoded:
             break
-        decoded = new
+        decoded = newer
     decoded = decoded.replace("\\", "/")
     if decoded.startswith("/") or re.match(r"^[A-Za-z]:/", decoded):
         raise ValueError("absolute content paths are prohibited")
@@ -375,31 +398,155 @@ def _validate_request(request: EvidenceRequest) -> None:
             raise ValueError("content operation requires an explicit ref")
 
 
-def _safe_request_headers(headers: Mapping[str, str]) -> dict[str, str]:
-    result: dict[str, str] = {}
-    for key, value in headers.items():
-        if key.lower() in SECRET_HEADER_NAMES:
-            result[key] = value
-        else:
-            result[key] = value
-    return result
+def _normalize_repository(response: TransportResponse) -> tuple[EvidenceState, Mapping[str, Any] | None, Any]:
+    if response.status_code != 200 or not isinstance(response.payload, Mapping):
+        return EvidenceState.UNVERIFIED, None, {"status_code": response.status_code}
+    payload = dict(response.payload)
+    required = {"id", "node_id", "full_name", "default_branch"}
+    if not required.issubset(payload):
+        return EvidenceState.UNVERIFIED, None, {"reason": "repository-required-field-missing"}
+    identity = {
+        "id": payload["id"],
+        "node_id": payload["node_id"],
+        "full_name": payload["full_name"],
+        "default_branch": payload["default_branch"],
+    }
+    expected = {
+        "id": EXPECTED_REPOSITORY_ID,
+        "node_id": EXPECTED_NODE_ID,
+        "full_name": EXPECTED_REPOSITORY,
+        "default_branch": EXPECTED_DEFAULT_BRANCH,
+    }
+    if identity != expected:
+        return EvidenceState.CONTRADICTORY, identity, _redact(payload)
+    return EvidenceState.VERIFIED, identity, _redact(payload)
 
 
-def _scalar_state(request: EvidenceRequest, response: TransportResponse) -> tuple[EvidenceState, Any]:
+def _normalize_scalar(request: EvidenceRequest, response: TransportResponse, repository_identity: Mapping[str, Any]) -> tuple[EvidenceState, Any]:
     if request.operation is Operation.PR_MERGED_CHECK:
         if response.status_code == 204:
             return EvidenceState.VERIFIED, {"merged": True}
-        if response.status_code == 404 and request.absence_eligible and response.endpoint_supports_absence:
+        if response.status_code == 404 and response.endpoint_supports_absence and _merged_absence_eligible(request):
             return EvidenceState.VERIFIED, {"merged": False}
         return EvidenceState.UNVERIFIED, {"status_code": response.status_code}
 
-    if 200 <= response.status_code < 300:
-        return EvidenceState.VERIFIED, response.payload
     if response.status_code == 404:
-        if request.absence_eligible and response.endpoint_supports_absence:
+        if response.endpoint_supports_absence and _missing_eligible(request, repository_identity):
             return EvidenceState.MISSING, {"missing": True}
         return EvidenceState.UNVERIFIED, {"status_code": 404, "reason": "ambiguous-not-found"}
-    return EvidenceState.UNVERIFIED, {"status_code": response.status_code}
+    if not (200 <= response.status_code < 300):
+        return EvidenceState.UNVERIFIED, {"status_code": response.status_code}
+    if not isinstance(response.payload, Mapping):
+        return EvidenceState.UNVERIFIED, {"reason": "scalar-payload-not-object"}
+    return _normalize_operation_payload(request, dict(response.payload))
+
+
+def _normalize_operation_payload(request: EvidenceRequest, payload: Mapping[str, Any]) -> tuple[EvidenceState, Any]:
+    op = request.operation
+    if op is Operation.COMMIT_GET:
+        if not isinstance(payload.get("sha"), str) or not payload["sha"]:
+            return EvidenceState.UNVERIFIED, {"reason": "commit-sha-missing"}
+        normalized = {"sha": payload["sha"]}
+        if request.ref and re.fullmatch(r"[0-9a-fA-F]{40}", request.ref) and payload["sha"].lower() != request.ref.lower():
+            return EvidenceState.STALE, normalized
+        return EvidenceState.VERIFIED, normalized
+
+    if op is Operation.CONTENT_GET:
+        required = {"path", "sha"}
+        if not required.issubset(payload) or not all(isinstance(payload[k], str) and payload[k] for k in required):
+            return EvidenceState.UNVERIFIED, {"reason": "content-required-field-missing"}
+        normalized_path = validate_content_path(payload["path"])
+        if normalized_path != validate_content_path(request.path or ""):
+            return EvidenceState.CONTRADICTORY, {"path": normalized_path, "sha": payload["sha"]}
+        return EvidenceState.VERIFIED, {"path": normalized_path, "sha": payload["sha"]}
+
+    if op is Operation.PR_GET:
+        required = {"number", "state", "head", "base"}
+        if not required.issubset(payload):
+            return EvidenceState.UNVERIFIED, {"reason": "pr-required-field-missing"}
+        try:
+            requested_number = int(request.subject)
+        except (TypeError, ValueError):
+            return EvidenceState.UNVERIFIED, {"reason": "pr-subject-not-number"}
+        if payload["number"] != requested_number:
+            return EvidenceState.CONTRADICTORY, {"number": payload["number"]}
+        if not isinstance(payload["head"], Mapping) or not isinstance(payload["base"], Mapping):
+            return EvidenceState.UNVERIFIED, {"reason": "pr-head-base-invalid"}
+        if not isinstance(payload["head"].get("sha"), str) or not isinstance(payload["base"].get("ref"), str):
+            return EvidenceState.UNVERIFIED, {"reason": "pr-head-base-required-field-missing"}
+        normalized = {
+            "number": payload["number"],
+            "state": payload["state"],
+            "head_sha": payload["head"]["sha"],
+            "base_ref": payload["base"]["ref"],
+        }
+        if request.ref and re.fullmatch(r"[0-9a-fA-F]{40}", request.ref) and normalized["head_sha"].lower() != request.ref.lower():
+            return EvidenceState.STALE, normalized
+        return EvidenceState.VERIFIED, normalized
+
+    return EvidenceState.UNVERIFIED, {"reason": "unsupported-scalar-normalizer"}
+
+
+def _normalize_collection_page(operation: Operation, payload: Any) -> tuple[EvidenceState, list[Any]]:
+    if not isinstance(payload, list):
+        return EvidenceState.UNVERIFIED, []
+    normalized: list[Any] = []
+    for item in payload:
+        if not isinstance(item, Mapping):
+            return EvidenceState.UNVERIFIED, []
+        if operation is Operation.PR_COMMITS_LIST:
+            sha = item.get("sha")
+            if not isinstance(sha, str) or not sha:
+                return EvidenceState.UNVERIFIED, []
+            normalized.append({"sha": sha})
+        elif operation is Operation.PR_FILES_LIST:
+            filename, status = item.get("filename"), item.get("status")
+            if not isinstance(filename, str) or not filename or not isinstance(status, str) or not status:
+                return EvidenceState.UNVERIFIED, []
+            normalized.append({"filename": filename, "status": status})
+        elif operation is Operation.PR_REVIEWS_LIST:
+            rid, state, user = item.get("id"), item.get("state"), item.get("user")
+            if rid is None or not isinstance(state, str) or not isinstance(user, Mapping) or not isinstance(user.get("login"), str):
+                return EvidenceState.UNVERIFIED, []
+            normalized.append({"id": rid, "state": state, "user_login": user["login"]})
+        elif operation is Operation.CHECK_RUNS_LIST:
+            cid, status, conclusion = item.get("id"), item.get("status"), item.get("conclusion")
+            if cid is None or not isinstance(status, str):
+                return EvidenceState.UNVERIFIED, []
+            normalized.append({"id": cid, "status": status, "conclusion": conclusion})
+        else:
+            return EvidenceState.UNVERIFIED, []
+    return EvidenceState.VERIFIED, normalized
+
+
+def _missing_eligible(request: EvidenceRequest, repository_identity: Mapping[str, Any]) -> bool:
+    if repository_identity.get("id") != EXPECTED_REPOSITORY_ID or repository_identity.get("node_id") != EXPECTED_NODE_ID:
+        return False
+    if request.operation is Operation.CONTENT_GET:
+        return bool(request.ref and request.path and validate_content_path(request.path))
+    if request.operation is Operation.COMMIT_GET:
+        return bool(request.subject)
+    if request.operation is Operation.PR_GET:
+        try:
+            return int(request.subject) > 0
+        except (TypeError, ValueError):
+            return False
+    return False
+
+
+def _merged_absence_eligible(request: EvidenceRequest) -> bool:
+    try:
+        return request.operation is Operation.PR_MERGED_CHECK and int(request.subject) > 0
+    except (TypeError, ValueError):
+        return False
+
+
+def _derive_collection_fact_state(request: EvidenceRequest, items: Sequence[Mapping[str, Any]]) -> EvidenceState:
+    if request.operation is Operation.PR_COMMITS_LIST and request.ref:
+        observed = {str(item["sha"]).lower() for item in items}
+        if request.ref.lower() not in observed:
+            return EvidenceState.STALE
+    return EvidenceState.VERIFIED
 
 
 def _canonical_hash(value: Any) -> str:
@@ -424,21 +571,16 @@ def _redact(value: Any) -> Any:
     return value
 
 
-def _record(
-    *,
-    request: EvidenceRequest,
-    state: EvidenceState,
-    capability: CredentialCapability,
-    completeness: CollectionCompleteness | None,
-    payload: Any,
-) -> EvidenceRecord:
+def _record(*, request: EvidenceRequest, state: EvidenceState, capability: CredentialCapability, completeness: CollectionCompleteness | None, payload: Any, repository_identity: Mapping[str, Any] | None) -> EvidenceRecord:
     sanitized = _redact(payload)
     payload_hash = _canonical_hash(sanitized)
+    repository_id = repository_identity.get("id") if repository_identity else None
+    repository_node_id = repository_identity.get("node_id") if repository_identity else None
     audit = {
         "provider": PROVIDER_ID,
         "repository_alias": request.repository_alias,
-        "repository_id": EXPECTED_REPOSITORY_ID,
-        "repository_node_id": EXPECTED_NODE_ID,
+        "repository_id": repository_id,
+        "repository_node_id": repository_node_id,
         "operation": request.operation.value,
         "subject": request.subject,
         "ref": request.ref,
@@ -451,8 +593,8 @@ def _record(
     return EvidenceRecord(
         provider=PROVIDER_ID,
         repository_alias=request.repository_alias,
-        repository_id=EXPECTED_REPOSITORY_ID,
-        repository_node_id=EXPECTED_NODE_ID,
+        repository_id=repository_id,
+        repository_node_id=repository_node_id,
         operation=request.operation.value,
         subject=request.subject,
         ref=request.ref,
