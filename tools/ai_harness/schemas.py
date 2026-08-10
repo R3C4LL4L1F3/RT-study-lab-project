@@ -59,6 +59,10 @@ CANONICAL_GATES = {
     "INDEPENDENT_REVIEW", "QA", "GITHUB_PROVENANCE", "RELEASE",
 }
 
+FINDING_TYPES = {
+    "VALIDATION_GAP", "CONFIRMED_DEFECT", "OBSERVATION", "UNRESOLVED",
+}
+
 REQUIRED_TASK_FIELDS = {
     "task_id", "title", "priority", "risk_tier", "work_state", "routing",
     "gates", "approvals", "findings", "kernel",
@@ -158,7 +162,7 @@ def validate_finding(finding: Any, index: int) -> dict[str, Any]:
     finding = _require_mapping(finding, field)
     if not isinstance(finding.get("finding_id"), str) or not finding["finding_id"]:
         raise SchemaError(f"{field}.finding_id is required")
-    if finding.get("type") not in {"VALIDATION_GAP", "CONFIRMED_DEFECT"}:
+    if finding.get("type") not in FINDING_TYPES:
         raise SchemaError(f"{field}.type is invalid")
     evidence = finding.get("evidence")
     if evidence is not None:
@@ -244,9 +248,17 @@ def validate_task(raw: Any, config: Config) -> dict[str, Any]:
         )
 
     if task.get("pause") is not None:
-        _require_mapping(task["pause"], "pause")
+        pause = _require_mapping(task["pause"], "pause")
+        if "resume_condition_satisfied" in pause and not isinstance(pause["resume_condition_satisfied"], bool):
+            raise SchemaError("pause.resume_condition_satisfied must be boolean")
+        if "resume_evidence_refs" in pause:
+            _require_list(pause["resume_evidence_refs"], "pause.resume_evidence_refs")
     if task.get("blocker") is not None:
-        _require_mapping(task["blocker"], "blocker")
+        blocker = _require_mapping(task["blocker"], "blocker")
+        if "unblock_condition_satisfied" in blocker and not isinstance(blocker["unblock_condition_satisfied"], bool):
+            raise SchemaError("blocker.unblock_condition_satisfied must be boolean")
+        if "unblock_evidence_refs" in blocker:
+            _require_list(blocker["unblock_evidence_refs"], "blocker.unblock_evidence_refs")
     if task.get("provenance") is not None:
         _require_mapping(task["provenance"], "provenance")
     return task

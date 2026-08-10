@@ -2,15 +2,20 @@ from __future__ import annotations
 
 from typing import Any
 
-from .transitions import TERMINAL_STATES, resume_target_valid, transition_enumerated
+from .transitions import (
+    TERMINAL_STATES,
+    previous_state_provenance_valid,
+    resume_target_valid,
+    transition_enumerated,
+)
 
 RULE_IDS = [
     "AIH-V0-R001", "AIH-V0-R002", "AIH-V0-R003", "AIH-V0-R004", "AIH-V0-R005",
     "AIH-V0-R010", "AIH-V0-R011",
     "AIH-V0-R020", "AIH-V0-R021", "AIH-V0-R022", "AIH-V0-R023",
-    "AIH-V0-R030", "AIH-V0-R031", "AIH-V0-R032", "AIH-V0-R033", "AIH-V0-R034", "AIH-V0-R035",
+    "AIH-V0-R030", "AIH-V0-R031", "AIH-V0-R032", "AIH-V0-R033", "AIH-V0-R034", "AIH-V0-R035", "AIH-V0-R036",
     "AIH-V0-R040", "AIH-V0-R041", "AIH-V0-R042",
-    "AIH-V0-R050", "AIH-V0-R051", "AIH-V0-R052", "AIH-V0-R053",
+    "AIH-V0-R050", "AIH-V0-R051", "AIH-V0-R052", "AIH-V0-R053", "AIH-V0-R054",
     "AIH-V0-R060", "AIH-V0-R061",
     "AIH-V0-R070", "AIH-V0-R071", "AIH-V0-R072", "AIH-V0-R073", "AIH-V0-R074",
     "AIH-V0-R080", "AIH-V0-R081", "AIH-V0-R082",
@@ -63,6 +68,30 @@ def _gate_actor_id(task: dict[str, Any], gate_id: str) -> str | None:
     return actor.get("actor_id")
 
 
+def _required_transition_approval(task: dict[str, Any], config: Any) -> dict[str, str] | None:
+    target = task.get("requested_transition")
+    if not target:
+        return None
+    key = f"{task['work_state']}->{target}"
+    return config.transitions.get("approval_requirements", {}).get(key)
+
+
+def _has_qualifying_approval(task: dict[str, Any], requirement: dict[str, str], config: Any) -> bool:
+    required_type = requirement["approval_type"]
+    required_decision = requirement["decision"]
+    allowed_roles = set(config.roles["approval_authority"].get(required_type, []))
+    for approval in task["approvals"]:
+        actor = approval["actor"]
+        if (
+            approval["approval_type"] == required_type
+            and approval["decision"] == required_decision
+            and actor.get("actor_type") == "HUMAN"
+            and actor.get("authority_role") in allowed_roles
+        ):
+            return True
+    return False
+
+
 def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
     out: list[dict[str, str]] = []
     for rid in ("AIH-V0-R001","AIH-V0-R002","AIH-V0-R003","AIH-V0-R004","AIH-V0-R005"):
@@ -72,14 +101,18 @@ def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
     if state == "PAUSED":
         pause = task.get("pause") or {}
         missing = [k for k in ("reason", "resume_condition", "previous_state") if not pause.get(k)]
-        out.append(rr("AIH-V0-R010", "FAIL" if missing else "PASS", "PAUSED missing: " + ", ".join(missing) if missing else "PAUSED contract satisfied"))
+        provenance_ok = not missing and previous_state_provenance_valid(task, config.transitions)
+        reason = "PAUSED missing: " + ", ".join(missing) if missing else ("PAUSED contract satisfied" if provenance_ok else "PAUSED previous_state is not a legal predecessor")
+        out.append(rr("AIH-V0-R010", "PASS" if not missing and provenance_ok else "FAIL", reason))
     else:
         out.append(rr("AIH-V0-R010", "NOT_APPLICABLE", "task is not PAUSED", "INFO"))
 
     if state == "BLOCKED":
         blocker = task.get("blocker") or {}
         missing = [k for k in ("description", "owner", "unblock_condition", "previous_state") if not blocker.get(k)]
-        out.append(rr("AIH-V0-R011", "FAIL" if missing else "PASS", "BLOCKED missing: " + ", ".join(missing) if missing else "BLOCKED contract satisfied"))
+        provenance_ok = not missing and previous_state_provenance_valid(task, config.transitions)
+        reason = "BLOCKED missing: " + ", ".join(missing) if missing else ("BLOCKED contract satisfied" if provenance_ok else "BLOCKED previous_state is not a legal predecessor")
+        out.append(rr("AIH-V0-R011", "PASS" if not missing and provenance_ok else "FAIL", reason))
     else:
         out.append(rr("AIH-V0-R011", "NOT_APPLICABLE", "task is not BLOCKED", "INFO"))
 
@@ -90,12 +123,12 @@ def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
         terminal_fail = state in TERMINAL_STATES
         out.append(rr("AIH-V0-R021", "FAIL" if terminal_fail else "PASS", "ordinary transition from terminal state is forbidden" if terminal_fail else "current state is nonterminal"))
         if state == "PAUSED":
-            ok = resume_target_valid(task, requested)
-            out.append(rr("AIH-V0-R022", "PASS" if ok else "FAIL", "resume target valid" if ok else "resume target does not match prior lifecycle state"))
+            ok = resume_target_valid(task, requested, config.transitions)
+            out.append(rr("AIH-V0-R022", "PASS" if ok else "FAIL", "PAUSED transition/resume prerequisites satisfied" if ok else "PAUSED resume lacks legal prior-state provenance or satisfied condition evidence"))
             out.append(rr("AIH-V0-R023", "NOT_APPLICABLE", "task is not BLOCKED", "INFO"))
         elif state == "BLOCKED":
-            ok = resume_target_valid(task, requested)
-            out.append(rr("AIH-V0-R023", "PASS" if ok else "FAIL", "resume target valid" if ok else "resume target does not match prior lifecycle state"))
+            ok = resume_target_valid(task, requested, config.transitions)
+            out.append(rr("AIH-V0-R023", "PASS" if ok else "FAIL", "BLOCKED transition/resume prerequisites satisfied" if ok else "BLOCKED resume lacks legal prior-state provenance or satisfied unblock evidence"))
             out.append(rr("AIH-V0-R022", "NOT_APPLICABLE", "task is not PAUSED", "INFO"))
         else:
             out.append(rr("AIH-V0-R022", "NOT_APPLICABLE", "task is not PAUSED", "INFO"))
@@ -107,9 +140,21 @@ def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
     gates = gate_map(task)
     minimum = set(config.gates["risk_minimum_required_gates"].get(task["risk_tier"], []))
     missing_minimum = sorted(minimum - set(gates))
+    nonrequired_minimum = sorted(gid for gid in minimum if gid in gates and not gates[gid]["obligation"]["required"])
     completeness_issues = required_gate_completeness_issues(task)
-    r030_issues = (["missing minimum required gate(s): " + ", ".join(missing_minimum)] if missing_minimum else []) + completeness_issues
-    out.append(rr("AIH-V0-R030", "FAIL" if r030_issues else "PASS", "; ".join(r030_issues) if r030_issues else "minimum risk gate records and authoritative PASS dispositions are present"))
+    r030_issues = []
+    if missing_minimum:
+        r030_issues.append("missing minimum required gate(s): " + ", ".join(missing_minimum))
+    if nonrequired_minimum:
+        r030_issues.append("risk-required gate(s) represented as non-required: " + ", ".join(nonrequired_minimum))
+    r030_issues.extend(completeness_issues)
+    out.append(rr("AIH-V0-R030", "FAIL" if r030_issues else "PASS", "; ".join(r030_issues) if r030_issues else "minimum risk gate obligations and authoritative PASS dispositions are present"))
+
+    missing_authority = sorted(
+        g["gate_id"] for g in task["gates"]
+        if g["obligation"]["required"] and not (g.get("authority") or {}).get("owner_role")
+    )
+    out.append(rr("AIH-V0-R036", "FAIL" if missing_authority else "PASS", "required gate authority missing: " + ", ".join(missing_authority) if missing_authority else "all required gates identify an authority owner"))
 
     req_fail = required_gate_failures(task)
     pre_rel_fail = requested == "READY_FOR_RELEASE" and bool(req_fail)
@@ -147,6 +192,13 @@ def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
         out.append(rr("AIH-V0-R052", "PASS" if role_ok else "FAIL", f"approval actor role {'authorized' if role_ok else 'unauthorized'} for {approval['approval_type']}"))
     out.append(rr("AIH-V0-R053", "PASS", "approval cannot override deterministic transition legality", "INFO"))
 
+    approval_requirement = _required_transition_approval(task, config)
+    if approval_requirement is None:
+        out.append(rr("AIH-V0-R054", "NOT_APPLICABLE", "requested transition has no frozen explicit approval prerequisite", "INFO"))
+    else:
+        approval_ok = _has_qualifying_approval(task, approval_requirement, config)
+        out.append(rr("AIH-V0-R054", "PASS" if approval_ok else "FAIL", f"required {approval_requirement['approval_type']} {approval_requirement['decision']} approval present" if approval_ok else f"transition requires explicit authorized {approval_requirement['approval_type']} {approval_requirement['decision']} approval"))
+
     qa_required = bool(qa and qa["obligation"]["required"])
     if qa_required:
         impl_actor = _gate_actor_id(task, "IMPLEMENTATION")
@@ -163,8 +215,8 @@ def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
         for rid in ("AIH-V0-R070","AIH-V0-R071","AIH-V0-R072","AIH-V0-R073","AIH-V0-R074"):
             out.append(rr(rid, "NOT_APPLICABLE", "no project findings present", "INFO"))
     for f in task["findings"]:
-        if f["type"] == "VALIDATION_GAP":
-            out.append(rr("AIH-V0-R070", "PASS", f"{f['finding_id']} remains VALIDATION_GAP", "INFO"))
+        if f["type"] in {"VALIDATION_GAP", "OBSERVATION", "UNRESOLVED"}:
+            out.append(rr("AIH-V0-R070", "PASS", f"{f['finding_id']} preserved as {f['type']}", "INFO"))
             continue
         evidence = f.get("evidence") or {}
         refs = evidence.get("evidence_refs") or []
@@ -196,7 +248,7 @@ def classify_status(rule_results: list[dict[str, str]]) -> str:
     failures = {r["rule_id"] for r in rule_results if r["status"] == "FAIL"}
     if failures & {"AIH-V0-R080", "AIH-V0-R082"}:
         return "CONTRADICTORY"
-    incomplete = {"AIH-V0-R030","AIH-V0-R031","AIH-V0-R032","AIH-V0-R035","AIH-V0-R060","AIH-V0-R061","AIH-V0-R071","AIH-V0-R073","AIH-V0-R074"}
+    incomplete = {"AIH-V0-R030","AIH-V0-R031","AIH-V0-R032","AIH-V0-R035","AIH-V0-R036","AIH-V0-R054","AIH-V0-R060","AIH-V0-R061","AIH-V0-R071","AIH-V0-R073","AIH-V0-R074"}
     if failures & incomplete:
         return "INCOMPLETE"
     if failures:

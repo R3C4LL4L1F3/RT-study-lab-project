@@ -38,6 +38,9 @@ def run(argv: list[str] | None = None) -> int:
         output_targets = {(output_dir / "evaluation.json").resolve(), (output_dir / "audit.json").resolve()}
         if input_path in output_targets:
             raise SchemaError("output directory would overwrite the supplied task input")
+        existing = sorted(str(path) for path in output_targets if path.exists())
+        if existing:
+            raise SchemaError("refusing to overwrite existing harness output: " + ", ".join(existing))
         raw = json.loads(input_path.read_text(encoding="utf-8"))
         result = evaluate_snapshot(raw, repo_root=_repo_root())
         if not result["final_policy_recheck"]["passed"]:
@@ -49,7 +52,7 @@ def run(argv: list[str] | None = None) -> int:
     except UnknownKernelError as exc:
         print(f"AUTHORITATIVE_EVALUATION_REFUSED: {exc}", file=sys.stderr)
         return EXIT_UNKNOWN_KERNEL
-    except (SchemaError, json.JSONDecodeError, OSError, ValueError, TypeError) as exc:
+    except (SchemaError, json.JSONDecodeError, OSError, ValueError, TypeError, FileExistsError) as exc:
         print(f"INVALID: {exc}", file=sys.stderr)
         return EXIT_INVALID
     except Exception as exc:

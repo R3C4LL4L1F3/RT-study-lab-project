@@ -1,65 +1,15 @@
 {
   "schema_version": "1",
   "transitions": {
-    "PROPOSED": [
-      "APPROVED",
-      "REJECTED",
-      "CANCELLED",
-      "DEFERRED",
-      "PAUSED",
-      "BLOCKED"
-    ],
-    "APPROVED": [
-      "READY",
-      "DEFERRED",
-      "PAUSED",
-      "BLOCKED",
-      "CANCELLED"
-    ],
-    "READY": [
-      "IN_PROGRESS",
-      "PAUSED",
-      "BLOCKED",
-      "DEFERRED",
-      "CANCELLED"
-    ],
-    "IN_PROGRESS": [
-      "IN_VALIDATION",
-      "PAUSED",
-      "BLOCKED",
-      "DEFERRED",
-      "CANCELLED"
-    ],
-    "IN_VALIDATION": [
-      "READY_FOR_RELEASE",
-      "IN_PROGRESS",
-      "PAUSED",
-      "BLOCKED",
-      "DEFERRED",
-      "CANCELLED"
-    ],
-    "READY_FOR_RELEASE": [
-      "COMPLETE",
-      "IN_VALIDATION",
-      "IN_PROGRESS",
-      "PAUSED",
-      "BLOCKED",
-      "DEFERRED",
-      "CANCELLED"
-    ],
-    "PAUSED": [
-      "BLOCKED",
-      "CANCELLED"
-    ],
-    "BLOCKED": [
-      "PAUSED",
-      "CANCELLED"
-    ],
-    "DEFERRED": [
-      "READY",
-      "APPROVED",
-      "CANCELLED"
-    ],
+    "PROPOSED": ["APPROVED", "REJECTED", "CANCELLED", "DEFERRED", "PAUSED", "BLOCKED"],
+    "APPROVED": ["READY", "DEFERRED", "PAUSED", "BLOCKED", "CANCELLED"],
+    "READY": ["IN_PROGRESS", "PAUSED", "BLOCKED", "DEFERRED", "CANCELLED"],
+    "IN_PROGRESS": ["IN_VALIDATION", "PAUSED", "BLOCKED", "DEFERRED", "CANCELLED"],
+    "IN_VALIDATION": ["READY_FOR_RELEASE", "IN_PROGRESS", "PAUSED", "BLOCKED", "DEFERRED", "CANCELLED"],
+    "READY_FOR_RELEASE": ["COMPLETE", "IN_VALIDATION", "IN_PROGRESS", "PAUSED", "BLOCKED", "DEFERRED", "CANCELLED"],
+    "PAUSED": ["BLOCKED", "CANCELLED"],
+    "BLOCKED": ["PAUSED", "CANCELLED"],
+    "DEFERRED": ["READY", "APPROVED", "CANCELLED"],
     "COMPLETE": [],
     "REJECTED": [],
     "CANCELLED": []
@@ -67,5 +17,11 @@
   "dynamic_resume_rules": {
     "PAUSED": "previous_state",
     "BLOCKED": "previous_state"
+  },
+  "approval_requirements": {
+    "PROPOSED->APPROVED": {
+      "approval_type": "MASTER",
+      "decision": "APPROVED"
+    }
   }
 }

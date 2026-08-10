@@ -5,13 +5,29 @@ from typing import Any
 from .canonical import canonical_bytes
 
 
+def _exclusive_write(path: Path, payload: bytes) -> None:
+    with path.open("xb") as handle:
+        handle.write(payload)
+        handle.write(b"\n")
+
+
 def write_outputs(result: dict[str, Any], output_dir: Path) -> tuple[Path, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
     evaluation_path = output_dir / "evaluation.json"
     audit_path = output_dir / "audit.json"
+    if evaluation_path.exists() or audit_path.exists():
+        raise FileExistsError("refusing to overwrite existing harness output")
     evaluation = {k: v for k, v in result.items() if k != "audit_record"}
-    evaluation_path.write_bytes(canonical_bytes(evaluation) + b"\n")
-    audit_path.write_bytes(canonical_bytes(result["audit_record"]) + b"\n")
+    created: list[Path] = []
+    try:
+        _exclusive_write(evaluation_path, canonical_bytes(evaluation))
+        created.append(evaluation_path)
+        _exclusive_write(audit_path, canonical_bytes(result["audit_record"]))
+        created.append(audit_path)
+    except Exception:
+        for path in created:
+            path.unlink(missing_ok=True)
+        raise
     return evaluation_path, audit_path
 
 
