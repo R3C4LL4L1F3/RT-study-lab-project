@@ -10,7 +10,7 @@ from tools.ai_harness.evaluator import evaluate_snapshot
 from .provider import EvidenceRecord, EvidenceState
 
 GITHUB_REF_PREFIXES = ("github:", "github-item:")
-AUTHORITATIVE_EVIDENCE_STATES = {EvidenceState.VERIFIED, EvidenceState.MISSING}
+POSITIVE_SUPPORT_STATES = {EvidenceState.VERIFIED}
 
 
 def _hash(value: Any) -> str:
@@ -27,9 +27,15 @@ def item_evidence_ref(record: EvidenceRecord, item: dict[str, Any]) -> str:
 
 
 def _available_refs(evidence: Sequence[EvidenceRecord]) -> set[str]:
+    """Return GitHub refs eligible to satisfy positive evidence-reference requirements.
+
+    Only VERIFIED evidence is positive support. MISSING is authoritative absence, not
+    positive evidence; STALE, UNVERIFIED, and CONTRADICTORY likewise cannot satisfy a
+    positive non-empty evidence requirement. All states remain available in provenance.
+    """
     available: set[str] = set()
     for record in evidence:
-        if record.evidence_state in AUTHORITATIVE_EVIDENCE_STATES:
+        if record.evidence_state in POSITIVE_SUPPORT_STATES:
             available.add(record_evidence_ref(record))
         payload = record.payload
         if isinstance(payload, dict) and isinstance(payload.get("items"), list):
@@ -40,7 +46,7 @@ def _available_refs(evidence: Sequence[EvidenceRecord]) -> set[str]:
                     state = EvidenceState(item.get("evidence_state"))
                 except (TypeError, ValueError):
                     continue
-                if state in AUTHORITATIVE_EVIDENCE_STATES:
+                if state in POSITIVE_SUPPORT_STATES:
                     available.add(item_evidence_ref(record, item))
     return available
 
@@ -58,11 +64,11 @@ def _bind_refs(values: Iterable[Any], available: set[str]) -> list[Any]:
 
 
 def _bind_evidence_before_policy(raw_task: dict[str, Any], evidence: Sequence[EvidenceRecord]) -> dict[str, Any]:
-    """Bind normalized GitHub facts to existing V0 evidence-reference inputs.
+    """Bind normalized positive GitHub support to existing V0 evidence-reference inputs.
 
     This does not create approvals, gate PASS states, clinical evidence, QA disposition,
     classifications, or work-state transitions. It only validates GitHub-prefixed
-    evidence references already asserted by the task snapshot before V0 policy runs.
+    positive evidence references already asserted by the task snapshot before V0 policy runs.
     """
     task = deepcopy(raw_task)
     available = _available_refs(evidence)
@@ -100,7 +106,7 @@ def evaluate_snapshot_with_evidence(
     evidence: Sequence[EvidenceRecord],
     repo_root: Path,
 ) -> dict[str, Any]:
-    """Bind normalized evidence first, then run the unchanged V0 evaluator/recheck."""
+    """Bind normalized positive evidence first, then run unchanged V0 evaluator/recheck."""
     for record in evidence:
         if not isinstance(record, EvidenceRecord):
             raise TypeError("only normalized EvidenceRecord inputs are accepted")
@@ -113,6 +119,7 @@ def evaluate_snapshot_with_evidence(
     output = dict(result)
     output["evidence_binding"] = {
         "performed_before_deterministic_evaluation": True,
+        "positive_support_states": sorted(state.value for state in POSITIVE_SUPPORT_STATES),
         "available_github_refs": sorted(_available_refs(evidence)),
     }
     output["evidence_provenance"] = [
