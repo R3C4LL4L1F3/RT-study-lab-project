@@ -1,0 +1,37 @@
+name: RTSL AIH 002 Stage 1 exact-SHA validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-exact-corrected-head:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact corrected PR #22 head
+        uses: actions/checkout@v4
+        with:
+          ref: 0e023ed79d0d7f13d19a830637e4376266259604
+          fetch-depth: 1
+
+      - name: Verify exact source SHA
+        shell: bash
+        run: |
+          expected='0e023ed79d0d7f13d19a830637e4376266259604'
+          actual="$(git rev-parse HEAD)"
+          echo "EXPECTED_SHA=$expected"
+          echo "ACTUAL_SHA=$actual"
+          test "$actual" = "$expected"
+
+      - name: Record Python runtime
+        run: python3 --version
+
+      - name: Run complete AI harness suite
+        run: python3 -m unittest discover -s tests/ai_harness -p 'test_*.py' -v
+
+      - name: Compile harness and tests
+        run: python3 -m compileall -q tools tests
