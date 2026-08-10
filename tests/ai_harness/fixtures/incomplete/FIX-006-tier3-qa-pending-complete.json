@@ -1,0 +1,27 @@
+{
+  "task_id": "FIX-006",
+  "title": "Valid Tier 1 record",
+  "priority": "P2",
+  "risk_tier": "TIER_3",
+  "work_state": "READY_FOR_RELEASE",
+  "routing": {
+    "coordinating_owner": "MASTER_PROJECT_CONTROL",
+    "primary_owner": "PLANNING_ARCHITECTURE",
+    "supporting_owners": []
+  },
+  "requested_transition": "COMPLETE",
+  "gates": [
+    {"gate_id":"CLINICAL_EVIDENCE","obligation":{"required":true,"origin":{"type":"RISK_TIER","ref":"TIER_3"}},"execution":{"state":"PASS"},"authority":{"owner_role":"CLINICAL_VALIDATION_SOURCES"},"disposition":{"decision":"PASS","actor":{"actor_id":"CLIN-1","actor_type":"HUMAN","authority_role":"CLINICAL_VALIDATION_SOURCES"},"evidence_refs":[]}},
+    {"gate_id":"ARCHITECTURE","obligation":{"required":true,"origin":{"type":"RISK_TIER","ref":"TIER_3"}},"execution":{"state":"PASS"},"authority":{"owner_role":"PLANNING_ARCHITECTURE"},"disposition":{"decision":"PASS","actor":{"actor_id":"ARCH-1","actor_type":"HUMAN","authority_role":"PLANNING_ARCHITECTURE"},"evidence_refs":[]}},
+    {"gate_id":"IMPLEMENTATION","obligation":{"required":true,"origin":{"type":"RISK_TIER","ref":"TIER_3"}},"execution":{"state":"PASS"},"authority":{"owner_role":"PLANNING_ARCHITECTURE"},"disposition":{"decision":"PASS","actor":{"actor_id":"IMPL-1","actor_type":"HUMAN","authority_role":"PLANNING_ARCHITECTURE"},"evidence_refs":[]}},
+    {"gate_id":"INDEPENDENT_REVIEW","obligation":{"required":true,"origin":{"type":"RISK_TIER","ref":"TIER_3"}},"execution":{"state":"PASS"},"authority":{"owner_role":"QA_REGRESSION_RELEASE"},"disposition":{"decision":"PASS","actor":{"actor_id":"REV-1","actor_type":"HUMAN","authority_role":"QA_REGRESSION_RELEASE"},"evidence_refs":[]}},
+    {"gate_id":"QA","obligation":{"required":true,"origin":{"type":"RISK_TIER","ref":"TIER_3"}},"execution":{"state":"REQUIRED_PENDING"},"authority":{"owner_role":"QA_REGRESSION_RELEASE"},"disposition":{"decision":null,"actor":null,"evidence_refs":[]}},
+    {"gate_id":"GITHUB_PROVENANCE","obligation":{"required":true,"origin":{"type":"RISK_TIER","ref":"TIER_3"}},"execution":{"state":"PASS"},"authority":{"owner_role":"GITHUB_PR_DOCUMENTATION"},"disposition":{"decision":"PASS","actor":{"actor_id":"GH-1","actor_type":"HUMAN","authority_role":"GITHUB_PR_DOCUMENTATION"},"evidence_refs":[]}}
+  ],
+  "approvals": [],
+  "findings": [],
+  "pause": null,
+  "blocker": null,
+  "kernel": {"profile_id":"RTSL-KERNEL-V0","version_ref":"RT_STUDY_LAB_PROJECT_OPERATING_KERNEL_V1.0"},
+  "provenance": {"evidence_refs": []}
+}

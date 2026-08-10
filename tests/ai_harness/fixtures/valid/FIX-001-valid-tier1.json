@@ -1,0 +1,25 @@
+{
+  "task_id": "FIX-001",
+  "title": "Valid Tier 1 record",
+  "priority": "P2",
+  "risk_tier": "TIER_1",
+  "work_state": "READY",
+  "routing": {
+    "coordinating_owner": "MASTER_PROJECT_CONTROL",
+    "primary_owner": "PLANNING_ARCHITECTURE",
+    "supporting_owners": []
+  },
+  "requested_transition": "IN_PROGRESS",
+  "gates": [],
+  "approvals": [],
+  "findings": [],
+  "pause": null,
+  "blocker": null,
+  "kernel": {
+    "profile_id": "RTSL-KERNEL-V0",
+    "version_ref": "RT_STUDY_LAB_PROJECT_OPERATING_KERNEL_V1.0"
+  },
+  "provenance": {
+    "evidence_refs": []
+  }
+}
