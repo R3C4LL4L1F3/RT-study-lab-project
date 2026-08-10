@@ -1,0 +1,10 @@
+{
+  "schema_version": "1",
+  "profile_id": "RTSL-KERNEL-V0",
+  "name": "RT Study Lab Project Operating Kernel",
+  "version_ref": "RT_STUDY_LAB_PROJECT_OPERATING_KERNEL_V1.0",
+  "source_revision": "UNAVAILABLE",
+  "content_hash_sha256": "UNAVAILABLE",
+  "effective_date": "UNAVAILABLE",
+  "policy_profile": "RTSL-AIH-V0-POLICY-1"
+}

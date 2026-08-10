@@ -1,0 +1,40 @@
+{
+  "schema_version": "1",
+  "roles": [
+    "MASTER_PROJECT_CONTROL",
+    "PLANNING_ARCHITECTURE",
+    "CLINICAL_VALIDATION_SOURCES",
+    "DESIGN_SYSTEM_UI_UX",
+    "SITE_CHAT_RT_STUDY",
+    "INTERACTIVE_MODELS_SIMULATION_LAB",
+    "VENTILATOR_WAVEFORM_CHAT",
+    "ECG_ACLS_LAB_SUBSYSTEMS",
+    "THREE_D_MODELING_CHAT",
+    "QA_REGRESSION_RELEASE",
+    "GITHUB_PR_DOCUMENTATION",
+    "TOOLS_CHAT"
+  ],
+  "approval_authority": {
+    "MASTER": [
+      "MASTER_PROJECT_CONTROL"
+    ],
+    "ARCHITECTURE": [
+      "PLANNING_ARCHITECTURE"
+    ],
+    "CLINICAL": [
+      "CLINICAL_VALIDATION_SOURCES"
+    ],
+    "QA": [
+      "QA_REGRESSION_RELEASE"
+    ],
+    "IMPLEMENTATION": [
+      "MASTER_PROJECT_CONTROL"
+    ],
+    "RELEASE": [
+      "MASTER_PROJECT_CONTROL"
+    ]
+  },
+  "defect_classification_authority": [
+    "QA_REGRESSION_RELEASE"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": "1",
+  "canonical_gates": [
+    "CLINICAL_EVIDENCE",
+    "ARCHITECTURE",
+    "IMPLEMENTATION",
+    "INDEPENDENT_REVIEW",
+    "QA",
+    "GITHUB_PROVENANCE",
+    "RELEASE"
+  ],
+  "execution_states": [
+    "NOT_REQUIRED",
+    "REQUIRED_PENDING",
+    "IN_REVIEW",
+    "PASS",
+    "FAIL",
+    "BLOCKED"
+  ],
+  "risk_minimum_required_gates": {
+    "TIER_0": [],
+    "TIER_1": [],
+    "TIER_2": [
+      "CLINICAL_EVIDENCE",
+      "INDEPENDENT_REVIEW",
+      "QA",
+      "GITHUB_PROVENANCE"
+    ],
+    "TIER_3": [
+      "CLINICAL_EVIDENCE",
+      "ARCHITECTURE",
+      "INDEPENDENT_REVIEW",
+      "QA",
+      "GITHUB_PROVENANCE"
+    ]
+  }
+}
