@@ -25,6 +25,10 @@ Separate SHA-256 identities are produced for:
 
 The human-readable console summary is never a hash source.
 
+## Output persistence
+
+V0 writes only to the explicitly designated local output directory. `evaluation.json` and `audit.json` are **create-only** artifacts for a run. If either target already exists, the evaluator refuses the write; it does not overwrite prior evaluation/audit evidence. The supplied task input also cannot be one of the output targets.
+
 ## Mandatory final recheck
 
 Immediately before successful output, V0 re-evaluates the original normalized task and compares the final candidate recommendation against fresh deterministic policy. A corrupted recommendation cannot be emitted as legal advancement.

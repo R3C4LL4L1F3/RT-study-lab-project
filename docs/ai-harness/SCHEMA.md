@@ -25,6 +25,19 @@ Actor types:
 
 `HUMAN`, `VERIFIED_TOOL`, `AI_ADVISORY`, `VERIFIED_GOVERNED_SYSTEM`.
 
-Approvals are explicit records. Free text never creates approval.
+Frozen finding types:
 
-Confirmed-defect findings preserve evidence-producer identity separately from authoritative classification identity.
+`VALIDATION_GAP`, `CONFIRMED_DEFECT`, `OBSERVATION`, `UNRESOLVED`.
+
+Approvals are explicit records. Free text never creates approval. The frozen transition matrix requires an explicit authorized `MASTER / APPROVED` human approval for `PROPOSED -> APPROVED`.
+
+Every gate whose `obligation.required` is true must identify `authority.owner_role`. A gate required by the task's risk tier cannot be represented as `required: false` merely because a gate record exists.
+
+For a PAUSED/BLOCKED resume to `previous_state`, V0 requires both legal previous-state provenance and explicit satisfied-condition evidence:
+
+- PAUSED: `resume_condition_satisfied: true` plus non-empty `resume_evidence_refs`;
+- BLOCKED: `unblock_condition_satisfied: true` plus non-empty `unblock_evidence_refs`.
+
+The `previous_state` must itself be a canonical state from which the frozen matrix legally permits entry into PAUSED/BLOCKED.
+
+Confirmed-defect findings preserve evidence-producer identity separately from authoritative classification identity. `OBSERVATION` and `UNRESOLVED` are preserved as their own frozen finding types and are not silently promoted to `CONFIRMED_DEFECT`.
