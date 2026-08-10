@@ -15,4 +15,10 @@ class SchemaTests(unittest.TestCase):
     def test_unknown_kernel_fails_closed(self):
         task=base_task(); task["kernel"]["version_ref"]="UNKNOWN"
         with self.assertRaises(UnknownKernelError): validate_task(task,self.config)
+    def test_unknown_approval_decision_rejected(self):
+        task=base_task(); task["approvals"]=[{"approval_id":"APR-1","approval_type":"MASTER","decision":"MAYBE","actor":{"actor_id":"H-1","actor_type":"HUMAN","authority_role":"MASTER_PROJECT_CONTROL"}}]
+        with self.assertRaises(SchemaError): validate_task(task,self.config)
+    def test_unknown_gate_owner_role_rejected(self):
+        task=base_task(); task["gates"]=[{"gate_id":"QA","obligation":{"required":True,"origin":{"type":"RISK_TIER","ref":"x"}},"execution":{"state":"REQUIRED_PENDING"},"authority":{"owner_role":"NOT_A_ROLE"},"disposition":{"decision":None,"actor":None,"evidence_refs":[]}}]
+        with self.assertRaises(SchemaError): validate_task(task,self.config)
 if __name__ == '__main__': unittest.main()

@@ -208,12 +208,20 @@ def validate_task(raw: Any, config: Config) -> dict[str, Any]:
     gate_ids = set()
     for idx, gate in enumerate(_require_list(task["gates"], "gates")):
         validate_gate(gate, idx)
+        authority = gate.get("authority") or {}
+        owner_role = authority.get("owner_role")
+        if owner_role is not None and owner_role not in config.roles["roles"]:
+            raise SchemaError(f"gates[{idx}].authority.owner_role is not a canonical role")
         if gate["gate_id"] in gate_ids:
             raise SchemaError(f"duplicate gate_id in task snapshot: {gate['gate_id']}")
         gate_ids.add(gate["gate_id"])
 
     for idx, approval in enumerate(_require_list(task["approvals"], "approvals")):
         validate_approval(approval, idx)
+        if approval["approval_type"] not in config.roles["approval_authority"]:
+            raise SchemaError(f"approvals[{idx}].approval_type is invalid")
+        if approval["decision"] not in {"APPROVED", "REVISE", "REJECTED", "BLOCKED"}:
+            raise SchemaError(f"approvals[{idx}].decision is invalid")
     for idx, finding in enumerate(_require_list(task["findings"], "findings")):
         validate_finding(finding, idx)
 

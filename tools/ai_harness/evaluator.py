@@ -39,15 +39,16 @@ def evaluate_snapshot(raw: dict[str, Any], *, repo_root: Path, corrupt_candidate
     if corrupt_candidate_for_test:
         recommendation["requested_transition_permitted"] = True
     fresh_rules = evaluate_rules(task, config)
-    recheck_passed, recheck_problems = final_policy_recheck(task, recommendation, fresh_rules)
+    recheck_passed, recheck_problems = final_policy_recheck(task, recommendation, rules, fresh_rules)
     deterministic_payload = {
         "task_id": task["task_id"], "policy_profile": "RTSL-AIH-V0-POLICY-1", "schema_version": "1",
         "kernel": task["kernel"], "rules": rules, "recommendation": recommendation,
     }
     deterministic_hash = sha256_hex(deterministic_payload)
-    audit = build_audit_record(task=task, input_hash=input_hash, rule_results=rules, recommendation=recommendation, deterministic_hash=deterministic_hash, recheck_passed=recheck_passed, recheck_problems=recheck_problems)
+    findings_hash = sha256_hex(rules)
+    audit = build_audit_record(task=task, input_hash=input_hash, rule_results=rules, recommendation=recommendation, deterministic_hash=deterministic_hash, findings_hash=findings_hash, recheck_passed=recheck_passed, recheck_problems=recheck_problems)
     return {
         "schema_version": "1", "policy_profile": "RTSL-AIH-V0-POLICY-1", "serialization_profile": "RTSL-CANONICAL-RECORD-1",
-        "input_sha256": input_hash, "deterministic_result_sha256": deterministic_hash, "deterministic_status": status,
+        "input_sha256": input_hash, "deterministic_findings_sha256": findings_hash, "deterministic_result_sha256": deterministic_hash, "deterministic_status": status,
         "deterministic_findings": rules, "recommendation": recommendation, "final_policy_recheck": audit["final_policy_recheck"], "audit_record": audit,
     }

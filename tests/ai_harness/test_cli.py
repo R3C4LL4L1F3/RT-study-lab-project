@@ -20,5 +20,9 @@ class CliTests(unittest.TestCase):
                 code=run(['evaluate',str(inp),'--output-dir',str(out)])
             self.assertEqual(code,5)
             self.assertFalse(out.exists())
-
+    def test_output_cannot_overwrite_input_snapshot(self):
+        with tempfile.TemporaryDirectory() as td:
+            td=Path(td); out=td/'out'; out.mkdir(); inp=out/'evaluation.json'; inp.write_text(json.dumps(base_task()),encoding='utf-8'); original=inp.read_text()
+            code=run(['evaluate',str(inp),'--output-dir',str(out)])
+            self.assertEqual(code,2); self.assertEqual(inp.read_text(),original); self.assertFalse((out/'audit.json').exists())
 if __name__=='__main__': unittest.main()

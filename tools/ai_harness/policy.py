@@ -33,6 +33,28 @@ def required_gate_failures(task: dict[str, Any]) -> list[str]:
     ]
 
 
+def required_gate_completeness_issues(task: dict[str, Any]) -> list[str]:
+    issues: list[str] = []
+    for gate in task["gates"]:
+        if not gate["obligation"]["required"] or gate["execution"]["state"] != "PASS":
+            continue
+        disposition = gate.get("disposition") or {}
+        actor = disposition.get("actor") or {}
+        authority = gate.get("authority") or {}
+        if disposition.get("decision") != "PASS":
+            issues.append(f"{gate['gate_id']}: PASS execution lacks PASS authority disposition")
+            continue
+        if actor.get("actor_type") not in {"HUMAN", "VERIFIED_GOVERNED_SYSTEM"}:
+            issues.append(f"{gate['gate_id']}: PASS execution lacks authoritative disposition actor")
+            continue
+        if authority.get("owner_role") and actor.get("authority_role") != authority.get("owner_role"):
+            issues.append(f"{gate['gate_id']}: disposition actor role does not match gate authority")
+            continue
+        if gate["gate_id"] == "CLINICAL_EVIDENCE" and not disposition.get("evidence_refs"):
+            issues.append("CLINICAL_EVIDENCE: required PASS lacks authoritative evidence reference")
+    return issues
+
+
 def _gate_actor_id(task: dict[str, Any], gate_id: str) -> str | None:
     gate = gate_map(task).get(gate_id)
     if not gate:
@@ -85,7 +107,9 @@ def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
     gates = gate_map(task)
     minimum = set(config.gates["risk_minimum_required_gates"].get(task["risk_tier"], []))
     missing_minimum = sorted(minimum - set(gates))
-    out.append(rr("AIH-V0-R030", "FAIL" if missing_minimum else "PASS", "missing minimum required gate(s): " + ", ".join(missing_minimum) if missing_minimum else "minimum risk gate records are present"))
+    completeness_issues = required_gate_completeness_issues(task)
+    r030_issues = (["missing minimum required gate(s): " + ", ".join(missing_minimum)] if missing_minimum else []) + completeness_issues
+    out.append(rr("AIH-V0-R030", "FAIL" if r030_issues else "PASS", "; ".join(r030_issues) if r030_issues else "minimum risk gate records and authoritative PASS dispositions are present"))
 
     req_fail = required_gate_failures(task)
     pre_rel_fail = requested == "READY_FOR_RELEASE" and bool(req_fail)
@@ -94,7 +118,6 @@ def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
     out.append(rr("AIH-V0-R032", "FAIL" if comp_fail else ("PASS" if requested == "COMPLETE" else "NOT_APPLICABLE"), "COMPLETE requires all mandatory gates PASS" if comp_fail else ("mandatory completion gates PASS" if requested == "COMPLETE" else "target is not COMPLETE"), "ERROR" if comp_fail else "INFO"))
     out.append(rr("AIH-V0-R033", "PASS", "READY_FOR_RELEASE and COMPLETE are distinct canonical states", "INFO"))
 
-    impl = gates.get("IMPLEMENTATION")
     qa = gates.get("QA")
     out.append(rr("AIH-V0-R034", "PASS", "implementation and QA remain independent gate records", "INFO"))
     tier3_qa_fail = task["risk_tier"] == "TIER_3" and requested == "COMPLETE" and (not qa or qa["execution"]["state"] != "PASS")
@@ -185,10 +208,12 @@ def transition_permitted(task: dict[str, Any], rules: list[dict[str, str]]) -> b
     return bool(task.get("requested_transition")) and not any(r["status"] == "FAIL" for r in rules)
 
 
-def final_policy_recheck(task: dict[str, Any], recommendation: dict[str, Any], fresh_rules: list[dict[str, str]]) -> tuple[bool, list[str]]:
+def final_policy_recheck(task: dict[str, Any], recommendation: dict[str, Any], original_rules: list[dict[str, str]], fresh_rules: list[dict[str, str]]) -> tuple[bool, list[str]]:
     expected_allowed = transition_permitted(task, fresh_rules)
     expected_status = classify_status(fresh_rules)
     problems: list[str] = []
+    if fresh_rules != original_rules:
+        problems.append("fresh deterministic rule evaluation diverged from initial evaluation")
     if bool(recommendation.get("requested_transition_permitted")) != expected_allowed:
         problems.append("requested-transition permission diverged from fresh deterministic policy")
     if recommendation.get("deterministic_status") != expected_status:

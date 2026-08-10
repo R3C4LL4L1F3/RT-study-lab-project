@@ -35,6 +35,9 @@ def run(argv: list[str] | None = None) -> int:
     try:
         input_path = args.input.resolve()
         output_dir = args.output_dir.resolve()
+        output_targets = {(output_dir / "evaluation.json").resolve(), (output_dir / "audit.json").resolve()}
+        if input_path in output_targets:
+            raise SchemaError("output directory would overwrite the supplied task input")
         raw = json.loads(input_path.read_text(encoding="utf-8"))
         result = evaluate_snapshot(raw, repo_root=_repo_root())
         if not result["final_policy_recheck"]["passed"]:
