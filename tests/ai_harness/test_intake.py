@@ -13,6 +13,7 @@ from tools.ai_harness.github_readonly.provider import (
 from tests.ai_harness.common import base_task
 
 ROOT = Path(__file__).resolve().parents[2]
+AUTONOMY_PROFILE = "RTSL-KERNEL-AUTONOMY-001-CONTROLLED"
 
 
 def request(**claims):
@@ -219,6 +220,43 @@ class IntakeRegressionTests(unittest.TestCase):
     def test_v0_integration_rejects_non_authoritative_copy(self):
         with self.assertRaises(Exception):
             evaluate_assembled_v0(self.assembled(request()), base_task(), evidence=[], repo_root=ROOT)
+
+    def test_controlled_profile_derives_conditional_tier2_gate_without_authorizing_it(self):
+        raw = request()
+        raw["authoritative_facts"] = [
+            authoritative("priority", "P2"),
+            authoritative("risk_tier", "TIER_2"),
+            authoritative("work_state", "READY"),
+            authoritative("owner", "PLANNING_ARCHITECTURE"),
+            {
+                "field": "independent_review_requirement",
+                "value": False,
+                "authority_role": "MASTER_PROJECT_CONTROL",
+                "authority_actor_id": "MASTER-1",
+                "source_refs": ["project-control://RTSL-KERNEL-AUTONOMY-001/contract"],
+                "source_revision": "autonomy-contract-r1",
+            },
+        ]
+        snapshot = assemble_intake(raw, repo_root=ROOT, governance_profile=AUTONOMY_PROFILE)["assembled_task_snapshot"]
+        conditional = next(g for g in snapshot["canonical_payload"]["gates"]["gates"] if g["gate_id"] == "INDEPENDENT_REVIEW")
+        self.assertFalse(conditional["obligation"]["value"])
+        self.assertEqual(conditional["obligation"]["condition"]["type"], "CONDITIONAL_CONTRACT")
+        self.assertEqual(snapshot["canonical_payload"]["gates"]["status"], "DETERMINISTICALLY_DERIVED")
+        self.assertTrue(snapshot["canonical_payload"]["missing_context"])
+        result = evaluate_assembled_v0(snapshot, evidence=[], repo_root=ROOT, governance_profile=AUTONOMY_PROFILE)
+        self.assertTrue(result["final_policy_recheck"]["performed"])
+
+    def test_controlled_profile_v0_handoff_keeps_final_recheck(self):
+        raw = request()
+        raw["authoritative_facts"] = [
+            authoritative("priority", "P2"),
+            authoritative("risk_tier", "TIER_1"),
+            authoritative("work_state", "IN_PROGRESS"),
+            authoritative("owner", "PLANNING_ARCHITECTURE"),
+        ]
+        snapshot = self.assembled(raw)
+        result = evaluate_assembled_v0(snapshot, evidence=[], repo_root=ROOT, governance_profile=AUTONOMY_PROFILE)
+        self.assertTrue(result["final_policy_recheck"]["performed"])
 
 
 if __name__ == "__main__":

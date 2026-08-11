@@ -20,13 +20,27 @@ def previous_state_provenance_valid(task: dict[str, Any], matrix: dict[str, Any]
     return current in allowed_targets(previous, matrix)
 
 
-def transition_enumerated(task: dict[str, Any], target: str, matrix: dict[str, Any]) -> bool:
+def transition_enumerated(
+    task: dict[str, Any],
+    target: str,
+    matrix: dict[str, Any],
+    *,
+    allow_bounded_completion: bool = False,
+) -> bool:
     current = task["work_state"]
     if current in {"PAUSED", "BLOCKED"}:
         record = task.get("pause") if current == "PAUSED" else task.get("blocker")
         previous = (record or {}).get("previous_state")
         if target == previous:
             return previous_state_provenance_valid(task, matrix)
+    if (
+        allow_bounded_completion
+        and current == "IN_VALIDATION"
+        and target == "COMPLETE"
+        and task.get("completion_scope", "BOUNDED_TASK") == "BOUNDED_TASK"
+    ):
+        release_gate = next((g for g in task.get("gates", []) if g.get("gate_id") == "RELEASE"), None)
+        return not bool(release_gate and (release_gate.get("obligation") or {}).get("required"))
     return target in allowed_targets(current, matrix)
 
 

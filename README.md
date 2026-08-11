@@ -93,6 +93,9 @@ The following remain separate persistent subsystem owners and must not be migrat
 - [`docs/VALIDATION_REGISTER.md`](docs/VALIDATION_REGISTER.md) — automated/manual/clinical/accessibility validation evidence and boundaries
 - [`docs/ARCHITECTURE_DECISIONS.md`](docs/ARCHITECTURE_DECISIONS.md) — project and architecture decision register
 - [`docs/AI_DEVELOPMENT_WORKFLOW.md`](docs/AI_DEVELOPMENT_WORKFLOW.md) — guardrails and work-routing for AI-assisted development
+- [`docs/governance/RTSL-KERNEL-AUTONOMY-001-ADOPTION-RECORD.md`](docs/governance/RTSL-KERNEL-AUTONOMY-001-ADOPTION-RECORD.md) — controlled governance migration adoption state and activation boundary
+- [`docs/governance/RTSL-KERNEL-AUTONOMY-001-CONFLICT-MIGRATION-REGISTER.md`](docs/governance/RTSL-KERNEL-AUTONOMY-001-CONFLICT-MIGRATION-REGISTER.md) — source-inspected KEEP / CLARIFY / MODIFY register
+- [`docs/governance/RTSL-KERNEL-AUTONOMY-001-INDEPENDENT-QA-HANDOFF.md`](docs/governance/RTSL-KERNEL-AUTONOMY-001-INDEPENDENT-QA-HANDOFF.md) — complete 25-item independent-QA handoff; implementation-owner evidence only
 - [`docs/PRODUCTION_REPOSITORY_VERIFICATION.md`](docs/PRODUCTION_REPOSITORY_VERIFICATION.md) — current production source/verification baseline
 
 ## Change workflow

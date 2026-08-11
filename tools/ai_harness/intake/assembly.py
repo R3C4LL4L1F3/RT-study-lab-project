@@ -70,7 +70,13 @@ def _missing(fields: dict[str, dict[str, Any]], raw: dict[str, Any]) -> list[dic
     return result
 
 
-def assemble_intake(raw: dict[str, Any], *, repo_root: Path, evidence: Sequence[EvidenceRecord] = ()) -> dict[str, Any]:
+def assemble_intake(
+    raw: dict[str, Any],
+    *,
+    repo_root: Path,
+    evidence: Sequence[EvidenceRecord] = (),
+    governance_profile: str | None = None,
+) -> dict[str, Any]:
     validate_intake_request(raw)
     normalized = deepcopy(raw)
     fields = _claim_fields(normalized)
@@ -86,7 +92,7 @@ def assemble_intake(raw: dict[str, Any], *, repo_root: Path, evidence: Sequence[
         "intake_schema_version": "1",
         "assembled_fields": fields,
         "routing": routing,
-        "gates": derive_gates(fields, repo_root=repo_root),
+        "gates": derive_gates(fields, repo_root=repo_root, governance_profile=governance_profile),
         "references": {
             "issue_numbers": issue_refs,
             "pull_request_numbers": refs.get("pull_request_numbers", []),
@@ -103,6 +109,7 @@ def assemble_intake(raw: dict[str, Any], *, repo_root: Path, evidence: Sequence[
             "routing_registry_version": "RTSL-AIH-004-ROUTING-1",
             "policy_profile_version": "RTSL-AIH-V0-POLICY-1",
             "canonicalization_profile": "RTSL-CANONICAL-RECORD-1",
+            "governance_profile": governance_profile or "CURRENT_KERNEL",
         },
     }
     assembled["v0_projection"] = safe_v0_projection(assembled)

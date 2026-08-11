@@ -12,7 +12,8 @@
     "THREE_D_MODELING_CHAT",
     "QA_REGRESSION_RELEASE",
     "GITHUB_PR_DOCUMENTATION",
-    "TOOLS_CHAT"
+    "TOOLS_CHAT",
+    "AI_HARNESS"
   ],
   "approval_authority": {
     "MASTER": [

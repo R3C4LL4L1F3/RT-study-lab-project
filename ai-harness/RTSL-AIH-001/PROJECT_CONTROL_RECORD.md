@@ -274,3 +274,7 @@ The following remain outside this completed V0 scope and require separate future
 - autonomous release;
 - cross-task persistence;
 - duplicate-task-ID detection deferred by `RTSL-AIH-IMP-001`.
+
+## Controlled migration revision — RTSL-AIH-001-REV-AUTONOMY-01
+
+The bounded migration candidate is recorded in `REV-AUTONOMY-01.md`. It is **prepared / NOT ACTIVE** and does not alter the completed V0 baseline until a separate MASTER PROJECT CONTROL activation decision. The candidate preserves the frozen V0 evaluator, canonical audit, read-only boundary, no-gate-downgrade, transition legality, PAUSED/BLOCKED contracts, and final deterministic recheck while adding dormant controlled-profile handling for conditional Tier 2 independence, mandatory Tier 3 independence, canonical gate authority, bounded-task completion, and project release/closure distinction.

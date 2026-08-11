@@ -22,7 +22,18 @@ def human_readable_projection(assembled: dict[str, Any]) -> str:
         lines.append(f"{name}: {candidate.get('value')} ({candidate.get('status')})")
     lines.extend(["", "GATES"])
     for gate in assembled.get("gates", {}).get("gates", []):
-        lines.append(f"{gate['gate_id']}: required, pending")
+        obligation = gate.get("obligation", {})
+        required = obligation.get("required", obligation.get("value"))
+        execution_state = (gate.get("execution") or {}).get("state", "UNKNOWN")
+        execution = {
+            "REQUIRED_PENDING": "pending",
+            "NOT_REQUIRED": "not required",
+            "IN_REVIEW": "in review",
+            "PASS": "pass",
+            "FAIL": "fail",
+            "BLOCKED": "blocked",
+        }.get(execution_state, execution_state.lower().replace("_", " "))
+        lines.append(f"{gate['gate_id']}: {'required' if required else 'not required'}, {execution}")
     if not assembled.get("gates", {}).get("gates"):
         lines.append("None derived")
     lines.extend(["", "MISSING CONTEXT"])
