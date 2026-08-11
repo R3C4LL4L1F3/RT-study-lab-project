@@ -104,6 +104,14 @@ Do not create an implementation branch for the reusable Interactive Models core 
 
 Future V/Q, gas-exchange, pulmonary-circulation, pulmonary-embolism physiology, ARDS physiology, heart-failure physiology and similar models remain **DEFERRED / framework-dependent**. They are not an approved speculative implementation backlog.
 
+#### Three.js 2.5D circulation renderer planning package
+
+- Status: **PROPOSED / SPECIFICATION — IMPLEMENTATION NOT APPROVED**
+- Related records: `docs/INTERACTIVE_MODELS_THREEJS_ROADMAP.md`, `docs/INTERACTIVE_MODELS_THREEJS_ARCHITECTURE.md`, `docs/INTERACTIVE_MODELS_THREEJS_VALIDATION_PLAN.md`, `docs/ADR-012-threejs-2-5d-circulation-renderer.md`
+- Scope: replace the circulation viewport presentation layer while preserving the deterministic physiology source of truth and accessible fallback.
+- Gate: architecture/model contract, clinical teaching specification, asset provenance, independent QA, and validation evidence must pass before production implementation.
+- Non-goals: full 3D, new shock categories, medications, interventions, or unreviewed AI-generated anatomy.
+
 ## P2 — Governance, validation infrastructure and stabilization
 
 ### Project-control foundation — PR #1

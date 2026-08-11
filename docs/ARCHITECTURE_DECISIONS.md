@@ -218,6 +218,20 @@ Current production facts:
 
 Do not enable branch protection, create a tag/Release, deploy, or delete validation branches as part of project-control synchronization.
 
+## DEC-012 — Use a Three.js 2.5D renderer as a replaceable presentation layer
+
+- Status: Proposed; architecture review required
+- Evidence basis: Project-control planning package; current lab visual audit
+- Related records: `docs/ADR-012-threejs-2-5d-circulation-renderer.md`, `docs/INTERACTIVE_MODELS_THREEJS_ARCHITECTURE.md`
+
+### Decision
+
+Plan a Three.js 2.5D renderer using an orthographic camera, documented GLB/glTF anatomy assets, canonical vascular segment IDs, bounded instanced parcels, and an immutable renderer frame adapter. Keep the existing deterministic physiology engine, accessible DOM summary, validation modules, and SVG/text fallback independent of the renderer.
+
+### Gate
+
+This decision authorizes specification and isolated prototyping only. It does not authorize production implementation until the clinical/model contract, asset provenance, independent QA, accessibility evidence, physiology-parity evidence, and runtime evidence pass.
+
 ## Future ADR threshold
 
 Create a dedicated ADR when a decision materially changes one or more of the following:
