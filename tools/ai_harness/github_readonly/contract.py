@@ -1,9 +1,11 @@
 from __future__ import annotations
 from typing import Protocol, Any
 
+from .provider import EvidenceProvider, EvidenceRequest, EvidenceRecord
+
 
 class GitHubReadOnlyEvidenceAdapter(Protocol):
-    """Evidence-only interface. Mutation methods are intentionally absent."""
+    """Legacy V0 read-only adapter surface. Mutation methods are intentionally absent."""
     def get_repository_metadata(self, repository: str) -> dict[str, Any]: ...
     def get_branch_head(self, repository: str, branch: str) -> dict[str, Any]: ...
     def get_commit_metadata(self, repository: str, sha: str) -> dict[str, Any]: ...
@@ -13,3 +15,11 @@ class GitHubReadOnlyEvidenceAdapter(Protocol):
     def get_pull_request_files(self, repository: str, number: int) -> list[dict[str, Any]]: ...
     def get_check_runs_or_status(self, repository: str, sha: str) -> dict[str, Any]: ...
     def get_review_metadata(self, repository: str, number: int) -> list[dict[str, Any]]: ...
+
+
+__all__ = [
+    "EvidenceProvider",
+    "EvidenceRequest",
+    "EvidenceRecord",
+    "GitHubReadOnlyEvidenceAdapter",
+]
