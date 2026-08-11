@@ -1,0 +1,18 @@
+{
+  "schema_version": "1",
+  "registry_id": "RTSL-AIH-004-ROUTING-1",
+  "routing_rules": [
+    {
+      "rule_id": "ROUTE-ARCH-001",
+      "terms": ["architecture"],
+      "candidate_subsystem": "SHARED_ARCHITECTURE",
+      "candidate_owner": "PLANNING_ARCHITECTURE"
+    },
+    {
+      "rule_id": "ROUTE-AIH-001-002-004",
+      "terms": ["aih-"],
+      "candidate_subsystem": "SHARED_DEVELOPMENT_GOVERNANCE",
+      "candidate_owner": "PLANNING_ARCHITECTURE"
+    }
+  ]
+}
