@@ -60,14 +60,24 @@ Rejected as an authoritative source. It may support concept exploration, but pro
 
 The decision is reversible during the prototype phase because the SVG renderer remains available behind a renderer adapter/fallback. It becomes a production migration only after the release gate in `docs/INTERACTIVE_MODELS_THREEJS_VALIDATION_PLAN.md` passes.
 
-## Open questions
+## Resolutions for the M1 renderer-shell gate
 
-- Which anatomical asset will be approved and under what license?
-- Which source/reference set will define proportional scale and mesh landmarks?
-- Will the heart use authored morph targets, procedural deformation, or both?
-- What desktop browsers and WebGL capability levels are release targets?
-- Which labels belong in the 3D scene versus the accessible DOM overlay?
-- Which QA owner will perform manual visual and interaction review?
+The following decisions resolve the technical questions for the isolated M1 prototype without claiming that the production anatomical asset or clinical reference set is approved:
+
+- **M1 anatomy asset:** use clearly labeled procedural placeholder geometry only. Do not treat it as production anatomy. A reviewed Blender-authored GLB remains an M2 dependency.
+- **Production asset and license:** defer selection to the 3D Modeling Chat and Clinical Validation & Sources owners. The asset must have documented source, license, scale basis, mesh names, and review evidence before M2.
+- **Scale and landmarks:** M1 uses normalized scene coordinates and named camera anchors. M2 must bind those anchors to an approved anatomical reference set.
+- **Heart deformation:** prefer authored morph targets for production chamber deformation, with deterministic procedural transforms allowed for the M1 shell. Both must be driven by the same renderer frame contract.
+- **Browser target:** M1 must run in the existing supported desktop browser validation environment and record the actual browser/graphics capability observed. The final support matrix remains a release-gate decision.
+- **Labels:** essential values and accessibility text remain in the DOM overlay. The Three.js scene may display concise anatomical labels, but no clinical meaning may exist only in WebGL.
+- **Manual QA owner:** QA — Regression & Release owns independent visual, interaction, accessibility, and runtime review, with Clinical Validation & Sources reviewing clinical teaching mappings.
+
+The following questions remain evidence-bound and are intentionally not guessed in this planning PR:
+
+- the final production anatomical asset and license;
+- the approved proportional reference set;
+- the final browser/WebGL support matrix;
+- the final clinical-educational disposition of the visual encodings.
 
 ## Related records
 

@@ -32,14 +32,23 @@
 - Independent clinical-educational review.
 - GitHub Actions evidence for any Three.js implementation.
 
+## Resolved planning questions
+
+- M1 will use procedural placeholder geometry, not unreviewed anatomy.
+- Production heart deformation will prefer authored morph targets; M1 may use deterministic procedural transforms.
+- Essential labels and accessibility output remain DOM-owned.
+- QA — Regression & Release owns independent visual/runtime/accessibility review.
+- Clinical Validation & Sources and 3D Modeling Chat still own the final asset, reference set, and clinical visual-encoding decisions.
+
 ## Next actions
 
-1. Review this planning package through project-control/architecture ownership.
+1. Obtain independent maintainer approval for PR #29.
 2. Confirm the clinical/model specification and visual teaching limits.
 3. Assign an anatomical asset owner and provenance reviewer.
 4. Approve the renderer frame contract.
-5. Build an isolated Three.js renderer spike without changing production behavior.
-6. Record prototype screenshots and parity results.
+5. Create the M1 prototype branch in the production repository.
+6. Build an isolated Three.js renderer spike without changing production behavior.
+7. Record prototype screenshots and parity results.
 
 ## Non-goals for this branch
 
