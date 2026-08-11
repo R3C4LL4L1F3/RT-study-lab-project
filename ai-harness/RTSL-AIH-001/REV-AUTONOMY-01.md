@@ -26,6 +26,8 @@ The following remain unchanged and are re-evaluated in the selected profile: no-
 
 ## Implementation surface
 
+Initial reviewed implementation commit: `99df24b65acf9e7fd61f1984687e4fb5725e49d2`.
+
 - `config/ai_harness/autonomy.v1.json`
 - `config/ai_harness/gates.v1.json` canonical gate-authority map
 - `config/ai_harness/roles.v1.json` non-authority `AI_HARNESS` execution role

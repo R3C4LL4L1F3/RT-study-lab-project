@@ -63,6 +63,7 @@ Until then, a prepared autonomy profile is a migration candidate only. A pull re
 | Operating Manual | Available external Version 2.6 Phase 1 working candidate; not labeled as an approved repository artifact | SHA-256 `C93E9E01E2468AFA4FBD16C34E39EBB5A00ADF017B3993AF3D67832B0F6EF41D` |
 | Role archive inventory | Available external Version 2.6 Phase 1 inventory; missing prompts are explicitly marked unavailable | SHA-256 `B2107A6E52C9372F705CEB7C990FA9C6901A9F0F9493C5A179B7CC5A4285CD85` |
 | Migration base | AIH-004 implementation head used as the migration starting point | `2f6d40fa995938b0089ad71690f7f5b7936d9ac9` |
+| Migration implementation commit | Reviewed bounded migration implementation | `99df24b65acf9e7fd61f1984687e4fb5725e49d2` (exact commit before this provenance-only record update) |
 | Remote main at inspection | Current project-control main after PR #29; not the migration branch | `f1b6f59322d5499a5fd180ed5741595df35cb872` |
 
 ## Affected durable artifacts

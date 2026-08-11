@@ -8,6 +8,8 @@
 
 **Branch:** `feature/rtsl-kernel-autonomy-001-controlled-migration`
 
+**Reviewed implementation commit:** `99df24b65acf9e7fd61f1984687e4fb5725e49d2`
+
 **Migration state:** `APPROVED FOR CONTROLLED ADOPTION` / `NOT YET ACTIVE`
 
 **Implementation owner:** bounded migration execution owner
