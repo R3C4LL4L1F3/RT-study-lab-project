@@ -49,6 +49,21 @@ The reconciliation order was: explicit authority and source provenance; current 
 | Production PR #3 | Repository event; GitHub ID verified | Draft, open, 5 commits, focused contract tests reported `3/3`, full build/typecheck pending in checkout; not production-integrated | Current production GitHub PR |
 | Production run `31311314980` | Validation event; run ID verified | `Success` on production `main` at `d64bde3`; CI warnings present; not clinical/accessibility/release proof | Current GitHub Actions |
 
+## Roadmap coverage correction
+
+The strict entity-to-Project audit is recorded in [`PHASE-1-ROADMAP-COVERAGE.md`](PHASE-1-ROADMAP-COVERAGE.md). It reviewed 26 significant Phase 1 entities and assigned each exactly one disposition. The live Project remains a single surface and now has 14 items, 13 named views, and 5 enabled workflows.
+
+The audit found no missing active, approved-future, validation/gate, or infrastructure/governance work item that could be created without inventing authority, state, priority, risk, owner, or gate data. It did find one materially useful historical milestone absent from the Historical Milestones view: the merged PR #1 project-control documentation foundation. Issue #34 was created from verified PR evidence, auto-added once by the existing Project workflow, and set to `COMPLETE`, `Documentation / Governance`, `Milestone`, and `Historical`; the issue is now closed by the existing `COMPLETE -> close issue` workflow.
+
+Existing item field corrections made in the live Project were deliberately limited to evidence-supported view/state representation:
+
+- #26: `DEFERRED`, `AI / Development Infrastructure`, `Later`.
+- #27: `APPROVED`, `Documentation / Governance`, `Near-Term`.
+- #28: `COMPLETE`, `AI / Development Infrastructure`, `Historical`.
+- #32: `APPROVED`, `QA / Release`, `Near-Term`.
+
+Priority, risk tier, owner, target date, release/version, clinical gate, architecture gate, and QA gate values were not inferred or populated. C-001 and C-002 remain explicit unresolved/non-card dispositions; creating a card for either would require a new authority/state decision not present in the bounded evidence.
+
 ## Important normalized decisions and requirements
 
 ### Authority separation
@@ -104,7 +119,8 @@ The resolved architecture decision says Tier 2 gates are contract-triggered rath
 - **Classification:** roadmap-state normalization; resolved in the existing Project.
 - **Claims:** issues #26, #27, #28, and #32 each contain explicit current dispositions that differed from their auto-added Project `PROPOSED` value.
 - **Correction:** Project statuses were updated to `DEFERRED`, `APPROVED`, `COMPLETE`, and `APPROVED` respectively.
-- **Disposition:** resolved and rechecked; no new roadmap item was created.
+- **Correction:** the same four items also received evidence-supported workstream/planning-horizon values so deferred, governance, historical, and QA work appears in the appropriate existing views.
+- **Disposition:** resolved and rechecked; no duplicate normalization item was created.
 
 ### C-004 - Chat implementation/test claims versus independent validation
 
@@ -125,6 +141,8 @@ The resolved architecture decision says Tier 2 gates are contract-triggered rath
 - Project: `https://github.com/users/R3C4LL4L1F3/projects/1`
 - Project-control repository: `https://github.com/R3C4LL4L1F3/RT-study-lab-project`
 - Production repository: `https://github.com/R3C4LL4L1F3/RT-study-lab`
+- Historical milestone issue #34: `https://github.com/R3C4LL4L1F3/RT-study-lab-project/issues/34`
+- Phase 1 coverage PR #33: `https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/33`
 - PR #29: `https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/29`
 - PR #30: `https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/30`
 - PR #31: `https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/31`

@@ -13,9 +13,10 @@ It is not a transcript archive, a replacement governance system, a clinical evid
 
 1. [`CURRENT_STATE.md`](CURRENT_STATE.md) - current live repository, Project, roadmap, and validation snapshot.
 2. [`RECONCILIATION.md`](RECONCILIATION.md) - normalized entities, provenance, chronology, claims, verified facts, and conflicts.
-3. [`PHASE-1-MANIFEST.yml`](PHASE-1-MANIFEST.yml) - machine-readable phase and coverage manifest.
-4. [`PHASE-1-CHECKPOINT.md`](PHASE-1-CHECKPOINT.md) - audit result, coverage boundary, limitations, and next batch.
-5. Existing canonical records linked from the repository root README, especially `docs/MASTER_PROJECT_QUEUE.md`, `docs/PROJECT_STATUS.md`, `docs/DEVELOPMENT_HISTORY.md`, `docs/VALIDATION_REGISTER.md`, and `docs/ARCHITECTURE_DECISIONS.md`.
+3. [`PHASE-1-ROADMAP-COVERAGE.md`](PHASE-1-ROADMAP-COVERAGE.md) - strict entity-to-Project coverage matrix and re-audit result.
+4. [`PHASE-1-MANIFEST.yml`](PHASE-1-MANIFEST.yml) - machine-readable phase and coverage manifest.
+5. [`PHASE-1-CHECKPOINT.md`](PHASE-1-CHECKPOINT.md) - audit result, coverage boundary, limitations, and next batch.
+6. Existing canonical records linked from the repository root README, especially `docs/MASTER_PROJECT_QUEUE.md`, `docs/PROJECT_STATUS.md`, `docs/DEVELOPMENT_HISTORY.md`, `docs/VALIDATION_REGISTER.md`, and `docs/ARCHITECTURE_DECISIONS.md`.
 
 ## Assigned chat collection
 

@@ -23,7 +23,7 @@ The project-control `main` ref is newer than the older local working branch and 
 
 ## Existing Project configuration
 
-The current Project has **13 items**, **13 named views**, and **5 enabled workflows**. No new Project item was created for this bridge; existing records were corrected only where an explicit current issue/closure record supplied the state.
+The current Project has **14 items**, **13 named views**, and **5 enabled workflows**. The Phase 1 coverage audit retained the existing canonical items, corrected four existing records, and added one evidence-backed historical milestone for the materially significant PR #1 project-control foundation.
 
 ### Current roadmap items
 
@@ -39,11 +39,12 @@ The current Project has **13 items**, **13 named views**, and **5 enabled workfl
 | #14 RTSL-AIH-001 - AI Development Harness V0 | `COMPLETE` | Closed issue #14 and project-control records |
 | #19 RTSL-AIH-002 - GitHub Read-Only Evidence Integration V0.x | `COMPLETE` | Closed issue #19 and project-control records |
 | #26 [DEFERRED] RTSL-AIH-003 - AI Development Harness pilot specification | `DEFERRED` | Explicit current disposition in issue #26 |
-| #27 [APPROVED] RTSL-WF-001 - Project response and handoff workflow optimization | `APPROVED` | Explicit current disposition in issue #27 |
-| #28 RTSL-AIH-004 - Task Intake & Context Assembly | `COMPLETE` | Explicit MASTER closure in issue #28; PR #30 merged |
-| #32 RTSL-QA-MODEL-001 - Risk-Based QA Operating Model Migration | `APPROVED` | Explicit current work state in issue #32; policy edits not yet authorized |
+| #27 [APPROVED] RTSL-WF-001 - Project response and handoff workflow optimization | `APPROVED` | Explicit current disposition in issue #27; `Documentation / Governance`, `Near-Term` |
+| #28 RTSL-AIH-004 - Task Intake & Context Assembly | `COMPLETE` | Explicit MASTER closure in issue #28; PR #30 merged; `AI / Development Infrastructure`, `Historical` |
+| #32 RTSL-QA-MODEL-001 - Risk-Based QA Operating Model Migration | `APPROVED` | Explicit current work state in issue #32; policy edits not yet authorized; `QA / Release`, `Near-Term` |
+| #34 [MILESTONE] Project-control documentation foundation established (PR #1) | `COMPLETE` | Historical issue #34; merged PR #1 evidence; `Documentation / Governance`, `Milestone`, `Historical` |
 
-The four bottom-of-queue corrections were made during this Phase 1 cycle: #26 `PROPOSED -> DEFERRED`, #27 `PROPOSED -> APPROVED`, #28 `PROPOSED -> COMPLETE`, and #32 `PROPOSED -> APPROVED`. No other Project item was changed.
+The Phase 1 coverage corrections were: #26 `PROPOSED -> DEFERRED` plus `AI / Development Infrastructure` / `Later`; #27 `PROPOSED -> APPROVED` plus `Documentation / Governance` / `Near-Term`; #28 `PROPOSED -> COMPLETE` plus `AI / Development Infrastructure` / `Historical`; and #32 `PROPOSED -> APPROVED` plus `QA / Release` / `Near-Term`. No priority, risk, owner, target date, release, or gate value was inferred. New issue #34 was auto-added once by the existing workflow, then set to `COMPLETE`, `Documentation / Governance`, `Milestone`, and `Historical`.
 
 ### Named views
 
@@ -69,6 +70,7 @@ The current enabled list does not show a closed-issue-to-`COMPLETE` or merged-PR
 - PR #31 (autonomy migration) is merged into the AIH-004 feature branch, not directly into `main`; its effect is included in the PR #30 merge.
 - Current GitHub pull-request list shows 0 open and 14 closed project-control PRs.
 - Current GitHub branch list shows 16 branches and 0 tags.
+- Phase 1 coverage PR #33 is a draft/open documentation branch; its current head is verified separately from default `main` and is not merged.
 
 ### Production repository
 
@@ -85,6 +87,7 @@ The current enabled list does not show a closed-issue-to-`COMPLETE` or merged-PR
 - #11 accessibility baseline is approved but not executed.
 - #12 and #26 remain deferred.
 - #9 and PR #29 establish planning evidence only; production PR #3 remains a draft.
+- The strict Phase 1 roadmap matrix records 26 significant entities: 9 already correctly represented, 4 existing items corrected, 1 new historical milestone (#34), 10 documentation-only dispositions, and 2 unresolved records (C-001/C-002). No new active, future, validation/gate, or infrastructure/governance item was justified.
 - The current repository contains an explicit PR #30 comment activating `RTSL-KERNEL-AUTONOMY-001`, while the durable adoption record on `main` still says `NOT YET ACTIVE`. This is recorded as an unresolved contradiction in [`RECONCILIATION.md`](RECONCILIATION.md); Phase 1 does not decide which record to rewrite.
 
 ## Not established by this snapshot
