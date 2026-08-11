@@ -108,6 +108,15 @@ Updated:
 
 - `README.md` - added one Phase 1 project-intelligence bridge link.
 
+## Publication checkpoint
+
+- Branch: `agent/phase-1-project-intelligence`.
+- Pull request: `#33`, draft and open, targeting `main`.
+- Initial publication commit: `a42aa9f9f8cebe78a26c063095f31f07a5a056af`.
+- Merge: not performed; this checkpoint does not claim default-branch publication.
+- Base `main` was verified at `e97a83b984f96d51dc7c3a29789eee2be7e52a9f` before PR creation.
+- PR checks: `0` reported for this documentation-only draft PR; the local project-control harness result remains the applicable verification evidence.
+
 Not changed:
 
 - production repository source, tests, configuration, branches, PRs, and deployment;
