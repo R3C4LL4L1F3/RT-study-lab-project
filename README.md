@@ -93,6 +93,10 @@ The following remain separate persistent subsystem owners and must not be migrat
 - [`docs/VALIDATION_REGISTER.md`](docs/VALIDATION_REGISTER.md) — automated/manual/clinical/accessibility validation evidence and boundaries
 - [`docs/ARCHITECTURE_DECISIONS.md`](docs/ARCHITECTURE_DECISIONS.md) — project and architecture decision register
 - [`docs/AI_DEVELOPMENT_WORKFLOW.md`](docs/AI_DEVELOPMENT_WORKFLOW.md) — guardrails and work-routing for AI-assisted development
+- [`docs/governance/RTSL-KERNEL-AUTONOMY-001-ADOPTION-RECORD.md`](docs/governance/RTSL-KERNEL-AUTONOMY-001-ADOPTION-RECORD.md) — controlled governance migration adoption state and activation boundary
+- [`docs/governance/RTSL-KERNEL-AUTONOMY-001-CONFLICT-MIGRATION-REGISTER.md`](docs/governance/RTSL-KERNEL-AUTONOMY-001-CONFLICT-MIGRATION-REGISTER.md) — source-inspected KEEP / CLARIFY / MODIFY register
+- [`docs/governance/RTSL-KERNEL-AUTONOMY-001-INDEPENDENT-QA-HANDOFF.md`](docs/governance/RTSL-KERNEL-AUTONOMY-001-INDEPENDENT-QA-HANDOFF.md) — complete 25-item independent-QA handoff; implementation-owner evidence only
+- [`docs/governance/RTSL-KERNEL-AUTONOMY-001-TEMPORARY-QA-DEVIATION.md`](docs/governance/RTSL-KERNEL-AUTONOMY-001-TEMPORARY-QA-DEVIATION.md) — temporary merge deviation; explicitly not a QA PASS
 - [`docs/ADR-012-threejs-2-5d-circulation-renderer.md`](docs/ADR-012-threejs-2-5d-circulation-renderer.md) — proposed Three.js renderer decision
 - [`docs/INTERACTIVE_MODELS_THREEJS_ROADMAP.md`](docs/INTERACTIVE_MODELS_THREEJS_ROADMAP.md) — Three.js 2.5D implementation roadmap and gates
 - [`docs/INTERACTIVE_MODELS_THREEJS_ARCHITECTURE.md`](docs/INTERACTIVE_MODELS_THREEJS_ARCHITECTURE.md) — renderer, asset, segment, and state contracts

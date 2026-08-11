@@ -41,3 +41,5 @@ For a PAUSED/BLOCKED resume to `previous_state`, V0 requires both legal previous
 The `previous_state` must itself be a canonical state from which the frozen matrix legally permits entry into PAUSED/BLOCKED.
 
 Confirmed-defect findings preserve evidence-producer identity separately from authoritative classification identity. `OBSERVATION` and `UNRESOLVED` are preserved as their own frozen finding types and are not silently promoted to `CONFIRMED_DEFECT`.
+
+The controlled-adoption candidate may additionally carry `completion_scope` (`BOUNDED_TASK`, `PROJECT_RELEASE`, or `PROJECT_CLOSURE`) and a `governance.independent_review` contract. The contract may mark Tier 2 independence `NOT_REQUIRED` only with a `project-control://` reference, contract revision, and human `MASTER_PROJECT_CONTROL` authority. These fields are dormant until the controlled profile is explicitly selected; the current V0 profile remains the default.
