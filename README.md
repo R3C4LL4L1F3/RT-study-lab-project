@@ -93,6 +93,11 @@ The following remain separate persistent subsystem owners and must not be migrat
 - [`docs/VALIDATION_REGISTER.md`](docs/VALIDATION_REGISTER.md) — automated/manual/clinical/accessibility validation evidence and boundaries
 - [`docs/ARCHITECTURE_DECISIONS.md`](docs/ARCHITECTURE_DECISIONS.md) — project and architecture decision register
 - [`docs/AI_DEVELOPMENT_WORKFLOW.md`](docs/AI_DEVELOPMENT_WORKFLOW.md) — guardrails and work-routing for AI-assisted development
+- [`docs/ADR-012-threejs-2-5d-circulation-renderer.md`](docs/ADR-012-threejs-2-5d-circulation-renderer.md) — proposed Three.js renderer decision
+- [`docs/INTERACTIVE_MODELS_THREEJS_ROADMAP.md`](docs/INTERACTIVE_MODELS_THREEJS_ROADMAP.md) — Three.js 2.5D implementation roadmap and gates
+- [`docs/INTERACTIVE_MODELS_THREEJS_ARCHITECTURE.md`](docs/INTERACTIVE_MODELS_THREEJS_ARCHITECTURE.md) — renderer, asset, segment, and state contracts
+- [`docs/INTERACTIVE_MODELS_THREEJS_VALIDATION_PLAN.md`](docs/INTERACTIVE_MODELS_THREEJS_VALIDATION_PLAN.md) — evidence and release validation plan
+- [`docs/INTERACTIVE_MODELS_THREEJS_PROGRESS.md`](docs/INTERACTIVE_MODELS_THREEJS_PROGRESS.md) — current workstream progress and next actions
 - [`docs/PRODUCTION_REPOSITORY_VERIFICATION.md`](docs/PRODUCTION_REPOSITORY_VERIFICATION.md) — current production source/verification baseline
 
 ## Change workflow
