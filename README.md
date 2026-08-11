@@ -104,6 +104,10 @@ The following remain separate persistent subsystem owners and must not be migrat
 - [`docs/INTERACTIVE_MODELS_THREEJS_PROGRESS.md`](docs/INTERACTIVE_MODELS_THREEJS_PROGRESS.md) — current workstream progress and next actions
 - [`docs/PRODUCTION_REPOSITORY_VERIFICATION.md`](docs/PRODUCTION_REPOSITORY_VERIFICATION.md) — current production source/verification baseline
 
+## Phase 1 project-intelligence bridge
+
+The bounded Phase 1 Codex context bridge is indexed at [`docs/project-intelligence/README.md`](docs/project-intelligence/README.md). It is partial-scope evidence and does not replace the project-control queue, authority records, or current-state reconciliation owned elsewhere in this repository.
+
 ## Change workflow
 
 1. Inspect current source and project-control evidence before editing.

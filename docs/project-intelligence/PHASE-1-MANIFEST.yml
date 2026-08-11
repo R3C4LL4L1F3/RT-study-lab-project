@@ -1,0 +1,38 @@
+# PHASE COVERAGE: 1 OF 3
+# PROJECT CHAT COVERAGE: PARTIAL
+# GLOBAL PROJECT RECONCILIATION: NOT YET COMPLETE
+# CODEX-READY GLOBAL BASELINE: NOT YET ESTABLISHED
+
+phase: 1
+total_phases: 3
+assigned_chats:
+  - MASTER PROJECT CONTROL
+  - (PLANNING_ARCHITECTURE)
+  - Clinical Validation & Sources
+  - QA - Regression & Release
+  - ROADMAP (GitHub)
+  - GitHub PR and Documentation
+chats_completed:
+  - MASTER PROJECT CONTROL
+  - (PLANNING_ARCHITECTURE)
+  - Clinical Validation & Sources
+  - QA - Regression & Release
+  - ROADMAP (GitHub)
+  - GitHub PR and Documentation
+collection_completed: true
+normalization_completed: true
+reconciliation_completed: true
+project_intelligence_update_completed: true
+github_project_update_completed: true
+phase_audit_completed: true
+durable_checkpoint_created: true
+coverage: PARTIAL_PROJECT_COVERAGE
+canonical_for_processed_scope: true
+canonical_for_entire_project: false
+global_reconciliation: NOT_COMPLETE
+global_audit: NOT_COMPLETE
+codex_ready_global_baseline: false
+unresolved_conflicts:
+  - C-001 autonomy activation versus adoption-record state
+  - C-002 historical repository status text versus live repository state
+next_batch_required: true
