@@ -1,0 +1,63 @@
+{
+  "schema_version": "1",
+  "amendment_id": "RTSL-KERNEL-AUTONOMY-001",
+  "profile_id": "RTSL-KERNEL-AUTONOMY-001-CONTROLLED",
+  "activation_state": "NOT_ACTIVE",
+  "default_policy_profile": "RTSL-AIH-V0-POLICY-1",
+  "zero_incremental_cost": true,
+  "independence_matrix": {
+    "TIER_0": "EXPLICIT_GATE_ONLY",
+    "TIER_1": "EXPLICIT_GATE_ONLY",
+    "TIER_2": "AUTHORITATIVE_CONTRACT",
+    "TIER_3": "MANDATORY"
+  },
+  "tier_2_minimum_required_gates_when_controlled": [
+    "CLINICAL_EVIDENCE",
+    "QA",
+    "GITHUB_PROVENANCE"
+  ],
+  "tier_3_minimum_required_gates_when_controlled": [
+    "CLINICAL_EVIDENCE",
+    "ARCHITECTURE",
+    "INDEPENDENT_REVIEW",
+    "QA",
+    "GITHUB_PROVENANCE"
+  ],
+  "conditional_independent_review": {
+    "not_required_basis": "AUTHORITATIVE_CONTRACT",
+    "required_fields": [
+      "contract_ref",
+      "contract_revision",
+      "authority.actor_id",
+      "authority.actor_type",
+      "authority.authority_role"
+    ],
+    "authority_role": "MASTER_PROJECT_CONTROL"
+  },
+  "direct_bounded_completion": {
+    "from": "IN_VALIDATION",
+    "to": "COMPLETE",
+    "completion_scope": "BOUNDED_TASK",
+    "release_gate": "RELEASE",
+    "allowed_when_release_gate_is_not_required": true
+  },
+  "authority_boundaries": {
+    "ai_harness_can": [
+      "DETERMINISTIC_INTAKE",
+      "DETERMINISTIC_POLICY_EVALUATION",
+      "READ_ONLY_EVIDENCE_BINDING",
+      "CANONICAL_AUDIT",
+      "ADVISORY_PROJECTION"
+    ],
+    "ai_harness_cannot": [
+      "APPROVE",
+      "SELF_CERTIFY_QA",
+      "MERGE",
+      "RELEASE",
+      "ACTIVATE_PROJECT_POLICY",
+      "WRITE_GITHUB",
+      "MUTATE_PROJECT_STATE",
+      "MAKE_AUTONOMOUS_CLINICAL_DECISIONS"
+    ]
+  }
+}

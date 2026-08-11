@@ -75,6 +75,7 @@ class Config:
     gates: dict[str, Any]
     transitions: dict[str, Any]
     kernel_profile: dict[str, Any]
+    autonomy: dict[str, Any]
 
 
 def load_json(path: Path) -> Any:
@@ -91,6 +92,7 @@ def load_config(repo_root: Path) -> Config:
         gates=load_json(base / "gates.v1.json"),
         transitions=load_json(base / "transition-matrix.v1.json"),
         kernel_profile=load_json(base / "kernel-profile.v1.json"),
+        autonomy=load_json(base / "autonomy.v1.json"),
     )
 
 
@@ -235,6 +237,38 @@ def validate_task(raw: Any, config: Config) -> dict[str, Any]:
             WorkState(requested)
         except ValueError as exc:
             raise SchemaError("requested_transition is invalid") from exc
+
+    completion_scope = task.get("completion_scope", "BOUNDED_TASK")
+    if completion_scope not in {"BOUNDED_TASK", "PROJECT_RELEASE", "PROJECT_CLOSURE"}:
+        raise SchemaError("completion_scope is invalid")
+
+    governance = task.get("governance")
+    if governance is not None:
+        governance = _require_mapping(governance, "governance")
+        handoff_required = governance.get("handoff_required")
+        if handoff_required is not None and not isinstance(handoff_required, bool):
+            raise SchemaError("governance.handoff_required must be boolean")
+        pr_state = governance.get("pr_state")
+        if pr_state is not None and pr_state not in {"NOT_OPEN", "OPEN", "APPROVED", "MERGED"}:
+            raise SchemaError("governance.pr_state is invalid")
+        independence = governance.get("independent_review")
+        if independence is not None:
+            independence = _require_mapping(independence, "governance.independent_review")
+            decision = independence.get("decision")
+            if decision not in {"REQUIRED", "NOT_REQUIRED"}:
+                raise SchemaError("governance.independent_review.decision is invalid")
+            if decision == "NOT_REQUIRED":
+                if independence.get("basis") != "AUTHORITATIVE_CONTRACT":
+                    raise SchemaError("NOT_REQUIRED independent review requires AUTHORITATIVE_CONTRACT basis")
+                contract_ref = independence.get("contract_ref")
+                if not isinstance(contract_ref, str) or not contract_ref.startswith("project-control://"):
+                    raise SchemaError("authoritative independent-review contract_ref is invalid")
+                if not isinstance(independence.get("contract_revision"), str) or not independence["contract_revision"].strip():
+                    raise SchemaError("authoritative independent-review contract_revision is required")
+                authority = _require_mapping(independence.get("authority"), "governance.independent_review.authority")
+                validate_actor(authority, "governance.independent_review.authority")
+                if authority.get("actor_type") != "HUMAN" or authority.get("authority_role") != "MASTER_PROJECT_CONTROL":
+                    raise SchemaError("conditional independent-review authority must be MASTER_PROJECT_CONTROL human")
 
     kernel = _require_mapping(task["kernel"], "kernel")
     if not isinstance(kernel.get("profile_id"), str) or not kernel["profile_id"]:

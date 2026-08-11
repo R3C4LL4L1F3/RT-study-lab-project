@@ -60,6 +60,8 @@ Not implemented:
 
 The V0 config identifies `RT Study Lab Project Operating Kernel` version `V1.0`. The durable Kernel source revision and content hash are currently represented as `UNAVAILABLE`; the harness does not fabricate them.
 
+`RTSL-AIH-001-REV-AUTONOMY-01` is a separate dormant controlled-adoption profile. It is not the default V0 policy profile and does not activate `RTSL-KERNEL-AUTONOMY-001`; project-wide activation remains an external MASTER PROJECT CONTROL decision.
+
 ## Exit behavior
 
 - `0` evaluation completed, including deterministic denial/incomplete result;

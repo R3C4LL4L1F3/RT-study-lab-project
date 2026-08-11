@@ -105,6 +105,7 @@ def evaluate_snapshot_with_evidence(
     *,
     evidence: Sequence[EvidenceRecord],
     repo_root: Path,
+    governance_profile: str | None = None,
 ) -> dict[str, Any]:
     """Bind normalized positive evidence first, then run unchanged V0 evaluator/recheck."""
     for record in evidence:
@@ -112,7 +113,7 @@ def evaluate_snapshot_with_evidence(
             raise TypeError("only normalized EvidenceRecord inputs are accepted")
 
     bound_task = _bind_evidence_before_policy(raw_task, evidence)
-    result = evaluate_snapshot(bound_task, repo_root=repo_root)
+    result = evaluate_snapshot(bound_task, repo_root=repo_root, governance_profile=governance_profile)
     if not result.get("final_policy_recheck", {}).get("performed"):
         raise RuntimeError("mandatory final deterministic policy recheck was not performed")
 

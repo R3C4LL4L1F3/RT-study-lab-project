@@ -11,6 +11,8 @@ AUTHORITY_BY_FIELD = {
     "owner": ("MASTER", "MASTER_PROJECT_CONTROL"),
     "subsystem": ("MASTER", "MASTER_PROJECT_CONTROL"),
     "work_state": ("MASTER", "MASTER_PROJECT_CONTROL"),
+    "independent_review_requirement": ("MASTER", "MASTER_PROJECT_CONTROL"),
+    "completion_scope": ("MASTER", "MASTER_PROJECT_CONTROL"),
     "clinical_disposition": ("CLINICAL", "CLINICAL_VALIDATION_AND_SOURCES"),
     "architecture_disposition": ("ARCHITECTURE", "PLANNING_ARCHITECTURE"),
     "qa_disposition": ("QA", "QA_REGRESSION_RELEASE"),

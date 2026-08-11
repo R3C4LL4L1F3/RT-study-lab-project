@@ -270,3 +270,9 @@ Chat history alone should not be the only durable record for a consequential pro
 A work item is ready to leave draft/review only when its implementation state, queue state, evidence basis, lifecycle/disposition, unresolved risks and documentation agree.
 
 A green automated suite is necessary evidence for many production changes, but RT Study Lab is not considered release-mature until applicable clinical, accessibility, manual/runtime and deployment/release-control evidence is also satisfied.
+
+## Controlled governance migration overlay
+
+`RTSL-KERNEL-AUTONOMY-001` is approved for controlled adoption but is **not yet active**. Until MASTER PROJECT CONTROL records project-wide activation, the existing Project Operating Kernel and current policy remain authoritative. The durable adoption record, source-inspected conflict register, operating-manual amendment, and role-contract amendment are under `docs/governance/`.
+
+Within an already-authorized bounded task, the implementation owner may continue through ordinary inspection, edits, tests, branch, PR, CI, provenance, and documentation milestones without returning to MASTER for each internal milestone. `PR_OPEN` is not a handoff requirement; GitHub approval is not merge authority, independent QA, or activation authority. Tier 0–1 work is normally self-validation-sufficient, Tier 2 independence is conditional on an authoritative contract, and Tier 3 independence remains mandatory. Bounded-task `COMPLETE` does not mean project release or closure. Any PAUSED or BLOCKED record must carry one exact resume/unblock condition and evidence.

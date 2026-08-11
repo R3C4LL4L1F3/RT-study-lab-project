@@ -13,14 +13,77 @@ RULE_IDS = [
     "AIH-V0-R001", "AIH-V0-R002", "AIH-V0-R003", "AIH-V0-R004", "AIH-V0-R005",
     "AIH-V0-R010", "AIH-V0-R011",
     "AIH-V0-R020", "AIH-V0-R021", "AIH-V0-R022", "AIH-V0-R023",
-    "AIH-V0-R030", "AIH-V0-R031", "AIH-V0-R032", "AIH-V0-R033", "AIH-V0-R034", "AIH-V0-R035", "AIH-V0-R036",
+    "AIH-V0-R030", "AIH-V0-R031", "AIH-V0-R032", "AIH-V0-R033", "AIH-V0-R034", "AIH-V0-R035", "AIH-V0-R036", "AIH-V0-R037",
     "AIH-V0-R040", "AIH-V0-R041", "AIH-V0-R042",
     "AIH-V0-R050", "AIH-V0-R051", "AIH-V0-R052", "AIH-V0-R053", "AIH-V0-R054",
-    "AIH-V0-R060", "AIH-V0-R061",
+    "AIH-V0-R060", "AIH-V0-R061", "AIH-V0-R062", "AIH-V0-R063", "AIH-V0-R064",
     "AIH-V0-R070", "AIH-V0-R071", "AIH-V0-R072", "AIH-V0-R073", "AIH-V0-R074",
     "AIH-V0-R080", "AIH-V0-R081", "AIH-V0-R082",
     "AIH-V0-R090",
 ]
+
+
+def _autonomy_enabled(config: Any, governance_profile: str | None) -> bool:
+    return governance_profile == (config.autonomy or {}).get("profile_id")
+
+
+def _conditional_independence_opt_out(task: dict[str, Any], config: Any, governance_profile: str | None) -> bool:
+    if not _autonomy_enabled(config, governance_profile) or task.get("risk_tier") != "TIER_2":
+        return False
+    gate = gate_map(task).get("INDEPENDENT_REVIEW")
+    governance = task.get("governance") or {}
+    decision = (governance.get("independent_review") or {}).get("decision")
+    obligation = (gate or {}).get("obligation") or {}
+    origin = obligation.get("origin") or {}
+    return bool(
+        gate
+        and decision == "NOT_REQUIRED"
+        and obligation.get("required") is False
+        and (gate.get("execution") or {}).get("state") == "NOT_REQUIRED"
+        and origin.get("type") == "CONDITIONAL_CONTRACT"
+        and origin.get("ref")
+        and origin.get("authority_role") == "MASTER_PROJECT_CONTROL"
+    )
+
+
+def _independent_review_required(task: dict[str, Any], config: Any, governance_profile: str | None) -> bool:
+    gate = gate_map(task).get("INDEPENDENT_REVIEW")
+    if task.get("risk_tier") == "TIER_3":
+        return True
+    if task.get("risk_tier") == "TIER_2":
+        return not _conditional_independence_opt_out(task, config, governance_profile)
+    return bool(gate and (gate.get("obligation") or {}).get("required"))
+
+
+def _conditional_independence_issues(task: dict[str, Any], config: Any, governance_profile: str | None) -> list[str]:
+    if not _autonomy_enabled(config, governance_profile):
+        return []
+    gate = gate_map(task).get("INDEPENDENT_REVIEW")
+    governance = task.get("governance") or {}
+    decision = (governance.get("independent_review") or {}).get("decision")
+    if task.get("risk_tier") == "TIER_3":
+        if not gate or (gate.get("obligation") or {}).get("required") is not True:
+            return ["Tier 3 independent review cannot be NOT_REQUIRED or absent"]
+        return []
+    if task.get("risk_tier") != "TIER_2":
+        if decision == "NOT_REQUIRED" and gate and (gate.get("obligation") or {}).get("required"):
+            return ["independent-review contract conflicts with an explicit required gate"]
+        return []
+    if decision == "NOT_REQUIRED":
+        if not gate:
+            return ["Tier 2 NOT_REQUIRED independent review requires an explicit gate record"]
+        if not _conditional_independence_opt_out(task, config, governance_profile):
+            return ["Tier 2 NOT_REQUIRED independent review lacks an authoritative conditional contract"]
+    if decision == "REQUIRED" and gate and (gate.get("obligation") or {}).get("required") is not True:
+        return ["Tier 2 REQUIRED independent review cannot be represented as non-required"]
+    return []
+
+
+def _minimum_required_gates(task: dict[str, Any], config: Any, governance_profile: str | None) -> set[str]:
+    minimum = set(config.gates["risk_minimum_required_gates"].get(task["risk_tier"], []))
+    if _conditional_independence_opt_out(task, config, governance_profile):
+        minimum.discard("INDEPENDENT_REVIEW")
+    return minimum
 
 
 def rr(rule_id: str, status: str, reason: str, severity: str = "ERROR") -> dict[str, str]:
@@ -92,7 +155,12 @@ def _has_qualifying_approval(task: dict[str, Any], requirement: dict[str, str], 
     return False
 
 
-def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
+def evaluate_rules(
+    task: dict[str, Any],
+    config: Any,
+    *,
+    governance_profile: str | None = None,
+) -> list[dict[str, str]]:
     out: list[dict[str, str]] = []
     for rid in ("AIH-V0-R001","AIH-V0-R002","AIH-V0-R003","AIH-V0-R004","AIH-V0-R005"):
         out.append(rr(rid, "PASS", "validated by schema/kernel profile", "INFO"))
@@ -118,7 +186,12 @@ def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
 
     requested = task.get("requested_transition")
     if requested:
-        enum_ok = transition_enumerated(task, requested, config.transitions)
+        enum_ok = transition_enumerated(
+            task,
+            requested,
+            config.transitions,
+            allow_bounded_completion=_autonomy_enabled(config, governance_profile),
+        )
         out.append(rr("AIH-V0-R020", "PASS" if enum_ok else "FAIL", f"{state} -> {requested} is {'enumerated' if enum_ok else 'not enumerated'}"))
         terminal_fail = state in TERMINAL_STATES
         out.append(rr("AIH-V0-R021", "FAIL" if terminal_fail else "PASS", "ordinary transition from terminal state is forbidden" if terminal_fail else "current state is nonterminal"))
@@ -138,7 +211,7 @@ def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
             out.append(rr(rid, "NOT_APPLICABLE", "no requested transition", "INFO"))
 
     gates = gate_map(task)
-    minimum = set(config.gates["risk_minimum_required_gates"].get(task["risk_tier"], []))
+    minimum = _minimum_required_gates(task, config, governance_profile)
     missing_minimum = sorted(minimum - set(gates))
     nonrequired_minimum = sorted(gid for gid in minimum if gid in gates and not gates[gid]["obligation"]["required"])
     completeness_issues = required_gate_completeness_issues(task)
@@ -156,11 +229,32 @@ def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
     )
     out.append(rr("AIH-V0-R036", "FAIL" if missing_authority else "PASS", "required gate authority missing: " + ", ".join(missing_authority) if missing_authority else "all required gates identify an authority owner"))
 
+    if _autonomy_enabled(config, governance_profile):
+        authority_map = (config.gates or {}).get("canonical_gate_authority", {})
+        authority_mismatches = sorted(
+            f"{g['gate_id']}->{(g.get('authority') or {}).get('owner_role')}"
+            for g in task["gates"]
+            if g["obligation"]["required"]
+            and g.get("authority")
+            and authority_map.get(g["gate_id"])
+            and g["authority"].get("owner_role") != authority_map[g["gate_id"]]
+        )
+        out.append(rr("AIH-V0-R064", "FAIL" if authority_mismatches else "PASS", "unauthorized gate authority assignment: " + ", ".join(authority_mismatches) if authority_mismatches else "required gate authorities match the canonical ownership map"))
+
     req_fail = required_gate_failures(task)
     pre_rel_fail = requested == "READY_FOR_RELEASE" and bool(req_fail)
     comp_fail = requested == "COMPLETE" and bool(req_fail)
     out.append(rr("AIH-V0-R031", "FAIL" if pre_rel_fail else ("PASS" if requested == "READY_FOR_RELEASE" else "NOT_APPLICABLE"), "READY_FOR_RELEASE requires all mandatory gates PASS" if pre_rel_fail else ("mandatory pre-release gates PASS" if requested == "READY_FOR_RELEASE" else "target is not READY_FOR_RELEASE"), "ERROR" if pre_rel_fail else "INFO"))
     out.append(rr("AIH-V0-R032", "FAIL" if comp_fail else ("PASS" if requested == "COMPLETE" else "NOT_APPLICABLE"), "COMPLETE requires all mandatory gates PASS" if comp_fail else ("mandatory completion gates PASS" if requested == "COMPLETE" else "target is not COMPLETE"), "ERROR" if comp_fail else "INFO"))
+    if _autonomy_enabled(config, governance_profile):
+        release_gate = gates.get("RELEASE")
+        release_scope = task.get("completion_scope", "BOUNDED_TASK") in {"PROJECT_RELEASE", "PROJECT_CLOSURE"}
+        release_scope_fail = requested == "COMPLETE" and release_scope and (
+            not release_gate
+            or not release_gate["obligation"]["required"]
+            or release_gate["execution"]["state"] != "PASS"
+        )
+        out.append(rr("AIH-V0-R037", "FAIL" if release_scope_fail else ("PASS" if requested == "COMPLETE" and release_scope else "NOT_APPLICABLE"), "project release/closure completion requires a required PASS RELEASE gate" if release_scope_fail else ("release/closure gate satisfied" if requested == "COMPLETE" and release_scope else "bounded-task completion scope"), "ERROR" if release_scope_fail else "INFO"))
     out.append(rr("AIH-V0-R033", "PASS", "READY_FOR_RELEASE and COMPLETE are distinct canonical states", "INFO"))
 
     qa = gates.get("QA")
@@ -211,6 +305,19 @@ def evaluate_rules(task: dict[str, Any], config: Any) -> list[dict[str, str]]:
         out.append(rr("AIH-V0-R060", "NOT_APPLICABLE", "QA independence not mandatory in supplied gate snapshot", "INFO"))
         out.append(rr("AIH-V0-R061", "NOT_APPLICABLE", "QA independence not mandatory in supplied gate snapshot", "INFO"))
 
+    if _autonomy_enabled(config, governance_profile):
+        independent_issues = _conditional_independence_issues(task, config, governance_profile)
+        out.append(rr("AIH-V0-R062", "FAIL" if independent_issues else "PASS", "; ".join(independent_issues) if independent_issues else "independent-review requirement is legal for the selected risk/profile"))
+        independent_required = _independent_review_required(task, config, governance_profile)
+        if independent_required:
+            impl_actor = _gate_actor_id(task, "IMPLEMENTATION")
+            reviewer_actor = _gate_actor_id(task, "INDEPENDENT_REVIEW")
+            identities = bool(impl_actor and reviewer_actor)
+            same = bool(impl_actor and reviewer_actor and impl_actor == reviewer_actor)
+            out.append(rr("AIH-V0-R063", "FAIL" if same or not identities else "PASS", "implementation actor equals independent reviewer" if same else ("independent reviewer and implementation identities are distinct" if identities else "mandatory independent-review identity unavailable")))
+        else:
+            out.append(rr("AIH-V0-R063", "NOT_APPLICABLE", "independent review is not required by the selected risk/profile", "INFO"))
+
     if not task["findings"]:
         for rid in ("AIH-V0-R070","AIH-V0-R071","AIH-V0-R072","AIH-V0-R073","AIH-V0-R074"):
             out.append(rr(rid, "NOT_APPLICABLE", "no project findings present", "INFO"))
@@ -248,7 +355,7 @@ def classify_status(rule_results: list[dict[str, str]]) -> str:
     failures = {r["rule_id"] for r in rule_results if r["status"] == "FAIL"}
     if failures & {"AIH-V0-R080", "AIH-V0-R082"}:
         return "CONTRADICTORY"
-    incomplete = {"AIH-V0-R030","AIH-V0-R031","AIH-V0-R032","AIH-V0-R035","AIH-V0-R036","AIH-V0-R054","AIH-V0-R060","AIH-V0-R061","AIH-V0-R071","AIH-V0-R073","AIH-V0-R074"}
+    incomplete = {"AIH-V0-R030","AIH-V0-R031","AIH-V0-R032","AIH-V0-R035","AIH-V0-R036","AIH-V0-R037","AIH-V0-R054","AIH-V0-R060","AIH-V0-R061","AIH-V0-R062","AIH-V0-R063","AIH-V0-R064","AIH-V0-R071","AIH-V0-R073","AIH-V0-R074"}
     if failures & incomplete:
         return "INCOMPLETE"
     if failures:
