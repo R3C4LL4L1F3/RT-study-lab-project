@@ -1,0 +1,162 @@
+name: RTSL AIH 002 Stage 2 live read-only validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-live-readonly:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mint repository-scoped read-only GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.RTSL_AIH_GH_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RTSL_AIH_GH_APP_PRIVATE_KEY }}
+          owner: R3C4LL4L1F3
+          repositories: RT-study-lab-project
+          permission-contents: read
+          permission-pull-requests: read
+          permission-checks: read
+
+      - name: Checkout exact QA-validated PR #22 head
+        uses: actions/checkout@v4
+        with:
+          ref: 0e023ed79d0d7f13d19a830637e4376266259604
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact source SHA
+        shell: bash
+        run: |
+          expected='0e023ed79d0d7f13d19a830637e4376266259604'
+          actual="$(git rev-parse HEAD)"
+          echo "EXPECTED_SHA=$expected"
+          echo "ACTUAL_SHA=$actual"
+          test "$actual" = "$expected"
+
+      - name: Run Stage 2 live GET-only evidence validation
+        env:
+          RTSL_AIH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
+          RTSL_AIH_INSTALLATION_ID: ${{ steps.app-token.outputs.installation-id }}
+          RTSL_AIH_APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from __future__ import annotations
+          import json, os, re
+          from urllib.error import HTTPError
+          from urllib.parse import quote, urlencode
+          from urllib.request import Request, urlopen
+          from tests.ai_harness.common import ROOT, base_task
+          from tools.ai_harness.github_readonly.integration import evaluate_snapshot_with_evidence, record_evidence_ref
+          from tools.ai_harness.github_readonly.provider import CollectionCompleteness, CredentialCapability, EvidenceRequest, EvidenceState, GitHubReadOnlyEvidenceProvider, Operation, PROJECT_CONTROL_ALIAS, StaticCredentialSource, TransportResponse, GITHUB_API_VERSION, validate_permission_manifest
+
+          EXPECTED_SHA='0e023ed79d0d7f13d19a830637e4376266259604'; REPOSITORY='R3C4LL4L1F3/RT-study-lab-project'; PR_NUMBER='22'; CONTENT_PATH='ai-harness/RTSL-AIH-002/PROJECT_CONTROL_RECORD.md'
+          READ={'metadata':'read','contents':'read','pull_requests':'read','checks':'read'}
+          token=os.environ.get('RTSL_AIH_APP_TOKEN','')
+          if not token: raise SystemExit('Stage 2 credential bootstrap failed: token unavailable')
+
+          def raw_get(path):
+              req=Request('https://api.github.com'+path,method='GET',headers={'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':GITHUB_API_VERSION,'User-Agent':'RTSL-AIH-002-stage2-validation'})
+              try:
+                  with urlopen(req,timeout=30) as resp:
+                      data=resp.read(); return resp.status,json.loads(data) if data else None,dict(resp.headers)
+              except HTTPError as exc:
+                  data=exc.read()
+                  try: payload=json.loads(data) if data else None
+                  except json.JSONDecodeError: payload=None
+                  return exc.code,payload,dict(exc.headers)
+
+          scope_status,scope_payload,_=raw_get('/installation/repositories?per_page=100')
+          if scope_status!=200 or not isinstance(scope_payload,dict): raise AssertionError(f'installation repository scope retrieval failed: {scope_status}')
+          visible=sorted(r.get('full_name') for r in scope_payload.get('repositories',[]) if isinstance(r,dict) and isinstance(r.get('full_name'),str))
+          if visible!=[REPOSITORY]: raise AssertionError(f'token repository scope mismatch: {visible!r}')
+          capability=validate_permission_manifest(READ)
+          if capability is not CredentialCapability.VERIFIED_READ_ONLY: raise AssertionError(f'credential capability preflight failed: {capability.value}')
+
+          class LiveGitHubGETTransport:
+              def __init__(self,content_ref): self.content_ref=content_ref; self.calls=[]
+              def request(self,method,**_): raise PermissionError(f'non-GET transport method rejected before network: {method.upper()}')
+              def get(self,*,operation,repository,subject,headers,page=None):
+                  if repository!=REPOSITORY: raise ValueError('repository outside Stage 2 allowlist')
+                  h=dict(headers); h['Accept']='application/vnd.github+json'; h['User-Agent']='RTSL-AIH-002-stage2-validation'
+                  if h.get('X-GitHub-Api-Version')!=GITHUB_API_VERSION: raise AssertionError('API version missing or unexpected')
+                  base=f'/repos/{repository}'; supports=False
+                  if operation is Operation.REPO_GET: path=base
+                  elif operation is Operation.COMMIT_GET: path=base+'/commits/'+quote(subject,safe=''); supports=True
+                  elif operation is Operation.CONTENT_GET: path=base+'/contents/'+quote(subject,safe='/')+'?'+urlencode({'ref':self.content_ref}); supports=True
+                  elif operation is Operation.PR_GET: path=base+'/pulls/'+quote(subject,safe=''); supports=True
+                  elif operation is Operation.PR_COMMITS_LIST: path=base+'/pulls/'+quote(subject,safe='')+'/commits?'+urlencode({'per_page':100,'page':page or 1})
+                  elif operation is Operation.PR_FILES_LIST: path=base+'/pulls/'+quote(subject,safe='')+'/files?'+urlencode({'per_page':100,'page':page or 1})
+                  elif operation is Operation.PR_REVIEWS_LIST: path=base+'/pulls/'+quote(subject,safe='')+'/reviews?'+urlencode({'per_page':100,'page':page or 1})
+                  elif operation is Operation.PR_MERGED_CHECK: path=base+'/pulls/'+quote(subject,safe='')+'/merge'; supports=True
+                  elif operation is Operation.CHECK_RUNS_LIST: path=base+'/commits/'+quote(subject,safe='')+'/check-runs?'+urlencode({'per_page':100,'page':page or 1})
+                  else: raise ValueError('operation outside frozen allowlist')
+                  req=Request('https://api.github.com'+path,method='GET',headers=h)
+                  try:
+                      with urlopen(req,timeout=30) as resp:
+                          raw=resp.read(); payload=json.loads(raw) if raw else None; response_headers=dict(resp.headers); status=resp.status
+                  except HTTPError as exc:
+                      raw=exc.read()
+                      try: payload=json.loads(raw) if raw else None
+                      except json.JSONDecodeError: payload=None
+                      response_headers=dict(exc.headers); status=exc.code
+                  if operation is Operation.CHECK_RUNS_LIST and isinstance(payload,dict): payload=payload.get('check_runs',[])
+                  next_page=None; link=response_headers.get('Link') or response_headers.get('link') or ''
+                  m=re.search(r'<[^>]*[?&]page=(\d+)[^>]*>;\s*rel="next"',link)
+                  if m: next_page=int(m.group(1))
+                  self.calls.append({'method':'GET','operation':operation.value,'repository':repository,'subject':subject,'page':page,'api_version':h['X-GitHub-Api-Version']})
+                  return TransportResponse(status_code=status,payload=payload,next_page=next_page,endpoint_supports_absence=supports)
+
+          credentials=StaticCredentialSource(manifest=READ,headers={'Authorization':'Bearer '+token}); transport=LiveGitHubGETTransport(EXPECTED_SHA); provider=GitHubReadOnlyEvidenceProvider(credentials,transport)
+          requests=[
+              EvidenceRequest(PROJECT_CONTROL_ALIAS,Operation.REPO_GET,REPOSITORY),
+              EvidenceRequest(PROJECT_CONTROL_ALIAS,Operation.COMMIT_GET,EXPECTED_SHA,ref=EXPECTED_SHA),
+              EvidenceRequest(PROJECT_CONTROL_ALIAS,Operation.CONTENT_GET,CONTENT_PATH,ref=EXPECTED_SHA,path=CONTENT_PATH),
+              EvidenceRequest(PROJECT_CONTROL_ALIAS,Operation.PR_GET,PR_NUMBER,ref=EXPECTED_SHA),
+              EvidenceRequest(PROJECT_CONTROL_ALIAS,Operation.PR_COMMITS_LIST,PR_NUMBER,ref=EXPECTED_SHA),
+              EvidenceRequest(PROJECT_CONTROL_ALIAS,Operation.PR_FILES_LIST,PR_NUMBER,ref=EXPECTED_SHA),
+              EvidenceRequest(PROJECT_CONTROL_ALIAS,Operation.PR_REVIEWS_LIST,PR_NUMBER,ref=EXPECTED_SHA),
+              EvidenceRequest(PROJECT_CONTROL_ALIAS,Operation.PR_MERGED_CHECK,PR_NUMBER,ref=EXPECTED_SHA),
+              EvidenceRequest(PROJECT_CONTROL_ALIAS,Operation.CHECK_RUNS_LIST,EXPECTED_SHA,ref=EXPECTED_SHA),
+          ]
+          records=[provider.retrieve(r) for r in requests]
+          for record in records:
+              if record.credential_capability is not CredentialCapability.VERIFIED_READ_ONLY: raise AssertionError(f'{record.operation}: capability={record.credential_capability.value}')
+              if record.repository_id!=1328584202 or record.repository_node_id!='R_kgDOTzCWCg': raise AssertionError(f'{record.operation}: repository identity mismatch')
+              if record.api_version!='2026-03-10': raise AssertionError(f'{record.operation}: API version mismatch')
+              serialized=json.dumps({'audit':dict(record.audit),'payload':record.payload},sort_keys=True)
+              if token in serialized: raise AssertionError(f'{record.operation}: secret material leaked')
+          by_op={r.operation:r for r in records}
+          for op in [x.value for x in Operation]:
+              if by_op[op].evidence_state is not EvidenceState.VERIFIED: raise AssertionError(f'{op}: state={by_op[op].evidence_state.value}')
+          for op in (Operation.PR_COMMITS_LIST,Operation.PR_FILES_LIST,Operation.PR_REVIEWS_LIST,Operation.CHECK_RUNS_LIST):
+              if by_op[op.value].collection_completeness is not CollectionCompleteness.COMPLETE: raise AssertionError(f'{op.value}: collection not complete')
+          if by_op[Operation.COMMIT_GET.value].payload.get('sha')!=EXPECTED_SHA: raise AssertionError('exact commit retrieval mismatch')
+          pp=by_op[Operation.PR_GET.value].payload
+          if pp.get('head_sha')!=EXPECTED_SHA or pp.get('base_ref')!='main': raise AssertionError('PR #22 live head/base mismatch')
+          if by_op[Operation.PR_MERGED_CHECK.value].payload.get('merged') is not False: raise AssertionError('PR #22 unexpectedly merged')
+          if by_op[Operation.PR_COMMITS_LIST.value].payload.get('derived_fact',{}).get('present') is not True: raise AssertionError('exact head absent from complete PR commit collection')
+          before=len(transport.calls)
+          try: transport.request('POST',operation='prohibited')
+          except PermissionError: pass
+          else: raise AssertionError('non-GET request was not rejected')
+          if len(transport.calls)!=before: raise AssertionError('non-GET check reached network transport')
+          repo_evidence=by_op[Operation.REPO_GET.value]; evidence_ref=record_evidence_ref(repo_evidence); task=base_task(); task['findings']=[{'finding_id':'S2-LIVE-INTEGRATION','type':'CONFIRMED_DEFECT','evidence':{'evidence_refs':[evidence_ref],'produced_by':{'actor_id':'github-provider','actor_type':'VERIFIED_TOOL','authority_role':None}},'classification':{'decision':'CONFIRMED_DEFECT','classified_by':{'actor_id':'independent-qa','actor_type':'HUMAN','authority_role':'QA_REGRESSION_RELEASE'}}}]
+          evaluated=evaluate_snapshot_with_evidence(task,evidence=records,repo_root=ROOT); recheck=evaluated.get('final_policy_recheck',{})
+          if not recheck.get('performed') or not recheck.get('passed'): raise AssertionError('mandatory final deterministic recheck did not pass')
+          summary={'source_sha':EXPECTED_SHA,'api_version':GITHUB_API_VERSION,'repository_scope':visible,'credential_capability':capability.value,'token_requested_permissions':READ,'installation_id_present':bool(os.environ.get('RTSL_AIH_INSTALLATION_ID')),'app_slug_present':bool(os.environ.get('RTSL_AIH_APP_SLUG')),'operations':[{'operation':r.operation,'state':r.evidence_state.value,'completeness':r.collection_completeness.value if r.collection_completeness else None,'payload_sha256':r.payload_sha256} for r in records],'all_transport_calls_get':all(c['method']=='GET' for c in transport.calls),'network_write_attempts':0,'secret_serialization_check':'PASS','final_policy_recheck':{'performed':bool(recheck.get('performed')),'passed':bool(recheck.get('passed'))}}
+          print('STAGE2_LIVE_VALIDATION='+json.dumps(summary,sort_keys=True,separators=(',',':')))
+          PY
+
+      - name: Re-run complete exact-head regression and compile validation
+        shell: bash
+        run: |
+          python3 -m unittest discover -s tests/ai_harness -p 'test_*.py' -v
+          python3 -m compileall -q tools tests
