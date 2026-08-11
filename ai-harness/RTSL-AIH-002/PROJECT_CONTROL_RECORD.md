@@ -1,5 +1,67 @@
 # RTSL-AIH-002 — GitHub Read-Only Evidence Integration
 
+## Final Closure Status — 2026-08-11
+
+**Task ID:** `RTSL-AIH-002`  
+**Priority / Risk:** **P2 / Tier 1**  
+**Current work state:** **COMPLETE**  
+**Stage 1 independent QA:** **PASS / SATISFIED**  
+**Stage 2 live read-only validation:** **PASS / SATISFIED**  
+**Open confirmed defects:** **0**  
+**Open validation gaps:** **0**  
+**GitHub / provenance gate:** **SATISFIED**  
+**Verified read-only credential boundary:** **SATISFIED — repository-scoped GitHub App installation token, read-only permission ceiling, `VERIFIED_READ_ONLY` preflight**  
+**QA-validated implementation SHA:** `0e023ed79d0d7f13d19a830637e4376266259604`  
+**Implementation PR:** `#22 — RTSL-AIH-002 Stage 1 GitHub read-only evidence provider` — **MERGED**  
+**Implementation merge / resulting main SHA:** `d0e15589c62511c8b50c4118db0cb6497af0a90a`  
+**Validated / merged tree SHA:** `5b49c077c7948d04ba1b598396cb74f672d527a1`
+
+### Final validation provenance
+
+Stage 1 independently validated the exact implementation head `0e023ed79d0d7f13d19a830637e4376266259604` with zero open Stage-1 defects and zero open Stage-1 validation gaps.
+
+Stage 2 live validation used the approved repository-scoped GitHub App credential boundary against `R3C4LL4L1F3/RT-study-lab-project` only. The live credential capability resolved to `VERIFIED_READ_ONLY`; the frozen read permission ceiling was preserved; all nine frozen GET-only evidence operations were exercised successfully; collection completeness was established where applicable; secret non-serialization passed; no network write attempt occurred; and the final deterministic policy recheck executed and passed.
+
+Stage 2 validation provenance:
+
+- validation-only PR `#24` — **CLOSED UNMERGED**;
+- GitHub Actions run `31460434475` — **SUCCESS**;
+- job `93682699283 — validate-live-readonly` — **SUCCESS**;
+- API version `2026-03-10`;
+- repository identity `1328584202` / `R_kgDOTzCWCg`;
+- repository scope: `R3C4LL4L1F3/RT-study-lab-project` only;
+- requested permission ceiling: Metadata read, Contents read, Pull requests read, Checks read;
+- credential capability: `VERIFIED_READ_ONLY`;
+- network write attempts: `0`;
+- secret serialization check: `PASS`;
+- final deterministic policy recheck: performed and passed;
+- full exact-head regression: `108/108 PASS`;
+- `python3 -m compileall -q tools tests`: `PASS`.
+
+### Merge / content provenance
+
+PR #22 was marked ready for review without moving its head and was merged with the expected-head-SHA guard set to:
+
+`0e023ed79d0d7f13d19a830637e4376266259604`
+
+The resulting squash-merge commit is:
+
+`d0e15589c62511c8b50c4118db0cb6497af0a90a`
+
+The exact validated implementation head and the squash-merge commit both resolve to tree:
+
+`5b49c077c7948d04ba1b598396cb74f672d527a1`
+
+Therefore the implementation content merged to `main` is content-identical to the exact independently validated implementation head.
+
+### Historical-state preservation
+
+The prior project-control record is preserved below as historical state. Its earlier work-state, authorization, and sequencing statements describe the project at those earlier points and do not override the final closure status above.
+
+---
+
+# RTSL-AIH-002 — GitHub Read-Only Evidence Integration
+
 ## Durable Project-Control Record
 
 **Task ID:** `RTSL-AIH-002`  
