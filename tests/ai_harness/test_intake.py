@@ -196,10 +196,25 @@ class IntakeRegressionTests(unittest.TestCase):
             authoritative("priority", "P1"),
             authoritative("risk_tier", "TIER_1"),
             authoritative("work_state", "IN_PROGRESS"),
+            authoritative("owner", "PLANNING_ARCHITECTURE"),
         ]
-        assembled = self.assembled(raw)
-        result = evaluate_assembled_v0(assembled, base_task(), evidence=[], repo_root=ROOT)
+        result = evaluate_assembled_v0(self.assembled(raw), evidence=[], repo_root=ROOT)
         self.assertTrue(result["final_policy_recheck"]["performed"])
+
+    def test_human_projection_exposes_origin_status_and_gates(self):
+        raw = request(); raw["authoritative_facts"] = [authoritative("risk_tier", "TIER_2")]
+        result = self.assembled(raw)
+        human = result["human_readable_projection"]
+        self.assertIn("Origin: USER_SUPPLIED", human)
+        self.assertIn("Status: AUTHORITATIVE", human)
+        self.assertIn("CLINICAL_EVIDENCE: required, pending", human)
+
+    def test_proposed_risk_produces_proposed_gate_candidates(self):
+        result = self.assembled(request(risk_tier={"value": "TIER_2", "status": "PROPOSED"}))
+        gates = result["canonical_payload"]["gates"]
+        self.assertEqual(gates["status"], "PROPOSED")
+        self.assertTrue(gates["fail_closed"])
+        self.assertEqual(gates["gates"][0]["obligation"]["status"], "PROPOSED")
 
     def test_v0_integration_rejects_non_authoritative_copy(self):
         with self.assertRaises(Exception):

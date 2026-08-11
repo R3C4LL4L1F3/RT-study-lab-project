@@ -19,6 +19,9 @@ def safe_v0_projection(assembled: dict[str, Any]) -> dict[str, Any]:
                 blocked.append(name)
             continue
         projection[name] = envelope.get("value")
+    gates = assembled.get("gates", {})
+    if gates.get("status") == AssemblyStatus.DETERMINISTICALLY_DERIVED.value:
+        projection["gates"] = gates.get("gates", [])
     return {
         "task": projection,
         "projection_status": "READY" if not blocked else "INCOMPLETE",

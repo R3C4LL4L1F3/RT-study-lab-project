@@ -6,7 +6,8 @@ from typing import Any, Sequence
 
 from ..github_readonly.provider import EvidenceRecord, EvidenceRequest, Operation, validate_content_path
 from .authority import authority_conflict, validate_authoritative_field
-from .normalize import normalize_field, normalize_text
+from .gates import derive_gates
+from .normalize import normalize_field
 from .output import build_output
 from .projection import safe_v0_projection
 from .provenance import evidence_snapshot
@@ -85,6 +86,7 @@ def assemble_intake(raw: dict[str, Any], *, repo_root: Path, evidence: Sequence[
         "intake_schema_version": "1",
         "assembled_fields": fields,
         "routing": routing,
+        "gates": derive_gates(fields, repo_root=repo_root),
         "references": {
             "issue_numbers": issue_refs,
             "pull_request_numbers": refs.get("pull_request_numbers", []),
