@@ -38,4 +38,4 @@ The implementation owner must record the exact conflict files and resolution, pa
 
 This deviation applies only to the identified PR #30 recovery/merge. It expires after post-merge verification is recorded and cannot be reused for another task. The QA model replacement must establish a new authoritative QA contract before future governance work relies on a changed independence model.
 
-**Activation state:** `RTSL-KERNEL-AUTONOMY-001` remains `NOT ACTIVE` until MASTER PROJECT CONTROL records a separate explicit project-wide activation decision.
+**Historical pre-activation state:** `RTSL-KERNEL-AUTONOMY-001` was `NOT ACTIVE` until MASTER PROJECT CONTROL recorded a separate explicit project-wide activation decision. That decision is now recorded in PR #30 comment [`#issuecomment-5253465946`](https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/30#issuecomment-5253465946) at `2026-08-11T12:56:49Z`; the current activation state is `ACTIVE`. This does not convert the deviation into a QA PASS or waive Tier 3 independent validation.

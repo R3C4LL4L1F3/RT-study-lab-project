@@ -13,13 +13,19 @@
 
 | Surface | Verified current state | Evidence boundary |
 |---|---|---|
-| Project-control repository | `R3C4LL4L1F3/RT-study-lab-project`, public, default `main` at `e97a83b984f96d51dc7c3a29789eee2be7e52a9f`; PR #30 merged; no open PRs; 16 branches; 0 tags | Repository and GitHub page |
+| Project-control repository | `R3C4LL4L1F3/RT-study-lab-project`, public, default `main` at `e97a83b984f96d51dc7c3a29789eee2be7e52a9f`; PR #30 merged; draft/open Phase 1 PR #33 is not merged; 16 branches; 0 tags | Repository and GitHub page |
 | Production repository | `R3C4LL4L1F3/RT-study-lab`, private, default `main` at `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`; 5 branches; 1 open draft PR (#3); main is not protected; 0 tags/releases | Repository and GitHub page |
 | Production CI | `Production Validation` run `31311314980` for `d64bde3` on `main`: `Success`; one artifact; warnings are present | GitHub Actions run page |
 | Existing GitHub Project | `RT Study Lab - Development Roadmap & Control`, owner `R3C4LL4L1F3`, private, Project #1 | GitHub Project |
 | Phase 1 bridge | Bounded six-chat checkpoint in this directory; no global baseline | This Phase 1 record |
 
 The project-control `main` ref is newer than the older local working branch and older README status lines. Future Codex sessions must use the live ref plus the reconciliation notes rather than treating those older lines as current.
+
+### Governance activation reconciliation
+
+- `RTSL-KERNEL-AUTONOMY-001` is **ACTIVE** effective `2026-08-11T12:56:49Z` by the explicit owner-authored MASTER PROJECT CONTROL decision in PR #30 comment [`#issuecomment-5253465946`](https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/30#issuecomment-5253465946), after verified merged `main` `e97a83b984f96d51dc7c3a29789eee2be7e52a9f`.
+- The adoption record's `NOT YET ACTIVE` wording, independent-QA handoff state, and temporary-deviation state are preserved as historical pre-activation records and are labeled accordingly.
+- This activation is not a QA PASS, clinical validation, release, project closure, or waiver of Tier 3 independent validation/no-gate-downgrade controls.
 
 ## Existing Project configuration
 
@@ -68,7 +74,7 @@ The current enabled list does not show a closed-issue-to-`COMPLETE` or merged-PR
 - The resulting tree is recorded in PR #30 as `ba5c0f3be77d3c5b607a461348b7c2533bb1f4a5`.
 - PR #29 (Three.js circulation renderer planning) is merged; it is documentation/planning only and does not authorize production implementation.
 - PR #31 (autonomy migration) is merged into the AIH-004 feature branch, not directly into `main`; its effect is included in the PR #30 merge.
-- Current GitHub pull-request list shows 0 open and 14 closed project-control PRs.
+- Current GitHub pull-request evidence shows draft/open Phase 1 PR #33 and the merged PR #30 baseline; PR #33 is not merged.
 - Current GitHub branch list shows 16 branches and 0 tags.
 - Phase 1 coverage PR #33 is a draft/open documentation branch; its current head is verified separately from default `main` and is not merged.
 
@@ -87,8 +93,8 @@ The current enabled list does not show a closed-issue-to-`COMPLETE` or merged-PR
 - #11 accessibility baseline is approved but not executed.
 - #12 and #26 remain deferred.
 - #9 and PR #29 establish planning evidence only; production PR #3 remains a draft.
-- The strict Phase 1 roadmap matrix records 26 significant entities: 9 already correctly represented, 4 existing items corrected, 1 new historical milestone (#34), 10 documentation-only dispositions, and 2 unresolved records (C-001/C-002). No new active, future, validation/gate, or infrastructure/governance item was justified.
-- The current repository contains an explicit PR #30 comment activating `RTSL-KERNEL-AUTONOMY-001`, while the durable adoption record on `main` still says `NOT YET ACTIVE`. This is recorded as an unresolved contradiction in [`RECONCILIATION.md`](RECONCILIATION.md); Phase 1 does not decide which record to rewrite.
+- The strict Phase 1 roadmap matrix records 26 significant entities: 9 already correctly represented, 4 existing items corrected, 1 new historical milestone (#34), 12 documentation-only dispositions, and 0 unresolved records. No new active, future, validation/gate, or infrastructure/governance item was justified.
+- C-001 is resolved by the explicit post-merge MASTER activation decision; C-002 is resolved by correcting current-status prose while preserving PR #1 history. Both resolutions are recorded in [`RECONCILIATION.md`](RECONCILIATION.md).
 
 ## Not established by this snapshot
 

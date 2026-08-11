@@ -33,6 +33,10 @@ phase_audit_completed: true
 durable_checkpoint_created: true
 roadmap_coverage_audit_completed: true
 roadmap_coverage_audit: PASS
+conflict_reconciliation_completed: true
+c001_disposition: RESOLVED
+c002_disposition: RESOLVED
+remaining_phase1_conflicts: 0
 significant_entities_reviewed: 26
 final_github_project_item_count: 14
 coverage: PARTIAL_PROJECT_COVERAGE
@@ -41,9 +45,7 @@ canonical_for_entire_project: false
 global_reconciliation: NOT_COMPLETE
 global_audit: NOT_COMPLETE
 codex_ready_global_baseline: false
-unresolved_conflicts:
-  - C-001 autonomy activation versus adoption-record state
-  - C-002 historical repository status text versus live repository state
+unresolved_conflicts: []
 next_batch_required: true
 ```
 
@@ -55,10 +57,10 @@ The checkpoint is canonical for the bounded processed scope in this branch/PR. I
 |---|---|---|
 | Collection | `PASS WITH LIMITATION` | All six assigned chats were paginated and read; `sources/` was empty |
 | Normalization | `PASS` | Work items, decisions, milestones, validation events, architecture/clinical requirements, dependencies, blockers, future/deferred records, repository events, and state transitions are indexed |
-| Reconciliation | `PASS WITH LIMITATION` | Current GitHub repos, Project, views, workflows, PRs, branches, commits, and Actions run were rechecked; unresolved conflicts are explicit |
+| Reconciliation | `PASS WITH LIMITATION` | Current GitHub repos, Project, views, workflows, PRs, branches, commits, and Actions run were rechecked; C-001 and C-002 were resolved from authoritative evidence; global reconciliation remains incomplete |
 | Project-intelligence update | `PASS` | Navigation, current-state, reconciliation, coverage-matrix, manifest, and checkpoint artifacts are linked; root README bridge link remains the discoverability addition |
 | GitHub Project update | `PASS` | Existing statuses/visibility fields corrected for #26, #27, #28, and #32; historical milestone #34 added once by the existing workflow; no duplicate item created |
-| Roadmap coverage correction | `PASS` | All 26 significant canonical entities have exactly one disposition; 9 existing items were already correct, 4 were corrected, 1 historical milestone was added, 10 were justified documentation-only, and 2 remain explicitly unresolved |
+| Roadmap coverage correction | `PASS` | All 26 significant canonical entities have exactly one disposition; 9 existing items were already correct, 4 were corrected, 1 historical milestone was added, 12 were justified documentation-only, and 0 remain unresolved |
 | Phase audit | `PASS WITH LIMITATION` | Coverage, provenance, chronology, duplication, repository facts, state vocabulary, authority separation, roadmap, milestones, future work, conflicts, and Codex usability checked; global reconciliation remains out of scope |
 | Durable checkpoint | `PASS` | This manifest and linked records are ready for PR publication; no merge is claimed here |
 
@@ -73,7 +75,7 @@ The checkpoint is canonical for the bounded processed scope in this branch/PR. I
 | Repository verification | `PASS` | Current project-control `main`, production `main`, branches, PRs, merge state, tree/ref evidence, and CI run rechecked |
 | Work state | `PASS WITH LIMITATION` | Only explicit current states were used; merge/CI/presence did not silently create `COMPLETE` outside explicit closure records |
 | Validation | `PASS WITH LIMITATION` | CI and implementation-owner evidence are retained separately from independent QA and clinical validation; no new independent gate was invented |
-| Authority | `PASS WITH UNRESOLVED CONFLICT` | Domain boundaries preserved; autonomy activation conflict C-001 remains open |
+| Authority | `PASS` | Domain boundaries preserved; the current autonomy activation state is established by the explicit post-merge MASTER decision and historical pre-activation wording is retained |
 | Roadmap | `PASS` | Existing Project statuses and view fields corrected from explicit issue/closure records; final live item count is 14 |
 | Milestones | `PASS` | PR #1 foundation is now #34 in Historical Milestones; #14, #19, and #28 remain represented; parent-item coverage prevents duplicate PR cards |
 | Future/deferred work | `PASS` | #12 and #26 are visible in Future Roadmap; approved #27 and #32 retain explicit approved state and near-term context |
@@ -114,8 +116,11 @@ Created:
 
 Updated:
 
-- `README.md` - added one Phase 1 project-intelligence bridge link.
+- `README.md` - added the Phase 1 project-intelligence bridge link and corrected current project-control state.
 - `docs/project-intelligence/README.md` - added the strict coverage matrix to the read order.
+- `README.md`, `docs/PROJECT_STATUS.md`, `docs/MASTER_PROJECT_QUEUE.md`, `docs/ROADMAP.md`, `docs/ARCHITECTURE_DECISIONS.md`, and `docs/DEVELOPMENT_HISTORY.md` - corrected current-vs-historical PR #1/project-control status (C-002).
+- `docs/AI_DEVELOPMENT_WORKFLOW.md` and `docs/governance/` autonomy records - recorded the current ACTIVE state and preserved the pre-activation history (C-001).
+- Phase 1 current-state, reconciliation, coverage, manifest, and checkpoint records - recorded the bounded conflict resolutions and re-audit.
 
 ## Publication checkpoint
 
@@ -131,17 +136,17 @@ Updated:
 Not changed:
 
 - production repository source, tests, configuration, branches, PRs, and deployment;
-- existing `docs/PROJECT_STATUS.md`, queue, history, validation, architecture, or governance records;
+- GitHub Project #1 items, views, workflows, and fields for C-001/C-002 (no Project change was required);
 - any synchronized project source file under `sources/`.
 
-The existing canonical docs were intentionally not rewritten in this bounded pass because several live-state corrections require a broader GitHub PR/Documentation reconciliation and the autonomy activation contradiction requires MASTER disposition. The new #34 milestone record is a separate historical Project-control issue, not a rewrite of stale current-status prose.
+The bounded final conflict pass corrected only the implicated current-status and governance records. Historical PR #1, adoption, handoff, and temporary-deviation evidence remains preserved and explicitly labeled; no broad modernization or unrelated cleanup was performed.
 
 ## Known limitations and blockers
 
-1. `C-001` remains unresolved: PR #30 contains an explicit activation decision while the current adoption record says `NOT YET ACTIVE`.
-2. `C-002` remains unresolved: several current-status documents still describe superseded PR #1/foundation state.
-3. Six chats are only partial project coverage; no Phase 2 or Phase 3 chat set was processed.
-4. `sources/` contained no synchronized files, so chat records were collected directly from the app and cannot be represented as immutable local source files in this repository.
+1. No unresolved Phase 1 reconciliation conflict remains; C-001 and C-002 are resolved with their historical evidence preserved.
+2. Six chats are only partial project coverage; no Phase 2 or Phase 3 chat set was processed.
+3. `sources/` contained no synchronized files, so chat records were collected directly from the app and cannot be represented as immutable local source files in this repository.
+4. The explicit activation decision is not a QA PASS, clinical validation, release readiness, or project closure; mandatory Tier 3/no-gate-downgrade controls remain.
 5. Production CI success, implementation-owner tests, and merged code do not establish clinical validation, accessibility completion, release readiness, or global closure.
 6. Issue #8 remains blocked because authoritative Sites deployment metadata is unavailable.
 
@@ -150,11 +155,10 @@ The existing canonical docs were intentionally not rewritten in this bounded pas
 Before treating this checkpoint as a global baseline:
 
 1. review PR #33 and verify its default-branch ref after any authorized merge;
-2. route C-001 to MASTER PROJECT CONTROL and GitHub PR and Documentation for one explicit durable activation-state reconciliation;
-3. correct or supersede the stale current-status lines identified in C-002 while preserving historical PR #1 provenance;
-4. define and authorize the Phase 2 chat batch; do not infer it from this checkpoint;
-5. repeat the same collection/reconciliation/audit cycle before claiming broader Codex readiness.
+2. review the corrected current-status and governance records against PR #30 and PR #1 evidence when reviewing PR #33;
+3. define and authorize the Phase 2 chat batch; do not infer it from this checkpoint;
+4. repeat the same collection/reconciliation/audit cycle before claiming broader Codex readiness.
 
 ## Non-goals confirmed
 
-This checkpoint does not redesign the website, change clinical behavior, modify production code, run Phase 2/3 ingestion, create a competing Project, create duplicate roadmap items, invent IDs/dates/owners/priorities/gates, declare a global baseline, close unresolved validation, or silently activate a disputed governance model.
+This checkpoint does not redesign the website, change clinical behavior, modify production code, run Phase 2/3 ingestion, create a competing Project, create duplicate roadmap items, invent IDs/dates/owners/priorities/gates, declare a global baseline, close unresolved validation, or broaden the explicit bounded activation decision into QA/release/closure authority.

@@ -18,6 +18,8 @@ It is not a transcript archive, a replacement governance system, a clinical evid
 5. [`PHASE-1-CHECKPOINT.md`](PHASE-1-CHECKPOINT.md) - audit result, coverage boundary, limitations, and next batch.
 6. Existing canonical records linked from the repository root README, especially `docs/MASTER_PROJECT_QUEUE.md`, `docs/PROJECT_STATUS.md`, `docs/DEVELOPMENT_HISTORY.md`, `docs/VALIDATION_REGISTER.md`, and `docs/ARCHITECTURE_DECISIONS.md`.
 
+Current-state records are authoritative for the verified live refs and explicit decisions. Older PR #1 and pre-activation adoption/handoff/deviation statements remain available as historical provenance only; the C-001/C-002 resolution details and exact evidence are in `RECONCILIATION.md`.
+
 ## Assigned chat collection
 
 The six assigned project chats were read from their accessible project records on 2026-08-11. The synchronized `sources/` directory was present but contained no files, so it was not treated as a source of evidence.

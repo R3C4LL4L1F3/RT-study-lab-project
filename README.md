@@ -39,8 +39,9 @@ Clinical validation, implementation state, test results, deployment status, defe
 Project-control:
 
 - Default branch: `main`
-- Working branch / PR #1 head: `setup/project-control-foundation`
-- Project-control PR #1 is the review vehicle for this foundation and must not be merged without explicit maintainer authorization.
+- Current `main` ref: `e97a83b984f96d51dc7c3a29789eee2be7e52a9f` (PR #30 merged)
+- PR #1 is the historical project-control foundation milestone; it is merged and represented by issue #34.
+- Phase 1 documentation corrections are in draft/open PR #33 on `agent/phase-1-project-intelligence`; PR #33 is not merged by this pass.
 
 Production:
 
@@ -122,4 +123,4 @@ The bounded Phase 1 Codex context bridge is indexed at [`docs/project-intelligen
 
 ## Immediate control objective
 
-Complete and merge the coherent project-control foundation after maintainer approval, then hand the next operational task to **QA — Regression & Release** for Ventilator browser/manual historical-P1 verification under Issue #3 unless MASTER PROJECT CONTROL changes the sequence based on new evidence.
+The coherent project-control foundation is durable on project-control `main`. The next operational task is normally **QA — Regression & Release** for Ventilator browser/manual historical-P1 verification under Issue #3 unless MASTER PROJECT CONTROL changes the sequence based on new evidence.

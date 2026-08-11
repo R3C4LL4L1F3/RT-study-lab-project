@@ -35,7 +35,7 @@ The reconciliation order was: explicit authority and source provenance; current 
 | RTSL-AIH-004 | Work item; ID verified from chat and issue #28 | Explicit MASTER closure `COMPLETE`; PR #30 merged to project-control `main`; independent implementation QA PASS is not claimed | Issue #28, PR #30, commit `e97a83b`; governance deviation remains separate from QA PASS |
 | RTSL-QA-MODEL-001 | Work item; ID verified from issue #32 | `APPROVED` requirements/contract migration; QA chat says contract complete, policy/configuration edits not authorized by the record | Issue #32 and QA chat; Project status corrected |
 | RTSL-QA-MODEL-ARCH-001 | Architecture decision; ID verified from Planning/QA records | `RESOLVED`: Tier 2 `INDEPENDENT_REVIEW` and `QA` are conditional and independently triggerable; no policy edit authorization | Planning authority and QA supporting review; not a repository policy change |
-| RTSL-KERNEL-AUTONOMY-001 | Governance decision; ID verified from chat/PR #31/PR #30 | Migration merged and explicit activation comment exists, but the adoption record still says `NOT YET ACTIVE`; effective state is `CONTRADICTORY` pending owner reconciliation | MASTER authority claim plus GitHub durable records; conflict C-001 |
+| RTSL-KERNEL-AUTONOMY-001 | Governance decision; ID verified from chat/PR #31/PR #30 | `ACTIVE` effective `2026-08-11T12:56:49Z` by the explicit MASTER activation decision recorded after PR #30 merged; the adoption record's earlier `NOT YET ACTIVE` wording is preserved historical preparation state | MASTER authority decision plus GitHub durable PR #30 comment, merge, and adoption-record chronology; C-001 resolved |
 | Issue #3 | Defect/validation work item; task ID missing | `IN VALIDATION`; Ventilator historical P1/browser/manual validation remains open | Current Project/issue; `ID_STATUS: MISSING / NEEDS NORMALIZATION` |
 | Issue #5 | Validation work item; task ID missing | `IN VALIDATION`; 3D equipment fidelity/browser/runtime validation remains open | Current Project/issue; `ID_STATUS: MISSING / NEEDS NORMALIZATION` |
 | Issue #8 | Blocker/work item; task ID missing | `BLOCKED`; authoritative Sites deployed Git commit metadata is required | Current Project/issue; exact unblock condition retained |
@@ -62,7 +62,7 @@ Existing item field corrections made in the live Project were deliberately limit
 - #28: `COMPLETE`, `AI / Development Infrastructure`, `Historical`.
 - #32: `APPROVED`, `QA / Release`, `Near-Term`.
 
-Priority, risk tier, owner, target date, release/version, clinical gate, architecture gate, and QA gate values were not inferred or populated. C-001 and C-002 remain explicit unresolved/non-card dispositions; creating a card for either would require a new authority/state decision not present in the bounded evidence.
+Priority, risk tier, owner, target date, release/version, clinical gate, architecture gate, and QA gate values were not inferred or populated. C-001 and C-002 are resolved documentation-only/non-card dispositions. No Project item was required because the authoritative activation decision and the current-vs-historical repository status were corrected in durable records; creating a separate card would duplicate documentation reconciliation rather than represent authorized project work.
 
 ## Important normalized decisions and requirements
 
@@ -86,10 +86,11 @@ The resolved architecture decision says Tier 2 gates are contract-triggered rath
 
 | Approximate order | Event | Current evidence / disposition |
 |---|---|---|
-| Earlier project-control foundation | Initial project-control branch/PR #1 and production validation PRs were created and merged in prior history | Historical; older README/status lines still reference these states |
+| Earlier project-control foundation | Initial project-control branch/PR #1 and production validation PRs were created and merged in prior history | Historical; original status wording is preserved in repository history, while current records are corrected |
 | AIH-001 / AIH-002 | Deterministic V0 and read-only evidence foundations were implemented and closed | Current Project #14/#19 and current repository artifacts |
 | AIH-003 | Pilot-specification work underwent bounded QA corrections, then was explicitly deferred | Current issue #26; no pilot execution inferred |
 | AIH-004 | Architecture, QA/GitHub supporting reviews, implementation, stacked governance migration, conflict recovery, and merge were recorded | Current issue #28, PR #30, and main `e97a83b`; QA deviation is not QA PASS |
+| Project-control status reconciliation | PR #1 foundation was verified as historical/merged; PR #30 merged at `e97a83b`; the later explicit MASTER activation decision was recorded at `2026-08-11T12:56:49Z`; Phase 1 corrections remain in draft/open PR #33 | Current GitHub evidence; C-001 and C-002 resolved in this bounded pass |
 | Three.js planning | PR #29 merged documentation-only renderer planning; production PR #3 remains draft | Current project-control and production GitHub |
 | QA model | Issue #32 is approved for contract migration; implementation/configuration edits remain unauthorized by that issue | Current issue #32 and corrected Project item |
 
@@ -97,22 +98,29 @@ The resolved architecture decision says Tier 2 gates are contract-triggered rath
 
 ### C-001 - Autonomy activation versus adoption-record state
 
-- **Classification:** authority / repository-document conflict.
-- **Claim A:** PR #30 contains an explicit MASTER PROJECT CONTROL activation comment for `RTSL-KERNEL-AUTONOMY-001` effective from `main = e97a83b`.
-- **Claim B:** `docs/governance/RTSL-KERNEL-AUTONOMY-001-ADOPTION-RECORD.md` on the same current `main` says `Activation state: NOT YET ACTIVE` and the existing Kernel remains authoritative until a future activation condition.
-- **Why unsafe to choose silently:** one is an explicit authority decision; the other is the durable canonical adoption record and activation boundary. Future automation must not treat the target policy as active while its governing record says otherwise.
-- **Owner:** MASTER PROJECT CONTROL, with GitHub PR and Documentation preserving the corrected durable record.
-- **Evidence needed:** an explicit update or supersession record in the adoption document and related current-status docs, or a durable reversal/clarification of the activation comment.
-- **Phase 1 disposition:** unresolved and preserved; no policy or governance record was rewritten.
+- **Conflict ID:** `C-001`.
+- **Original:** PR #30 contained an explicit MASTER PROJECT CONTROL activation comment while the adoption record stated `NOT YET ACTIVE`.
+- **Disposition:** **RESOLVED** on `2026-08-11`.
+- **Root cause:** the adoption record was committed at `17798cc8c6b6cc97da3bd66752b261c683c9f281` at `2026-08-11T08:38:31-04:00`, before PR #30 merged at `2026-08-11T08:50:57-04:00`; the owner-authored activation decision was recorded later as a distinct authority event.
+- **Authoritative current state:** `RTSL-KERNEL-AUTONOMY-001` is **ACTIVE**, effective `2026-08-11T12:56:49Z` (`8:56 AM EDT`), by the explicit `MASTER PROJECT CONTROL ACTIVATION DECISION` in PR #30 comment [`#issuecomment-5253465946`](https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/30#issuecomment-5253465946), against verified merged `main` `e97a83b984f96d51dc7c3a29789eee2be7e52a9f`.
+- **Historical preserved:** the adoption record, independent-QA handoff, and temporary-QA-deviation record retain their pre-activation `NOT YET ACTIVE` state and are labeled as historical; no source wording was deleted.
+- **Evidence:** PR #30 merge chronology and the exact owner-authored comment; adoption-record commit history; corrected durable governance records.
+- **Files corrected:** `docs/governance/RTSL-KERNEL-AUTONOMY-001-ADOPTION-RECORD.md`, `docs/governance/RTSL-KERNEL-AUTONOMY-001-INDEPENDENT-QA-HANDOFF.md`, `docs/governance/RTSL-KERNEL-AUTONOMY-001-TEMPORARY-QA-DEVIATION.md`, `docs/governance/RTSL-KERNEL-AUTONOMY-001-CONFLICT-MIGRATION-REGISTER.md`, `docs/AI_DEVELOPMENT_WORKFLOW.md`, and the Phase 1 records listed in the checkpoint.
+- **Project items corrected:** **NONE**. C-001 did not warrant a separate Project card.
+- **Remaining limitation:** the decision is not a QA PASS, clinical validation, release, project closure, or waiver of Tier 3 independent validation/no-gate-downgrade controls.
 
 ### C-002 - Historical repository status text versus live repository state
 
-- **Classification:** historical supersession / documentation drift.
-- **Claims:** current `main` is `e97a83b`, PR #30 is merged, and no project-control PR is open; older `README.md`, `PROJECT_STATUS.md`, `MASTER_PROJECT_QUEUE.md`, and related records still describe PR #1 as the active/open foundation boundary.
-- **Why unsafe to choose silently:** these documents remain navigational and can misroute future work.
-- **Owner:** GitHub PR and Documentation, routed through MASTER for any queue/state changes.
-- **Evidence needed:** a bounded current-status documentation correction against the live `main` history, preserving the historical PR #1 record.
-- **Phase 1 disposition:** unresolved; this bridge points to live evidence but does not rewrite the broader canonical documents.
+- **Conflict ID:** `C-002`.
+- **Original:** current-status documents described PR #1 and `setup/project-control-foundation` as the active/open foundation boundary after that foundation had been superseded by merged history.
+- **Disposition:** **RESOLVED** on `2026-08-11`.
+- **Root cause:** current navigational prose was not updated after the PR #1 foundation merged and later project-control work advanced through PR #30; historical chronology and current status were not explicitly separated.
+- **Authoritative current state:** project-control `main` is `e97a83b984f96d51dc7c3a29789eee2be7e52a9f` after merged PR #30; PR #1 is a historical merged foundation milestone represented by issue #34; PR #33 is the current draft/open Phase 1 documentation branch and is not merged.
+- **Historical preserved:** the PR #1 branch/PR creation and merge history, issue #34 milestone, and historical development record remain intact.
+- **Evidence:** verified current `main`, live PR #30 merge, live PR #33 draft/open state, issue #34, and the corrected current-status documents.
+- **Files corrected:** `README.md`, `docs/PROJECT_STATUS.md`, `docs/MASTER_PROJECT_QUEUE.md`, `docs/ROADMAP.md`, `docs/ARCHITECTURE_DECISIONS.md`, and the current merge/execution boundary in `docs/DEVELOPMENT_HISTORY.md`.
+- **Project items corrected:** **NONE**. C-002 was a documentation-state correction and did not warrant a new roadmap item.
+- **Remaining limitation:** PR #33 remains a draft/open branch checkpoint until separately reviewed and authorized; this correction does not establish global project reconciliation or Phase 2/3 coverage.
 
 ### C-003 - Chat/project state lag for corrected roadmap items
 
@@ -145,6 +153,7 @@ The resolved architecture decision says Tier 2 gates are contract-triggered rath
 - Phase 1 coverage PR #33: `https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/33`
 - PR #29: `https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/29`
 - PR #30: `https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/30`
+- PR #30 activation decision: `https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/30#issuecomment-5253465946`
 - PR #31: `https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/31`
 - Production PR #3: `https://github.com/R3C4LL4L1F3/RT-study-lab/pull/3`
 - Production run: `https://github.com/R3C4LL4L1F3/RT-study-lab/actions/runs/31311314980`

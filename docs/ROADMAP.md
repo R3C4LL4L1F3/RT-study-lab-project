@@ -116,10 +116,10 @@ Future V/Q, gas-exchange, pulmonary-circulation, pulmonary-embolism physiology, 
 
 ### Project-control foundation — PR #1
 
-- Status: **ACTIVE**
+- Status: **COMPLETE / HISTORICAL**
 - Risk: Tier 0
 - Goal: make the two-repository governance, current production state, canonical queue, architecture decisions and validation boundaries durable on project-control `main`.
-- Merge remains subject to explicit maintainer authorization.
+- PR #1 is merged into project-control `main`; issue #34 records the historical milestone. Current Phase 1 documentation corrections are in draft/open PR #33 and are not merged by this pass.
 
 ### Production branch-control policy — Issue #12
 

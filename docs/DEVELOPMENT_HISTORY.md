@@ -23,6 +23,7 @@ Unless explicitly promoted by current evidence, older application-development en
 | Interactive Equipment | Shiley-style cuffed tracheostomy model developed with modular outer cannula, removable inner cannula, obturator, cuff/pilot-line and iterative animation/model revisions | Confirmed from project history; not production-integrated at current ref |
 | Project control | Dedicated GitHub project-control repository initialized | Project-control verified |
 | Project control | `setup/project-control-foundation` branch created and project-control PR #1 opened | Project-control verified |
+| Project control | Project-control PR #1 merged into `main`; the historical foundation milestone is represented by issue #34 | Verified current project-control history; historical milestone, not active work |
 | Project control | Evidence/lifecycle vocabulary and production-verification framework established | Project-control verified |
 | Production source | Existing RT Study Lab Git repository recovered and preserved in private GitHub repository `R3C4LL4L1F3/RT-study-lab` without replacing its existing Sites remote | Verified against production repository / migration evidence |
 | Production verification | Baseline production source established at `a0495e9fa4e5437d8a027312b618b5c1c389ef94` (`Redesign Shock visual teaching page`) | Verified against production repository |
@@ -51,7 +52,7 @@ Unless explicitly promoted by current evidence, older application-development en
 
 Production validation infrastructure is **merged and green on current production `main`** at `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`.
 
-Project-control PR #1 remains the foundation review/merge boundary. Until the maintainer explicitly authorizes its merge, the synchronized foundation exists on `setup/project-control-foundation`, not project-control `main`.
+Project-control PR #1 is the historical foundation review vehicle and is merged into project-control `main`. The current verified `main` ref is `e97a83b984f96d51dc7c3a29789eee2be7e52a9f` after PR #30; issue #34 records the foundation milestone. Phase 1 documentation corrections are carried by draft/open PR #33 on `agent/phase-1-project-intelligence` and are not merged by this pass.
 
 Later approved work recorded in the queue does not authorize premature execution. In particular, project-control synchronization does not authorize:
 
