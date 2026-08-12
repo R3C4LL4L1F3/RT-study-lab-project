@@ -25,8 +25,9 @@ Current project emphasis is:
 
 - Repository: `R3C4LL4L1F3/RT-study-lab-project`
 - Default branch: `main`
-- Foundation branch: `setup/project-control-foundation`
-- PR #1: open review vehicle for the durable foundation; merge requires explicit maintainer authorization
+- Current `main` ref: `e97a83b984f96d51dc7c3a29789eee2be7e52a9f` (PR #30 merged)
+- PR #1: historical merged foundation milestone, represented by issue #34
+- PR #33: current draft/open Phase 1 documentation branch; not merged
 - Current project-control issues in active/future queue include #3, #5, #8, #9, #10, #11 and #12
 
 ### Production repository
@@ -97,7 +98,7 @@ None currently established.
 
 ### P2
 
-- project-control foundation — **ACTIVE** through PR #1
+- project-control foundation — **COMPLETE / HISTORICAL**, PR #1 merged; issue #34
 - production branch-control policy — **APPROVED / DEFERRED EXECUTION**, Issue #12
 - deployment correspondence — **BLOCKED**, Issue #8
 - release/tag convention — **APPROVED / BLOCKED BY #8**, Issue #12
@@ -128,7 +129,7 @@ Closed Issue #4 remains the historical Shock reconciliation record and should no
 
 ## Immediate next operational task
 
-Once the project-control foundation is approved for merge and made durable on project-control `main`, the next operational owner is normally:
+With the project-control foundation durable on project-control `main`, the next operational owner is normally:
 
 **QA — Regression & Release**
 → complete Ventilator browser/manual historical-P1 verification under Issue #3.

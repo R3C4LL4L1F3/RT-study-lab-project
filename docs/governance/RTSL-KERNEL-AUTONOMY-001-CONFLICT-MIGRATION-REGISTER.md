@@ -27,3 +27,15 @@ This register records the source-inspected disposition of the controlled governa
 - No AIH-002 repository, operation, ref, content-path, credential, or permission allowlist is expanded.
 - No runtime AI, autonomous agent, RAG/vector database, persistence, duplicate-task registry, or paid API is introduced.
 - No direct-to-main substantial development, merge, release, or project-wide activation is performed by this migration branch.
+
+## Post-migration activation resolution
+
+- **Conflict ID:** `C-001`.
+- **Original:** the pre-activation adoption record stated `NOT YET ACTIVE` while the later PR #30 discussion contained an explicit MASTER activation decision.
+- **Disposition:** **RESOLVED** on `2026-08-11`.
+- **Root cause:** the adoption record was committed at `17798cc8c6b6cc97da3bd66752b261c683c9f281` before PR #30 merged; the explicit owner-authorized activation comment was recorded later, after merged `main` was verified.
+- **Authoritative current state:** `RTSL-KERNEL-AUTONOMY-001` is `ACTIVE` effective `2026-08-11T12:56:49Z` from PR #30 comment [`#issuecomment-5253465946`](https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/30#issuecomment-5253465946), against merged `main` `e97a83b984f96d51dc7c3a29789eee2be7e52a9f`.
+- **Historical preserved:** the preparation record, independent-QA handoff, and temporary-deviation wording retain their pre-activation state and are now explicitly labeled as historical.
+- **Files corrected:** the adoption record, AI-development workflow overlay, independent-QA handoff, temporary-deviation record, Phase 1 reconciliation/current-state/checkpoint/manifest/coverage records, and stale project-control current-status records.
+- **Project items corrected:** none for C-001; no separate Project card was warranted.
+- **Remaining limitation:** activation is not a QA PASS, clinical validation, release, project closure, or waiver of mandatory Tier 3/no-gate-downgrade controls.

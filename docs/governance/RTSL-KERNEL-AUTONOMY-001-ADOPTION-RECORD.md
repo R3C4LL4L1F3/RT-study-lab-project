@@ -4,14 +4,26 @@
 
 **Amendment:** `RTSL-KERNEL-AUTONOMY-001 — Continuous Execution / Sole-Human Repository Governance Amendment`
 **Adoption disposition:** **APPROVED FOR CONTROLLED ADOPTION**
-**Activation state:** **NOT YET ACTIVE**
-**Current governing policy:** Existing RT Study Lab Project Operating Kernel and `RTSL-AIH-V0-POLICY-1` remain authoritative until the activation condition below is satisfied.
+**Historical pre-activation state at record creation:** **NOT YET ACTIVE**
+**Current activation state:** **ACTIVE**
+**Current governing policy:** `RTSL-KERNEL-AUTONOMY-001` is active from the explicit MASTER PROJECT CONTROL decision recorded after PR #30 merged; the existing RT Study Lab Project Operating Kernel and `RTSL-AIH-V0-POLICY-1` remain authoritative for controls not superseded by the amendment.
 
-This record is the durable project-control record for the approved migration. It records preparation and adoption of the amendment; it does not activate the amendment or authorize project-wide release/closure.
+This record is the durable project-control record for the approved migration. Its `NOT YET ACTIVE` wording records the pre-activation preparation state committed before PR #30 merged. The later explicit MASTER decision below establishes the current activation state; activation does not authorize project-wide release/closure or convert the temporary deviation into a QA PASS.
 
-## Activation condition
+## Current authoritative activation decision
 
-Project-wide activation requires a separate explicit `MASTER_PROJECT_CONTROL` decision after:
+- **Decision:** `MASTER PROJECT CONTROL ACTIVATION DECISION — RTSL-KERNEL-AUTONOMY-001`.
+- **Authority:** `R3C4LL4L1F3` / MASTER PROJECT CONTROL.
+- **Effective timestamp:** `2026-08-11T12:56:49Z` (`8:56 AM EDT`).
+- **Durable evidence:** PR #30 comment [`#issuecomment-5253465946`](https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/30#issuecomment-5253465946).
+- **Verified merged baseline:** project-control `main` at `e97a83b984f96d51dc7c3a29789eee2be7e52a9f`; PR #30 merged before the activation decision.
+- **Preserved invariants:** Tier 3 independent validation and no-gate-downgrade remain mandatory; GitHub approval, merge authority, QA, activation, release, and closure remain distinct; AIH-001 remains read-only/advisory unless separately revised; AIH-002 remains read-only evidence.
+
+The adoption record was committed at `17798cc8c6b6cc97da3bd66752b261c683c9f281` (`2026-08-11T08:38:31-04:00`), before the PR #30 merge at `2026-08-11T08:50:57-04:00`. Its pre-activation state is historical and preserved, not the current activation state.
+
+## Pre-activation condition (historical)
+
+The preparation record required a separate explicit `MASTER_PROJECT_CONTROL` decision after:
 
 1. the migration branch is reviewed and merged through the permitted GitHub workflow;
 2. all required deterministic regression and provenance checks pass;
@@ -19,7 +31,7 @@ Project-wide activation requires a separate explicit `MASTER_PROJECT_CONTROL` de
 4. Tier 3 independence, no-gate-downgrade, clinical/architecture boundaries, and the AIH-001 final deterministic recheck are verified at the exact implementation head; and
 5. no unresolved clinical, architecture, authority, mandatory-gate, or provenance conflict remains.
 
-Until then, a prepared autonomy profile is a migration candidate only. A pull request being open, a GitHub review being present, or a CI check being green does not activate the amendment, authorize merge, satisfy independent QA, or authorize project release/closure.
+At the time this preparation record was written, a prepared autonomy profile was a migration candidate only. A pull request being open, a GitHub review being present, or a CI check being green did not activate the amendment, authorize merge, satisfy independent QA, or authorize project release/closure. The later activation decision is the separate authority record required by this section.
 
 ## Preserved controls
 
@@ -42,7 +54,9 @@ Until then, a prepared autonomy profile is a migration candidate only. A pull re
 - `PAUSED` requires a reason, owner, exact resume condition, and satisfied-condition evidence before resumption. `BLOCKED` requires a blocker, owner, exact unblock condition, and satisfied-condition evidence before resumption.
 - If the current authorized session can safely perform an ordinary in-scope operation, it performs that operation rather than asking the sole human to relay it. Human decisions remain required for authority, scope, activation, release, closure, and any required independent gate.
 
-## Approved migration sequence
+## Approved migration sequence (historical preparation)
+
+The sequence below records the bounded preparation path before the later explicit activation decision. It is retained for provenance and does not represent a current dormant-state claim.
 
 1. Establish this durable adoption record.
 2. Source-inspect the current Kernel, manual, role archive, QA/GitHub contracts, AIH-001, AIH-002, and AIH-004 artifacts.
@@ -64,7 +78,7 @@ Until then, a prepared autonomy profile is a migration candidate only. A pull re
 | Role archive inventory | Available external Version 2.6 Phase 1 inventory; missing prompts are explicitly marked unavailable | SHA-256 `B2107A6E52C9372F705CEB7C990FA9C6901A9F0F9493C5A179B7CC5A4285CD85` |
 | Migration base | AIH-004 implementation head used as the migration starting point | `2f6d40fa995938b0089ad71690f7f5b7936d9ac9` |
 | Migration implementation commit | Reviewed bounded migration implementation | `99df24b65acf9e7fd61f1984687e4fb5725e49d2` (exact commit before this provenance-only record update) |
-| Remote main at inspection | Current project-control main after PR #29; not the migration branch | `f1b6f59322d5499a5fd180ed5741595df35cb872` |
+| Remote main at historical inspection | Project-control main after PR #29; not the migration branch | `f1b6f59322d5499a5fd180ed5741595df35cb872` (pre-PR #30 snapshot; superseded by current `main` `e97a83b`) |
 
 ## Affected durable artifacts
 
@@ -79,8 +93,8 @@ Until then, a prepared autonomy profile is a migration candidate only. A pull re
 
 ## Current migration disposition
 
-**Controlled migration prepared; project-wide activation not performed.**
+**Controlled migration prepared; project-wide activation subsequently recorded by explicit MASTER decision and is currently ACTIVE.**
 
-Implementation-owner validation currently records targeted autonomy/intake tests `56/56 PASS`, the complete repository suite `164/164 PASS`, unchanged default AIH-001 fixture outputs, and no independent QA disposition. The complete 25-item handoff is durable in `RTSL-KERNEL-AUTONOMY-001-INDEPENDENT-QA-HANDOFF.md`.
+The historical preparation package records targeted autonomy/intake tests `56/56 PASS`, the complete repository suite `164/164 PASS`, unchanged default AIH-001 fixture outputs, and no independent QA disposition. The complete 25-item handoff remains durable in `RTSL-KERNEL-AUTONOMY-001-INDEPENDENT-QA-HANDOFF.md`; the explicit activation decision did not convert those implementation-owner results into an independent QA PASS.
 
-The exact resume condition for this record is: `MASTER_PROJECT_CONTROL` records an explicit activation decision after the exact migration head has passed all required regression, provenance, and independent-validation gates.
+**Historical pre-activation resume condition:** `MASTER_PROJECT_CONTROL` records an explicit activation decision after the exact migration head has passed the required review path. This condition is now closed by the durable decision above; future Tier 3, clinical, QA, release, and closure gates remain mandatory under the preserved invariants.

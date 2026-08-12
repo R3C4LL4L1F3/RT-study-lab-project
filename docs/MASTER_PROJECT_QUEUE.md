@@ -39,7 +39,7 @@ It records approved sequencing, priority, ownership, dependencies and execution 
 
 | Item | Priority detail | Risk | Owning chat / area | Status | Execution boundary |
 |---|---|---|---|---|---|
-| Project-control foundation — PR #1 | P2 High | Tier 0 | GitHub — PR / Documentation | **ACTIVE** | Merge requires explicit maintainer authorization |
+| Project-control foundation — PR #1 | P2 High | Tier 0 | GitHub — PR / Documentation | **COMPLETE / HISTORICAL** | Merged into project-control `main`; issue #34 records the milestone; no current foundation merge is pending |
 | Production branch-control policy — #12 | P2 High | Tier 1 | GitHub — PR / Documentation | **APPROVED / DEFERRED EXECUTION** | Do not change branch protection during synchronization |
 | Deployment-to-Git correspondence — #8 | P2 High | Tier 1 | Site / Platform | **BLOCKED** | Requires authoritative private Sites saved/deployed-version metadata |
 | Release/tag convention — #12 | P2 | Tier 1 | GitHub — PR / Documentation + Site / Platform | **APPROVED / BLOCKED BY #8** | Do not create a tag or GitHub Release yet |

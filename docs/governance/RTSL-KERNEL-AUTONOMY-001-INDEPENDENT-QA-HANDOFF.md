@@ -10,11 +10,13 @@
 
 **Reviewed implementation commit:** `99df24b65acf9e7fd61f1984687e4fb5725e49d2`
 
-**Migration state:** `APPROVED FOR CONTROLLED ADOPTION` / `NOT YET ACTIVE`
+**Migration state at handoff creation:** `APPROVED FOR CONTROLLED ADOPTION` / `NOT YET ACTIVE`
+
+**Current activation state:** `ACTIVE`, by the later explicit MASTER PROJECT CONTROL decision recorded in PR #30 comment [`#issuecomment-5253465946`](https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/30#issuecomment-5253465946) at `2026-08-11T12:56:49Z`, after merged `main` `e97a83b984f96d51dc7c3a29789eee2be7e52a9f`.
 
 **Implementation owner:** bounded migration execution owner
 
-This is a complete 25-item handoff package for QA - Regression & Release. The implementation owner executed the local checks listed below, but no independent QA disposition is claimed. The amendment remains dormant and the existing Project Operating Kernel remains authoritative.
+This is a complete 25-item handoff package for QA - Regression & Release. At handoff creation, the implementation owner executed the local checks listed below, but no independent QA disposition was claimed and the amendment was dormant. The later activation decision is recorded separately; the existing Project Operating Kernel remains authoritative for controls not superseded by the amendment.
 
 ## 25-item independent QA checklist
 
@@ -23,7 +25,7 @@ This is a complete 25-item handoff package for QA - Regression & Release. The im
 3. **Baseline provenance.** Confirm the migration starting point was AIH-004 implementation head `2f6d40fa995938b0089ad71690f7f5b7936d9ac9`, with inspected remote `main` at `f1b6f59322d5499a5fd180ed5741595df35cb872`.
 4. **Final implementation identity.** Record and verify the exact final implementation HEAD SHA supplied with this handoff and confirm it is the branch head under review.
 5. **PR provenance.** Verify the migration PR number, base branch, source branch, PR head SHA, open/merged state, and CI/check state directly in GitHub. An open PR must not be treated as a merge or activation decision.
-6. **Adoption record.** Verify `RTSL-KERNEL-AUTONOMY-001-ADOPTION-RECORD.md` records `APPROVED FOR CONTROLLED ADOPTION`, `NOT YET ACTIVE`, the activation condition, the zero-cost constraint, affected artifacts, and the bounded-task/project-release distinction.
+6. **Adoption record.** Verify `RTSL-KERNEL-AUTONOMY-001-ADOPTION-RECORD.md` preserves its historical `APPROVED FOR CONTROLLED ADOPTION` / `NOT YET ACTIVE` preparation state, records the later current `ACTIVE` decision, the zero-cost constraint, affected artifacts, and the bounded-task/project-release distinction.
 7. **Normative source identity.** Verify the recovered AIH-004 v1.1 source contains the complete `INTAKE-054` through `INTAKE-085`, QA-001 through QA-003, and GH-001 through GH-003 definitions, with SHA-256 `6DF0A7EFF3F6D3FD226DA57DF4F58BA6C0907E0EBB63118CC5F5E80606508EFA`.
 8. **Conflict register.** Review `RTSL-KERNEL-AUTONOMY-001-CONFLICT-MIGRATION-REGISTER.md` and confirm each changed clause has a KEEP, CLARIFY, MODIFY, SUPERSEDE, or NO_CHANGE disposition and that unrelated wording was not globally replaced.
 9. **Operating Manual treatment.** Confirm the external Version 2.6 Phase 1 RC3 manual was source-inspected but not falsely represented as an approved replacement; verify the repository amendment is additive and preserves clinical, technical, QA, GitHub, and Tier 0-3 safeguards.
@@ -57,4 +59,4 @@ This is a complete 25-item handoff package for QA - Regression & Release. The im
 
 ## QA decision boundary
 
-This handoff authorizes review of the prepared migration result only. It does not authorize QA to activate the amendment, merge the PR, release the project, close the project, or change any MASTER-reserved decision. The proposed effective state after all required gates is still `CONTROLLED ADOPTION PREPARED - NOT ACTIVE`, pending a separate explicit MASTER Project Control activation decision.
+This handoff authorizes review of the prepared migration result only. It did not authorize QA to activate the amendment, merge the PR, release the project, close the project, or change any MASTER-reserved decision. At handoff creation the proposed effective state was `CONTROLLED ADOPTION PREPARED - NOT ACTIVE`; the current effective state is `ACTIVE` only because the separate explicit MASTER Project Control activation decision was later recorded. This handoff remains `NOT SELF-CERTIFIED` and is not a QA PASS.
