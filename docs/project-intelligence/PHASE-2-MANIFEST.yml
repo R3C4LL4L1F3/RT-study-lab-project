@@ -1,0 +1,92 @@
+phase: 2
+phase_of: 3
+coverage_banner: |-
+  PHASE COVERAGE: 2 OF 3
+  PROJECT CHAT COVERAGE: PARTIAL
+  GLOBAL RECONCILIATION: NOT COMPLETE
+  GLOBAL AUDIT: NOT COMPLETE
+  CODEX-READY GLOBAL BASELINE: NOT ESTABLISHED
+disposition: "COMPLETE - bounded Phase 2 checkpoint with recorded unresolved conflicts and dependencies"
+assigned_chats:
+  - title: "SITE CHAT (RT_study)"
+    record_id: "019f720f-15ca-70c2-bd2f-9b72510e2844"
+    collection: "7 pages / 62 turns"
+    processed: true
+  - title: "Ventilator Waveform Chat"
+    record_id: "019f8976-212b-7f93-ba5f-f4530a8c688d"
+    collection: "1 page / 2 turns"
+    processed: true
+  - title: "ECG & ACLS Lab Subsystems"
+    record_id: "6a786482-1e5c-83ea-a27a-0e122b120fb8"
+    collection: "1 page / 3 turns"
+    processed: true
+  - title: "Interactive Models & Simulation Lab"
+    record_id: "019fe35c-e3d2-73e0-9310-d790e0f50376"
+    collection: "10 pages / 95 turns"
+    processed: true
+  - title: "3D Modeling Chat"
+    record_id: "019fe258-ff0d-7852-9ee4-01753e743d47"
+    collection: "2 pages / 12 turns"
+    processed: true
+  - title: "3D Model Implementation Workflow"
+    record_id: "6a5ca154-aacc-83ea-9b5f-82fee60f3bff"
+    collection: "13 pages / 128 turns"
+    processed: true
+phase_3_processed: false
+repositories:
+  project_control:
+    repository: "R3C4LL4L1F3/RT-study-lab-project"
+    baseline_main: "53c5f1aebb52fc69e721fd9276d8668c0b8fdd71"
+  production:
+    repository: "R3C4LL4L1F3/RT-study-lab"
+    verified_main: "d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6"
+project:
+  url: "https://github.com/users/R3C4LL4L1F3/projects/1"
+  title: "RT Study Lab - Development Roadmap & Control"
+  item_count_before: 14
+  item_count_after: 17
+  named_views: 13
+  enabled_workflows: 5
+  items_created: [35, 36, 37]
+  existing_items_updated: []
+  existing_items_added_to_project: []
+  membership_corrections: []
+  membership_verified: true
+  membership_blockers: []
+post_checkpoint_amendment:
+  applied: true
+  reason: "Explicit user-directed request to represent production PR #3 on the roadmap and mark it IN PROGRESS."
+  project_item: 18
+  item_type: "production pull request"
+  source_pull_request: "https://github.com/R3C4LL4L1F3/RT-study-lab/pull/3"
+  status: "IN PROGRESS"
+  workstream: "Interactive Models"
+  project_item_count_after_amendment: 18
+  gates_unchanged: "Issue #9 remains APPROVED FOR SPECIFICATION - IMPLEMENTATION NOT APPROVED; clinical, independent QA, release, merge, and deployment boundaries remain open."
+counts:
+  significant_entities_reviewed: 27
+  roadmap_worthy_entities: 15
+  roadmap_not_worthy_or_documentation_only: 12
+  existing_project_items_retained: 14
+  existing_project_items_updated: 0
+  new_project_items_created: 3
+  new_active_items: 0
+  new_future_roadmap_items: 0
+  new_historical_milestones: 3
+  new_defect_follow_up_items: 0
+  new_validation_gate_items: 0
+unresolved_conflicts:
+  - "Issue #3 historical automated-layer wording conflicts with the latest assigned Ventilator report of four current P1 concerns; independent current source/browser retest is required."
+  - "Earlier independent renderer anatomy QA findings and later implementation-owner revision claims require a current independent retest; PR #3 remains draft/open and unapproved."
+unresolved_dependencies:
+  - "Issue #8 authoritative Sites saved/deployed-version metadata for live Git SHA correspondence."
+  - "PR #3 depends on #9 architecture/model contract, provenance review, independent QA, and release-gate disposition."
+  - "Ventilator current P1/manual retest under #3."
+  - "ECG/ACLS contemporary clinical validation under #10."
+canonicality:
+  canonical_for_processed_phase_1_plus_phase_2_scope: true
+  canonical_for_entire_project: false
+  global_reconciliation: "NOT COMPLETE"
+  global_audit: "NOT COMPLETE"
+  codex_ready_global_baseline: false
+next_required_action: "Proceed to Phase 3 only after the Phase 2 checkpoint and Project membership audit are accepted."

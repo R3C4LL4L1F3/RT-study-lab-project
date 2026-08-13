@@ -25,9 +25,9 @@ Current project emphasis is:
 
 - Repository: `R3C4LL4L1F3/RT-study-lab-project`
 - Default branch: `main`
-- Current `main` ref: `e97a83b984f96d51dc7c3a29789eee2be7e52a9f` (PR #30 merged)
+- Current `main` ref at the Phase 2 synchronization baseline: `53c5f1aebb52fc69e721fd9276d8668c0b8fdd71` (PR #33 merged)
 - PR #1: historical merged foundation milestone, represented by issue #34
-- PR #33: current draft/open Phase 1 documentation branch; not merged
+- PR #33: Phase 1 documentation branch; merged into `main`
 - Current project-control issues in active/future queue include #3, #5, #8, #9, #10, #11 and #12
 
 ### Production repository
@@ -38,7 +38,7 @@ Current project emphasis is:
 - Current ref: `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`
 - Commit: `Run production validation on main pushes (#2)`
 - Automatic `Production Validation` on current `main`: **PASS** — Actions run `31311314980`
-- Open production PRs: none at synchronization inspection
+- Open production PRs: PR #3 is draft/open for the oxygen-transport renderer; it is not merged and has no current Project membership
 - Open production issues: none at synchronization inspection
 - `main` branch protection: **not enabled**
 - Git tags: none

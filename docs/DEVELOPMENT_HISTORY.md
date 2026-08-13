@@ -52,7 +52,7 @@ Unless explicitly promoted by current evidence, older application-development en
 
 Production validation infrastructure is **merged and green on current production `main`** at `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`.
 
-Project-control PR #1 is the historical foundation review vehicle and is merged into project-control `main`. The current verified `main` ref is `e97a83b984f96d51dc7c3a29789eee2be7e52a9f` after PR #30; issue #34 records the foundation milestone. Phase 1 documentation corrections are carried by draft/open PR #33 on `agent/phase-1-project-intelligence` and are not merged by this pass.
+Project-control PR #1 is the historical foundation review vehicle and is merged into project-control `main`. The current verified `main` ref at the Phase 2 synchronization baseline is `53c5f1aebb52fc69e721fd9276d8668c0b8fdd71` after PR #33; issue #34 records the foundation milestone. Phase 2 records are carried on a purpose-specific branch and reviewed by a separate pull request.
 
 Later approved work recorded in the queue does not authorize premature execution. In particular, project-control synchronization does not authorize:
 
