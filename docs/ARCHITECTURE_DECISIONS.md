@@ -47,7 +47,7 @@ Queue state additionally distinguishes **ACTIVE**, **APPROVED**, **IN VALIDATION
 
 ### Decision
 
-Do not make project-control changes directly to `main`. Use a purpose-specific branch and pull request. PR #1 was the historical foundation review vehicle and is now merged into project-control `main`; current Phase 1 documentation corrections are being carried in draft/open PR #33 and are not merged by this pass.
+Do not make project-control changes directly to `main`. Use a purpose-specific branch and pull request. PR #1 was the historical foundation review vehicle and is now merged into project-control `main`; Phase 1 documentation corrections were merged by PR #33. Phase 2 and later synchronization batches continue to use purpose-specific branches and pull requests.
 
 ## DEC-004 — Preserve validation dimensions as distinct concerns
 

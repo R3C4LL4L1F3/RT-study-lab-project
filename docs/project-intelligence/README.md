@@ -5,7 +5,7 @@
 > GLOBAL PROJECT RECONCILIATION: NOT YET COMPLETE
 > CODEX-READY GLOBAL BASELINE: NOT YET ESTABLISHED
 
-This directory is the bounded Phase 1 navigation and reconciliation layer for the RT Study Lab project. It makes the processed project-chat context usable by a future Codex session with GitHub access while preserving the existing project-control documents as the broader authority system.
+This directory contains the bounded Phase 1 and Phase 2 navigation and reconciliation layers for the RT Study Lab project. The Phase 1 records retain their original Phase 1 coverage boundary; the Phase 2 records are a separate, additive checkpoint. Together they make the processed project-chat context usable by a future Codex session with GitHub access while preserving the existing project-control documents as the broader authority system.
 
 It is not a transcript archive, a replacement governance system, a clinical evidence repository, or a claim that all RT Study Lab chats have been reconciled.
 
@@ -16,7 +16,14 @@ It is not a transcript archive, a replacement governance system, a clinical evid
 3. [`PHASE-1-ROADMAP-COVERAGE.md`](PHASE-1-ROADMAP-COVERAGE.md) - strict entity-to-Project coverage matrix and re-audit result.
 4. [`PHASE-1-MANIFEST.yml`](PHASE-1-MANIFEST.yml) - machine-readable phase and coverage manifest.
 5. [`PHASE-1-CHECKPOINT.md`](PHASE-1-CHECKPOINT.md) - audit result, coverage boundary, limitations, and next batch.
-6. Existing canonical records linked from the repository root README, especially `docs/MASTER_PROJECT_QUEUE.md`, `docs/PROJECT_STATUS.md`, `docs/DEVELOPMENT_HISTORY.md`, `docs/VALIDATION_REGISTER.md`, and `docs/ARCHITECTURE_DECISIONS.md`.
+6. [`PHASE-2-README.md`](PHASE-2-README.md) - Phase 2 scope, exact coverage banner, and read order.
+7. [`PHASE-2-CURRENT-STATE.md`](PHASE-2-CURRENT-STATE.md) - Phase 2 current-state snapshot and evidence boundaries.
+8. [`PHASE-2-SUBSYSTEM-RECORDS.md`](PHASE-2-SUBSYSTEM-RECORDS.md) - six assigned subsystem histories and current disposition.
+9. [`PHASE-2-RECONCILIATION.md`](PHASE-2-RECONCILIATION.md) - collection, normalization, repository reconciliation, conflicts, and dependencies.
+10. [`PHASE-2-ROADMAP-COVERAGE.md`](PHASE-2-ROADMAP-COVERAGE.md) - Phase 2 entity-to-Project coverage matrix and membership audit.
+11. [`PHASE-2-MANIFEST.yml`](PHASE-2-MANIFEST.yml) - machine-readable Phase 2 manifest.
+12. [`PHASE-2-CHECKPOINT.md`](PHASE-2-CHECKPOINT.md) - bounded Phase 2 checkpoint and next-batch boundary.
+13. Existing canonical records linked from the repository root README, especially `docs/MASTER_PROJECT_QUEUE.md`, `docs/PROJECT_STATUS.md`, `docs/DEVELOPMENT_HISTORY.md`, `docs/VALIDATION_REGISTER.md`, and `docs/ARCHITECTURE_DECISIONS.md`.
 
 Current-state records are authoritative for the verified live refs and explicit decisions. Older PR #1 and pre-activation adoption/handoff/deviation statements remain available as historical provenance only; the C-001/C-002 resolution details and exact evidence are in `RECONCILIATION.md`.
 
@@ -60,4 +67,4 @@ repository presence != authority for every domain
 
 Phase 1 processes only the six chats above. It does not ingest other persistent chats, recursively discover unassigned chats, redesign the website, change clinical behavior, change production code, rewrite governance, invent task IDs or dates, delete history, or establish a global baseline.
 
-The current project-control repository remains the durable documentation home. This directory is canonical only for the bounded processed scope represented by this Phase 1 checkpoint and remains non-canonical for the entire project.
+The current project-control repository remains the durable documentation home. The Phase 1 records are canonical only for their bounded processed scope; the Phase 2 records are canonical only for the six-chat Phase 2 scope and its checkpoint. Neither phase establishes a global baseline for the entire project.

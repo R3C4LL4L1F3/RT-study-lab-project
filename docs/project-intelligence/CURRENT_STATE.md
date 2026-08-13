@@ -9,6 +9,8 @@
 **Scope:** six assigned chats, project-control repository, production repository, and the existing GitHub Project
 **Status semantics:** live evidence below is separated from older chat claims and stale documentation.
 
+> This is the preserved Phase 1 report-time snapshot. The later bounded Phase 2 report-time state is recorded in [`PHASE-2-CURRENT-STATE.md`](PHASE-2-CURRENT-STATE.md); Phase 1 values below remain historical provenance rather than a claim that the current Project still has 14 items or that PR #33 remains open.
+
 ## Executive state
 
 | Surface | Verified current state | Evidence boundary |
