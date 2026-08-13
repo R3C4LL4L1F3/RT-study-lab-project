@@ -23,7 +23,8 @@ It is not a transcript archive, a replacement governance system, a clinical evid
 10. [`PHASE-2-ROADMAP-COVERAGE.md`](PHASE-2-ROADMAP-COVERAGE.md) - Phase 2 entity-to-Project coverage matrix and membership audit.
 11. [`PHASE-2-MANIFEST.yml`](PHASE-2-MANIFEST.yml) - machine-readable Phase 2 manifest.
 12. [`PHASE-2-CHECKPOINT.md`](PHASE-2-CHECKPOINT.md) - bounded Phase 2 checkpoint and next-batch boundary.
-13. Existing canonical records linked from the repository root README, especially `docs/MASTER_PROJECT_QUEUE.md`, `docs/PROJECT_STATUS.md`, `docs/DEVELOPMENT_HISTORY.md`, `docs/VALIDATION_REGISTER.md`, and `docs/ARCHITECTURE_DECISIONS.md`.
+13. [`PHASE-2-POST-CHECKPOINT-AMENDMENT.md`](PHASE-2-POST-CHECKPOINT-AMENDMENT.md) - subsequent user-directed Project membership/status amendment.
+14. Existing canonical records linked from the repository root README, especially `docs/MASTER_PROJECT_QUEUE.md`, `docs/PROJECT_STATUS.md`, `docs/DEVELOPMENT_HISTORY.md`, `docs/VALIDATION_REGISTER.md`, and `docs/ARCHITECTURE_DECISIONS.md`.
 
 Current-state records are authoritative for the verified live refs and explicit decisions. Older PR #1 and pre-activation adoption/handoff/deviation statements remain available as historical provenance only; the C-001/C-002 resolution details and exact evidence are in `RECONCILIATION.md`.
 

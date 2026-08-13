@@ -8,7 +8,7 @@ GLOBAL AUDIT: NOT COMPLETE
 CODEX-READY GLOBAL BASELINE: NOT ESTABLISHED
 ```
 
-Snapshot date: 2026-08-12. This is a bounded report-time snapshot after the Phase 2 Project membership audit.
+Snapshot date: 2026-08-12. This is a bounded report-time snapshot after the Phase 2 Project membership audit and the subsequent user-directed roadmap amendment recorded in [`PHASE-2-POST-CHECKPOINT-AMENDMENT.md`](PHASE-2-POST-CHECKPOINT-AMENDMENT.md).
 
 ## Verified repository refs
 
@@ -25,14 +25,16 @@ Snapshot date: 2026-08-12. This is a bounded report-time snapshot after the Phas
 |---|---|
 | Project | [RT Study Lab - Development Roadmap & Control](https://github.com/users/R3C4LL4L1F3/projects/1) |
 | Items before Phase 2 membership work | 14 |
-| Items after Phase 2 membership work | 17 |
+| Items at the Phase 2 checkpoint | 17 |
+| Items after the post-checkpoint amendment | 18 |
 | Named views | 13 |
 | Enabled workflows | 5 |
-| New Project items | #35, #36, #37; all historical milestones, COMPLETE, and membership-verified |
-| Existing items changed | No existing item field or state was changed in this pass |
-| Duplicate records created | None |
+| New Project items in the Phase 2 checkpoint | #35, #36, #37; all historical milestones, COMPLETE, and membership-verified |
+| Post-checkpoint Project item | Production PR #3 as item #18; IN PROGRESS; Interactive Models; membership-verified |
+| Existing issue items changed | No existing issue item was downgraded or replaced |
+| Duplicate records created | None; PR #3 is represented as a PR item, not a duplicate issue |
 
-The three new milestone records have `Status=COMPLETE`, the evidenced owning workstream, `Roadmap Level=Milestone`, and `Planning Horizon=Historical`. The Project field set has no `Initiative Type=Milestone` option, so that field was left unassigned rather than approximated. Priority, risk, owner, release, and gate fields were left unassigned where the Phase 2 evidence did not establish them.
+The three new milestone records have `Status=COMPLETE`, the evidenced owning workstream, `Roadmap Level=Milestone`, and `Planning Horizon=Historical`. The post-checkpoint PR item has `Status=IN PROGRESS` and `Workstream / Project Area=Interactive Models`. Priority, risk, owner, release, architecture, clinical, and QA fields remain unassigned or pending; no unsupported value was inferred.
 
 ## Workstream snapshot
 
@@ -41,7 +43,7 @@ The three new milestone records have `Status=COMPLETE`, the evidenced owning wor
 | Site / Platform | Shock learning module and visual-teaching source history is verified on production `main`; live deployment SHA remains unknown. | #35 historical milestone COMPLETE; #8 remains BLOCKED for deployment correspondence. |
 | Ventilator | Session 3.5 implementation lineage is present in the verified production source. The latest assigned report still identifies P1/manual validation concerns. | #37 historical milestone COMPLETE; #3 remains IN VALIDATION; no defect duplicate created. |
 | ECG / ACLS | Production implementation and test families are present in the verified source; the assigned ECG chat is an ownership record, not a clinical validation result. | #10 remains the independent clinical-validation framework; no separate ECG defect or milestone was invented. |
-| Interactive Models | Oxygen-transport renderer work is on draft/open production PR #3 and is not on production `main`; model/architecture authorization and independent QA remain open. | #9 remains the canonical architecture/model-contract item; PR #3 is represented as a dependency, not a separate Project item. |
+| Interactive Models | Oxygen-transport renderer work is on draft/open production PR #3 and is not on production `main`; model/architecture authorization and independent QA remain open. | #9 remains the canonical architecture/model-contract gate; PR #3 is Project item #18, IN PROGRESS, as a user-directed implementation-activity record. |
 | 3D | Chest Trauma 3D pilot assets and source integration are present on production `main`; manual/runtime/mechanical/visual QA remains open. | #36 historical milestone COMPLETE; #5 remains IN VALIDATION. |
 | 3D Model Implementation Workflow | Historical Shiley/model-rigging workflow, naming, centerline, provenance, and manual Blender-validation conventions are preserved; no production-integrated Shiley claim is made. | Documentation-only Phase 2 history under the 3D owner boundary; no duplicate Project item. |
 
@@ -50,4 +52,5 @@ The three new milestone records have `Status=COMPLETE`, the evidenced owning wor
 - A source-tree match is not a live-deployment match.
 - A chat validation report is not independent QA or clinical validation.
 - A production PR being present is not authorization to merge or release.
+- Project status IN PROGRESS records implementation activity; it is not architecture approval, clinical validation, independent QA PASS, deployment, merge, or release.
 - Historical milestone completion records the evidenced source/implementation milestone; it does not close the separate clinical, QA, accessibility, mechanical, or deployment gates.

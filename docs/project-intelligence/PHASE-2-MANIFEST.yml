@@ -53,6 +53,16 @@ project:
   membership_corrections: []
   membership_verified: true
   membership_blockers: []
+post_checkpoint_amendment:
+  applied: true
+  reason: "Explicit user-directed request to represent production PR #3 on the roadmap and mark it IN PROGRESS."
+  project_item: 18
+  item_type: "production pull request"
+  source_pull_request: "https://github.com/R3C4LL4L1F3/RT-study-lab/pull/3"
+  status: "IN PROGRESS"
+  workstream: "Interactive Models"
+  project_item_count_after_amendment: 18
+  gates_unchanged: "Issue #9 remains APPROVED FOR SPECIFICATION - IMPLEMENTATION NOT APPROVED; clinical, independent QA, release, merge, and deployment boundaries remain open."
 counts:
   significant_entities_reviewed: 27
   roadmap_worthy_entities: 15

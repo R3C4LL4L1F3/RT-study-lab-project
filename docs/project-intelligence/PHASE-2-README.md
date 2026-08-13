@@ -8,7 +8,7 @@ GLOBAL AUDIT: NOT COMPLETE
 CODEX-READY GLOBAL BASELINE: NOT ESTABLISHED
 ```
 
-This is the durable index for the bounded Phase 2 project-intelligence pass. It processes only the six assigned project chats listed below. It does not establish a global project baseline, ingest Phase 3 chats, redesign the site, change clinical behavior, or replace the authority model.
+This is the durable index for the bounded Phase 2 project-intelligence pass and its later post-checkpoint roadmap amendment. It processes only the six assigned project chats listed below. It does not establish a global project baseline, ingest Phase 3 chats, redesign the site, change clinical behavior, or replace the authority model.
 
 ## Read order
 
@@ -18,7 +18,8 @@ This is the durable index for the bounded Phase 2 project-intelligence pass. It 
 4. [`PHASE-2-ROADMAP-COVERAGE.md`](PHASE-2-ROADMAP-COVERAGE.md) - significant-entity matrix, canonical Project representation, and membership audit.
 5. [`PHASE-2-MANIFEST.yml`](PHASE-2-MANIFEST.yml) - machine-readable phase manifest.
 6. [`PHASE-2-CHECKPOINT.md`](PHASE-2-CHECKPOINT.md) - bounded checkpoint, disposition, limitations, and next-batch boundary.
-7. Phase 1 records in this directory, especially [`PHASE-1-CHECKPOINT.md`](PHASE-1-CHECKPOINT.md), remain the authority for the separately bounded Phase 1 scope.
+7. [`PHASE-2-POST-CHECKPOINT-AMENDMENT.md`](PHASE-2-POST-CHECKPOINT-AMENDMENT.md) - user-directed current Project membership/status amendment after the bounded checkpoint.
+8. Phase 1 records in this directory, especially [`PHASE-1-CHECKPOINT.md`](PHASE-1-CHECKPOINT.md), remain the authority for the separately bounded Phase 1 scope.
 
 ## Assigned chats only
 

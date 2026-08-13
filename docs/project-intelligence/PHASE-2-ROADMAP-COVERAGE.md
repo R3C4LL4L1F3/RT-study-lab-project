@@ -12,6 +12,8 @@ CODEX-READY GLOBAL BASELINE: NOT ESTABLISHED
 
 Each normalized significant entity was classified once as roadmap-worthy or documentation-only. Roadmap-worthy entities were mapped to one canonical Project representation. Existing items were retained where they already owned the decision, validation, gate, blocker, or parent relationship. New items were created only for the three evidenced historical milestones. A PR, chat, model version, or view was not made into a duplicate roadmap item merely because it appeared in more than one source.
 
+This matrix is the report-time Phase 2 checkpoint audit at 17 Project items. The later explicit user-directed re-addition of production PR #3 as Project item #18, IN PROGRESS under Interactive Models, is recorded in [`PHASE-2-POST-CHECKPOINT-AMENDMENT.md`](PHASE-2-POST-CHECKPOINT-AMENDMENT.md) and supersedes the live Project membership statement for the post-checkpoint state without rewriting this historical audit.
+
 ## Significant-entity matrix
 
 | # | Normalized entity | Source chat / entity type | State; priority / risk | Owner | Roadmap-worthy? | Existing issue / final Project item | Membership and disposition |
