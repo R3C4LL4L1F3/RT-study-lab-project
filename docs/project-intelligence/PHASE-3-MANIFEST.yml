@@ -120,6 +120,9 @@ canonicality:
   codex_ready_global_baseline: false
 checkpoint:
   branch: "agent/phase-3-project-intelligence"
-  commit: "PENDING DURABLE CHECKPOINT"
-  pull_request: "PENDING DURABLE CHECKPOINT"
+  content_commit: "877a478eba4c111e321ef1d19f63e41d626e7250"
+  pull_request: "https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/46"
+  pull_request_state: "DRAFT / OPEN"
+  pull_request_checks: 0
+  files_changed: 9
   merge: "NOT PERFORMED"

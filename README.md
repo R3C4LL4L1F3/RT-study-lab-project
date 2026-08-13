@@ -41,7 +41,7 @@ Project-control:
 - Default branch: `main`
 - Current `main` ref at the Phase 3 inherited baseline: `382132f82b5f71d2b6d101b56e3b70dff5b557ee` (Phase 2 PR #38 merged)
 - PR #1 is the historical project-control foundation milestone; it is merged and represented by issue #34.
-- Phase 1 documentation corrections were merged by PR #33, and the Phase 2 checkpoint was merged by PR #38. Phase 3 records are being prepared on the purpose-specific branch for this bounded batch.
+- Phase 1 documentation corrections were merged by PR #33, and the Phase 2 checkpoint was merged by PR #38. Phase 3 records are on purpose-specific branch `agent/phase-3-project-intelligence` with draft PR #46 for this bounded batch.
 
 Production:
 

@@ -49,14 +49,17 @@ The Project field audit left unsupported priority, risk, owner, release, gate, t
 
 ## Repository and durable checkpoint
 
-At the time of this document's initial creation:
-
 - project-control inherited `main`: `382132f82b5f71d2b6d101b56e3b70dff5b557ee`;
 - production `main`: `d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6`;
 - branch: `agent/phase-3-project-intelligence`;
-- PR/commit: to be filled after branch self-validation and remote checkpoint.
+- content commit: `877a478eba4c111e321ef1d19f63e41d626e7250`;
+- pull request: [#46](https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/46);
+- PR state: **DRAFT / OPEN**;
+- PR checks: **0** at checkpoint report time;
+- files changed: **9**;
+- merge: **NOT PERFORMED**.
 
-The final merged/unmerged state must be verified against GitHub and updated in this checkpoint before Phase 3 is reported as durably integrated.
+The Phase 3 documentation is durably pushed on the purpose-specific branch and linked from the draft PR. The PR remains unmerged so the bounded checkpoint can receive ordinary review; no merge or release claim is made.
 
 ## Unresolved conflicts and dependencies
 
