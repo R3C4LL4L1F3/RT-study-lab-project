@@ -39,9 +39,9 @@ Clinical validation, implementation state, test results, deployment status, defe
 Project-control:
 
 - Default branch: `main`
-- Current `main` ref at the Phase 2 synchronization baseline: `53c5f1aebb52fc69e721fd9276d8668c0b8fdd71` (PR #33 merged)
+- Current `main` ref at the Phase 3 inherited baseline: `382132f82b5f71d2b6d101b56e3b70dff5b557ee` (Phase 2 PR #38 merged)
 - PR #1 is the historical project-control foundation milestone; it is merged and represented by issue #34.
-- Phase 1 documentation corrections were merged by PR #33. Phase 2 records are carried on the purpose-specific branch and draft PR for this bounded batch.
+- Phase 1 documentation corrections were merged by PR #33, and the Phase 2 checkpoint was merged by PR #38. Phase 3 records are on purpose-specific branch `agent/phase-3-project-intelligence` with draft PR #46 for this bounded batch.
 
 Production:
 
@@ -105,9 +105,9 @@ The following remain separate persistent subsystem owners and must not be migrat
 - [`docs/INTERACTIVE_MODELS_THREEJS_PROGRESS.md`](docs/INTERACTIVE_MODELS_THREEJS_PROGRESS.md) — current workstream progress and next actions
 - [`docs/PRODUCTION_REPOSITORY_VERIFICATION.md`](docs/PRODUCTION_REPOSITORY_VERIFICATION.md) — current production source/verification baseline
 
-## Phase 1 and Phase 2 project-intelligence bridge
+## Phase 1, Phase 2, and Phase 3 project-intelligence bridge
 
-The bounded Phase 1 and Phase 2 Codex context bridges are indexed at [`docs/project-intelligence/README.md`](docs/project-intelligence/README.md). Phase 2 is additionally indexed at [`docs/project-intelligence/PHASE-2-README.md`](docs/project-intelligence/PHASE-2-README.md). Both are partial-scope evidence and do not replace the project-control queue, authority records, or current-state reconciliation owned elsewhere in this repository.
+The bounded Phase 1, Phase 2, and Phase 3 Codex context bridges are indexed at [`docs/project-intelligence/README.md`](docs/project-intelligence/README.md). Phase 3 is additionally indexed at [`docs/project-intelligence/PHASE-3-README.md`](docs/project-intelligence/PHASE-3-README.md). These are bounded-scope evidence layers and do not replace the project-control queue, authority records, or final global reconciliation owned elsewhere in this repository.
 
 ## Change workflow
 

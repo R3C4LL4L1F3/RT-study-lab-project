@@ -1,0 +1,128 @@
+phase: 3
+phase_of: 3
+coverage_banner: |-
+  PHASE COVERAGE: 3 OF 3
+  PROJECT CHAT COVERAGE: COMPLETE FOR THE SIX ASSIGNED PHASE 3 CHATS
+  GLOBAL RECONCILIATION: NOT COMPLETE
+  GLOBAL AUDIT: NOT COMPLETE
+  CODEX-READY GLOBAL BASELINE: NOT ESTABLISHED
+assigned_chats:
+  - title: "Tools Chat"
+    record_id: "6a784ad9-6930-83ea-b62b-79deb57c1fd9"
+    collection: "17 pages / 165 turns"
+    processed: true
+  - title: "AI Harness Integration"
+    record_id: "6a7a1055-ce54-83ea-a7dd-7691f1ff6fae"
+    collection: "2 pages / 15 turns"
+    processed: true
+  - title: "Explore Agent Workflow"
+    record_id: "6a7aed79-6758-83ea-aca7-8b0209f0cf95"
+    collection: "1 page / 2 turns"
+    processed: true
+  - title: "Continue agent workflow exploration"
+    record_id: "019ff113-e168-70d0-9ae9-3f0cdaa16279"
+    collection: "1 page / 5 turns"
+    processed: true
+  - title: "Implement RTSL-AIH-004 intake"
+    record_id: "019ff069-6850-7f12-a064-0713592cc36b"
+    collection: "1 page / 8 turns"
+    processed: true
+  - title: "Design System & UI/UX"
+    record_id: "6a7864bc-b078-83ea-b997-fa8920989434"
+    collection: "1 page / 4 turns"
+    processed: true
+collection_total_turns: 199
+repositories:
+  project_control:
+    repository: "R3C4LL4L1F3/RT-study-lab-project"
+    inherited_main: "382132f82b5f71d2b6d101b56e3b70dff5b557ee"
+    phase_3_branch: "agent/phase-3-project-intelligence"
+  production:
+    repository: "R3C4LL4L1F3/RT-study-lab"
+    verified_main: "d64bde34b69a73c2f71f5a7f5863eca4b5bdbdf6"
+project:
+  url: "https://github.com/users/R3C4LL4L1F3/projects/1"
+  title: "RT Study Lab - Development Roadmap & Control"
+  item_count_before: 18
+  item_count_after: 25
+  named_views: 13
+  enabled_workflows: 5
+  new_issue_items:
+    - project_row: 19
+      issue: 39
+      entity: RTSL-AIH-005
+      status: PROPOSED
+    - project_row: 20
+      issue: 40
+      entity: RTSL-AIH-006
+      status: PROPOSED
+    - project_row: 21
+      issue: 41
+      entity: RTSL-AIH-007
+      status: PROPOSED
+    - project_row: 22
+      issue: 42
+      entity: RTSL-AIH-008
+      status: PROPOSED
+    - project_row: 23
+      issue: 43
+      entity: RTSL-AIH-009
+      status: PROPOSED
+    - project_row: 24
+      issue: 44
+      entity: RTSL-AGENT-EXP-001
+      status: COMPLETE
+    - project_row: 25
+      issue: 45
+      entity: "Shared Design System durable record"
+      status: DEFERRED
+  existing_items_updated: []
+  existing_items_restored: []
+  membership_blockers: []
+counts:
+  significant_entities: 18
+  project_control_relevant_entities: 17
+  documentation_only_entities: 1
+  standalone_project_items_required: 12
+  direct_preexisting: 5
+  direct_updated: 0
+  direct_new: 7
+  direct_restored: 0
+  parent_represented: 1
+  historical_milestone_represented: 0
+  validation_gate_represented: 1
+  multiple_canonical_representations: 3
+  project_control_relevant_without_verified_representation: 0
+  project_control_coverage: "17/17 - 100%"
+new_items:
+  historical_milestones: ["#24 / Issue #44 - RTSL-AGENT-EXP-001 feasibility discovery"]
+  future_roadmap: ["#19 / Issue #39", "#20 / Issue #40", "#21 / Issue #41", "#22 / Issue #42", "#23 / Issue #43", "#25 / Issue #45"]
+  validation_gate: []
+  tooling_ai_harness: ["#19-#24 / Issues #39-#44"]
+  design_system: ["#25 / Issue #45"]
+unresolved_conflicts:
+  - "Phase 2 Issue #3 wording versus later Ventilator P1 reports; current independent browser/manual retest remains required."
+  - "Phase 2 renderer anatomy QA chronology versus later implementation-owner claims; current independent retest remains required for production PR #3."
+  - "Local QA-model implementation history is not remote/default-main evidence."
+unresolved_dependencies:
+  - "Issue #8 authoritative Sites saved/deployed-version metadata."
+  - "Issue #3 Ventilator manual/current-P1 retest."
+  - "Issue #5 independent 3D runtime/mechanical/visual/browser QA."
+  - "Issue #10 independent contemporary ECG/ACLS clinical validation."
+  - "Production PR #3 dependency on Issue #9, provenance, independent QA, and release gates."
+  - "AIH-005 through AIH-009 future authorization and predecessor maturity."
+  - "Deferred shared design-system durable record."
+canonicality:
+  canonical_for_processed_phase_1_plus_phase_2_plus_phase_3_scope: true
+  canonical_for_entire_project: false
+  global_reconciliation: "NOT COMPLETE"
+  global_audit: "NOT COMPLETE"
+  codex_ready_global_baseline: false
+checkpoint:
+  branch: "agent/phase-3-project-intelligence"
+  content_commit: "877a478eba4c111e321ef1d19f63e41d626e7250"
+  pull_request: "https://github.com/R3C4LL4L1F3/RT-study-lab-project/pull/46"
+  pull_request_state: "DRAFT / OPEN"
+  pull_request_checks: 0
+  files_changed: 9
+  merge: "NOT PERFORMED"
