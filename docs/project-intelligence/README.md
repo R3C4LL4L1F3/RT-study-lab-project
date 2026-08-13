@@ -1,36 +1,33 @@
 # RT Study Lab - Project Intelligence / Codex Context Bridge
 
-> PHASE COVERAGE: 1 OF 3
-> PROJECT CHAT COVERAGE: PARTIAL
-> GLOBAL PROJECT RECONCILIATION: NOT YET COMPLETE
-> CODEX-READY GLOBAL BASELINE: NOT YET ESTABLISHED
+> PHASE COVERAGE: 3 OF 3
+> PROJECT CHAT COVERAGE: COMPLETE FOR THE THREE BOUNDED INGESTION BATCHES
+> GLOBAL PROJECT RECONCILIATION: NOT COMPLETE
+> CODEX-READY GLOBAL BASELINE: NOT ESTABLISHED
 
-This directory contains the bounded Phase 1 and Phase 2 navigation and reconciliation layers for the RT Study Lab project. The Phase 1 records retain their original Phase 1 coverage boundary; the Phase 2 records are a separate, additive checkpoint. Together they make the processed project-chat context usable by a future Codex session with GitHub access while preserving the existing project-control documents as the broader authority system.
+This directory contains the bounded Phase 1, Phase 2, and Phase 3 navigation and reconciliation layers for the RT Study Lab project. Each phase retains its own coverage boundary; Phase 2 and Phase 3 are separate additive checkpoints. Together they make the processed project-chat context usable by a future Codex session with GitHub access while preserving the existing project-control documents as the broader authority system.
 
 It is not a transcript archive, a replacement governance system, a clinical evidence repository, or a claim that all RT Study Lab chats have been reconciled.
 
 ## Read order
 
-1. [`CURRENT_STATE.md`](CURRENT_STATE.md) - current live repository, Project, roadmap, and validation snapshot.
-2. [`RECONCILIATION.md`](RECONCILIATION.md) - normalized entities, provenance, chronology, claims, verified facts, and conflicts.
-3. [`PHASE-1-ROADMAP-COVERAGE.md`](PHASE-1-ROADMAP-COVERAGE.md) - strict entity-to-Project coverage matrix and re-audit result.
-4. [`PHASE-1-MANIFEST.yml`](PHASE-1-MANIFEST.yml) - machine-readable phase and coverage manifest.
-5. [`PHASE-1-CHECKPOINT.md`](PHASE-1-CHECKPOINT.md) - audit result, coverage boundary, limitations, and next batch.
-6. [`PHASE-2-README.md`](PHASE-2-README.md) - Phase 2 scope, exact coverage banner, and read order.
-7. [`PHASE-2-CURRENT-STATE.md`](PHASE-2-CURRENT-STATE.md) - Phase 2 current-state snapshot and evidence boundaries.
-8. [`PHASE-2-SUBSYSTEM-RECORDS.md`](PHASE-2-SUBSYSTEM-RECORDS.md) - six assigned subsystem histories and current disposition.
-9. [`PHASE-2-RECONCILIATION.md`](PHASE-2-RECONCILIATION.md) - collection, normalization, repository reconciliation, conflicts, and dependencies.
-10. [`PHASE-2-ROADMAP-COVERAGE.md`](PHASE-2-ROADMAP-COVERAGE.md) - Phase 2 entity-to-Project coverage matrix and membership audit.
-11. [`PHASE-2-MANIFEST.yml`](PHASE-2-MANIFEST.yml) - machine-readable Phase 2 manifest.
-12. [`PHASE-2-CHECKPOINT.md`](PHASE-2-CHECKPOINT.md) - bounded Phase 2 checkpoint and next-batch boundary.
-13. [`PHASE-2-POST-CHECKPOINT-AMENDMENT.md`](PHASE-2-POST-CHECKPOINT-AMENDMENT.md) - subsequent user-directed Project membership/status amendment.
-14. Existing canonical records linked from the repository root README, especially `docs/MASTER_PROJECT_QUEUE.md`, `docs/PROJECT_STATUS.md`, `docs/DEVELOPMENT_HISTORY.md`, `docs/VALIDATION_REGISTER.md`, and `docs/ARCHITECTURE_DECISIONS.md`.
+1. [`PHASE-3-README.md`](PHASE-3-README.md) - Phase 3 scope, assigned chats, and representation model.
+2. [`PHASE-3-CURRENT-STATE.md`](PHASE-3-CURRENT-STATE.md) - current live repository, Project, and Phase 3 field snapshot.
+3. [`PHASE-3-SUBSYSTEM-RECORDS.md`](PHASE-3-SUBSYSTEM-RECORDS.md) - normalized tooling, AI-harness, agent-workflow, and design-system records.
+4. [`PHASE-3-RECONCILIATION.md`](PHASE-3-RECONCILIATION.md) - collection, normalization, cross-phase reconciliation, conflicts, and dependencies.
+5. [`PHASE-3-ROADMAP-COVERAGE.md`](PHASE-3-ROADMAP-COVERAGE.md) - three-level entity-to-Project coverage matrix and membership audit.
+6. [`PHASE-3-MANIFEST.yml`](PHASE-3-MANIFEST.yml) - machine-readable Phase 3 manifest.
+7. [`PHASE-3-CHECKPOINT.md`](PHASE-3-CHECKPOINT.md) - bounded Phase 3 checkpoint and global-status boundary.
+8. [`PHASE-2-README.md`](PHASE-2-README.md) and its linked records - separately bounded Phase 2 checkpoint and amendment.
+9. [`PHASE-1-CHECKPOINT.md`](PHASE-1-CHECKPOINT.md) and its linked records - separately bounded Phase 1 checkpoint.
+10. [`CURRENT_STATE.md`](CURRENT_STATE.md) and [`RECONCILIATION.md`](RECONCILIATION.md) - earlier canonical baseline/provenance records retained for historical continuity.
+11. Existing canonical records linked from the repository root README, especially `docs/MASTER_PROJECT_QUEUE.md`, `docs/PROJECT_STATUS.md`, `docs/DEVELOPMENT_HISTORY.md`, `docs/VALIDATION_REGISTER.md`, and `docs/ARCHITECTURE_DECISIONS.md`.
 
 Current-state records are authoritative for the verified live refs and explicit decisions. Older PR #1 and pre-activation adoption/handoff/deviation statements remain available as historical provenance only; the C-001/C-002 resolution details and exact evidence are in `RECONCILIATION.md`.
 
 ## Assigned chat collection
 
-The six assigned project chats were read from their accessible project records on 2026-08-11. The synchronized `sources/` directory was present but contained no files, so it was not treated as a source of evidence.
+The Phase 1 assigned project chats were read from their accessible project records on 2026-08-11. The synchronized `sources/` directory was present but contained no files, so it was not treated as a source of evidence. Phase 2 and Phase 3 collection details are recorded in their respective phase indexes.
 
 | Assigned chat | Chat record | Accessible collection | Authority preserved |
 |---|---|---:|---|
@@ -66,6 +63,6 @@ repository presence != authority for every domain
 
 ## Scope boundary
 
-Phase 1 processes only the six chats above. It does not ingest other persistent chats, recursively discover unassigned chats, redesign the website, change clinical behavior, change production code, rewrite governance, invent task IDs or dates, delete history, or establish a global baseline.
+Each phase processes only its explicitly assigned chats. The Phase 3 batch processed only Tools Chat, AI Harness Integration, Explore Agent Workflow, Continue agent workflow exploration, Implement RTSL-AIH-004 intake, and Design System & UI/UX. The bridge does not recursively discover unassigned chats, redesign the website, change clinical behavior, change production code, rewrite governance, invent task IDs or dates, delete history, or establish a global baseline.
 
-The current project-control repository remains the durable documentation home. The Phase 1 records are canonical only for their bounded processed scope; the Phase 2 records are canonical only for the six-chat Phase 2 scope and its checkpoint. Neither phase establishes a global baseline for the entire project.
+The current project-control repository remains the durable documentation home. Phase 1, Phase 2, and Phase 3 records are canonical only for their bounded processed scopes and checkpoints. Together they cover the processed three-batch chat scope, but they do not establish a global baseline for the entire project.
